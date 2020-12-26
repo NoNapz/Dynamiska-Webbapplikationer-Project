@@ -31,6 +31,7 @@ questions, hence the number of contributors must be pre-determined. This
 provides a clear distinction between consumers and contributors.
 NOTE: The different users should login with different permissions. Follow this
 tutorial for tips on how to manage sessions with Node.js and Express:
+
 https://codeforgeek.com/manage-session-using-node-js-express-4/
 
 
@@ -39,32 +40,50 @@ https://codeforgeek.com/manage-session-using-node-js-express-4/
 TODO:
 
 -As Consumer- (Ask questions and consume information (answers))
+
 • I should be able to login as a consumer.
+
 • I should be able to administer my questions i.e. add, delete and update them. The data that each question has is: question title, the question text, date/time when it was created and the category that the question falls under.
+
 (You have to think about database design, for example: qsID which is a primary key, unique and automatically enumerated).
+
 • I should also be able to see a list of FAQ (frequently asked questions) returned as a result of a search query (linked to category).
+
 • I should be able to view all my questions.
+
 • Once a contributor has added an answer to my question, I should be able to see it below my question.
 
 -As Contributor- (Provide information (answers) to questions)
+
 • I should be able to login as contributor.
+
 • I should be able to see a list of questions classified by category.
+
 • Under each question there should be a place for me to add my answer with my username and answer text. The date/time should be appended automatically.
+
 • I should also be able to update my answer or delete it.
+
 • The consumer should be able to see the answer I have provided to their question.
 
 -As Super Admin- (See a list of all questions and administer the questions and the users)
+
 I should be able to login as super admin.
+
 • Under each question I should be able to see all answers related to it. For both the questions and answers I should be able to see all related information: user, 
 text and date/time. For answers, I should be able to view up-votes/down-votes (see further functionality requirements below).
+
 • I should be able to block a user (i.e. consumer or contributor) for misconduct. In this scenario, when that user attempts to login they should not be able to login and should read somewhere that their account has been blocked.
+
 • I should be able to manage contributors (i.e. add contributor, delete contributor and update contributor information).
 
 Further functionality for contributor:
+
 • I should be able to label a question as duplicate.
+
 • More than one contributor can add answers to the same question.
 
 Further functionality for consumer:
+
 • I should be able to up-vote/down-vote an answer to my question.
 
 NEEDS FIX:
