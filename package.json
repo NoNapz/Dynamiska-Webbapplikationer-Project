@@ -1,0 +1,23 @@
+{
+  "name": "node",
+  "version": "1.0.0",
+  "description": "WebbApp",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NoNapz/W-Project.git"
+  },
+  "author": "Robin Hellström och David Thiman",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NoNapz/W-Project/issues"
+  },
+  "homepage": "https://github.com/NoNapz/W-Project#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "nodemon": "^2.0.6"
+  }
+}
