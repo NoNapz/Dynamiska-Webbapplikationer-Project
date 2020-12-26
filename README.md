@@ -1,7 +1,7 @@
 # W-Project
 Dynamiska webb
 
-- Project Desc -
+-- Project Desc --
 
 Front-end requirements:
 Make a user-friendly interface that opens immediately when the server is
