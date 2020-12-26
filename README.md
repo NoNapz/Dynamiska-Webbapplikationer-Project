@@ -55,7 +55,8 @@ TODO:
 
 -As Super Admin- (See a list of all questions and administer the questions and the users)
 I should be able to login as super admin.
-• Under each question I should be able to see all answers related to it. For both the questions and answers I should be able to see all related information: user, text and date/time. For answers, I should be able to view up-votes/down-votes (see further functionality requirements below).
+• Under each question I should be able to see all answers related to it. For both the questions and answers I should be able to see all related information: user, 
+text and date/time. For answers, I should be able to view up-votes/down-votes (see further functionality requirements below).
 • I should be able to block a user (i.e. consumer or contributor) for misconduct. In this scenario, when that user attempts to login they should not be able to login and should read somewhere that their account has been blocked.
 • I should be able to manage contributors (i.e. add contributor, delete contributor and update contributor information).
 
