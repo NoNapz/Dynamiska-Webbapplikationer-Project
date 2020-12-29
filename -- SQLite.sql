@@ -8,27 +8,27 @@ CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
 );
 
-DROP TABLE IF EXISTS post;
-CREATE TABLE if not EXISTS post(
-    PostID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    userID INTEGER NOT NULL,
-    information varchar(256) NOT NULL,
-    title varchar(256) NOT NULL,
-    likes INTEGER DEFAULT 0,
-    FOREIGN KEY (userID) REFERENCES users(userID)
-);
+-- DROP TABLE IF EXISTS post;
+-- CREATE TABLE if not EXISTS post(
+--     PostID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+--     userID INTEGER NOT NULL,
+--     information varchar(256) NOT NULL,
+--     title varchar(256) NOT NULL,
+--     likes INTEGER DEFAULT 0,
+--     FOREIGN KEY (userID) REFERENCES users(userID)
+-- );
 
-DROP TABLE IF EXISTS reply;
-CREATE TABLE if not EXISTS reply(
-    replyID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    userID INTEGER NOT NULL,
-    Post_ID INTEGER NOT NULL,
-    information varchar(256) NOT NULL,
-    title varchar(256) NOT NULL,
-    likes INTEGER DEFAULT 0,
-    FOREIGN KEY (userID) REFERENCES users(userID)
-    FOREIGN KEY (Post_ID) REFERENCES post(Post_ID)
-);
+-- DROP TABLE IF EXISTS reply;
+-- CREATE TABLE if not EXISTS reply(
+--     replyID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+--     userID INTEGER NOT NULL,
+--     Post_ID INTEGER NOT NULL,
+--     information varchar(256) NOT NULL,
+--     title varchar(256) NOT NULL,
+--     likes INTEGER DEFAULT 0,
+--     FOREIGN KEY (userID) REFERENCES users(userID)
+--     FOREIGN KEY (Post_ID) REFERENCES post(Post_ID)
+-- );
 
 INSERT INTO users (username, email, name, password, userType)
 VALUES ('Tassarna', 'h19robhe@du.se', 'Robin Hellström', 12345, 'Super Admin');
