@@ -1,6 +1,9 @@
 .container-own{
     display: flex;
     justify-content: center;
+    margin: 1rem auto;
+    background-color: white;
+    border: 1px solid black;
 }
 .container-own>div{
     display: flex;
@@ -13,4 +16,14 @@
 }
 .col-own{
     min-width: 100%!important;
+}
+.fade-modal{
+    display: block;
+    z-index: 10;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
 }
