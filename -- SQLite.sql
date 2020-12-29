@@ -34,3 +34,6 @@ INSERT INTO users (username, email, name, password, userType)
 VALUES ('Tassarna', 'h19robhe@du.se', 'Robin Hellström', 12345, 'Super Admin');
 INSERT INTO users (username, email, name, password, userType)
 VALUES ('Hyena', 'h19davth@du.se', 'David Thiman', '12345', 'Super Admin');
+
+INSERT INTO users (username, email, name, password)
+VALUES ('billybob', 'billy@bob.se', 'Billy', 'pass');
