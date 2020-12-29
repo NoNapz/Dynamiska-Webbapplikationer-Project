@@ -1,0 +1,8 @@
+0.5: Create user
+
+1: Logga in, spara ner user i en global variabel.
+2: Skapa topics
+2.1: Skapa inlägg
+2.2: ta user från global variabel för post
+2.3: If user = poster, then add crud.
+3: Like/dislike posts/topics
