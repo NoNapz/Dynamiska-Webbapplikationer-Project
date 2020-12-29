@@ -16,11 +16,12 @@ const addUser = async (data) => {
         console.log(data);
         const dbCon = await dbPromise();
         const user = await dbCon.run(
-            `INSERT INTO users (username, email, name, password) VALUES (?,?,?,?)`,
+            `INSERT INTO users (username, email, name, password) 
+            VALUES (?,?,?,?)`,
             [data.username, data.email, data.name, data.password]
         );
         console.log('Worked');
-        return user;
+        // return user;
     } catch (err) {
         throw new Error("Error adding User to database: " + err);
     }

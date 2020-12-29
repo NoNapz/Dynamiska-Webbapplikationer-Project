@@ -65,6 +65,17 @@ router.post("/signup", async (req, res) => {
     }
 });
 
+router.get('/getUser', async (req, res)=>{
+    try{
+        
+    }catch(err){
+
+    }
+})
+
+
+
+
 // router.get("/home", (req, res) => {
 //     sess = req.session;
 //     if (sess.username) {

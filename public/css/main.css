@@ -1,0 +1,16 @@
+.container-own{
+    display: flex;
+    justify-content: center;
+}
+.container-own>div{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.form-control{
+    width: auto;
+}
+.col-own{
+    min-width: 100%!important;
+}

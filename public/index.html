@@ -6,73 +6,108 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
     <script src="https://kit.fontawesome.com/d82fdbf1c7.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <link rel="stylesheet" href="css/main.css">
     <title>Document</title>
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">Navbar</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-      
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-              <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="login.html">Login/SignUp</a>
-            </li>
-
-          </ul>
-          <div class="username">
-            <h2>{{user.username}}</h2>
-          </div>
-        </div>
-      </nav>
-    </header>
-    <main>
-        <main id="underFlow">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-6 col-md-offset-3">
-                        <h2>Testing</h2>
-                        <form action="/login" method="POST">
-                            <input id="logUsername" class="form-control" type="text" name="username" placeholder="Username"> <br>
-                            <input id="logPassword" class="form-control" type="password" name="password" placeholder="Password"> <br>
-                            <button type="submit">Log in</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
+    <div id="app">
+        <header>
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="#">Navbar</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+          
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                  <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="login.html">Login/SignUp</a>
+                </li>
     
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-6 col-md-offset-3">
-                        <h2>Testing</h2>
-                        <form>
-                            <input id="addUsername" class="form-control" type="text" name="username" placeholder="Username"> <br>
-                            <input id="addEmail" class="form-control" type="email" name="email" placeholder="Email"> <br>
-                            <input id="addName" class="form-control" type="text" name="name" placeholder="Name"> <br>
-                            <input id="addPassword" class="form-control" type="password" name="password" placeholder="Password"> <br>
-                            <button v-on:click="addUser" @click.prevent="addUser" type="submit">Sign Up</button>
-                        </form>
+              </ul>
+              <div class="username">
+                <h2 id="username"></h2>
+              </div>
+            </div>
+          </nav>
+        </header>
+
+
+        <main>
+            
+        </main>
+
+
+        <footer>
+
+        </footer>
+
+
+
+
+
+
+
+
+
+
+
+        <!--MODALS-->
+        <div class="login-Modal">
+            <div class="container container-own">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6 col-md-offset-3 col-own">
+                            <h2>log in</h2>
+                            <form action="/login" method="POST">
+                                <input id="logUsername" class="form-control" type="text" name="username" placeholder="Username"> <br>
+                                <input id="logPassword" class="form-control" type="password" name="password" placeholder="Password"> <br>
+                                <button type="submit">Log in</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6 col-md-offset-3 col-own">
+                            <h2>Sign up</h2>
+                            <form>
+                                <input id="addUsername" class="form-control" type="text" name="username" placeholder="Username"> <br>
+                                <input id="addEmail" class="form-control" type="email" name="email" placeholder="Email"> <br>
+                                <input id="addName" class="form-control" type="text" name="name" placeholder="Name"> <br>
+                                <input id="addPassword" class="form-control" type="password" name="password" placeholder="Password"> <br>
+                                <button @click.prevent="addUser" type="submit">Sign Up</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
-        </main>
-    </main>
+        </div>
+    </div>
+
 
 <script src="http://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 <script>
     const vm = new Vue({
-        el: "#underFlow",
+        el: "#app",
         data: {
         },
         methods: {
+            getUser() {
+                $.ajax({
+                    url: '/getUser',
+                    type: 'GET',
+                    success: (user) =>{
+                        $('#username').val(user.username);
+                    }
+                    })
+            },
             addUser() {
                 let user = {
                     username: $("#addUsername").val(),
