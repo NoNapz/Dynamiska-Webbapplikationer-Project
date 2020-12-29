@@ -1,9 +1,9 @@
 DROP TABLE IF EXISTS users;
 CREATE TABLE IF NOT EXISTS users (
     username varchar(64) UNIQUE NOT NULL,
+    password varchar(256) NOT NULL,
     email varchar(128) UNIQUE NOT NULL,
     name varchar(128) NOT NULL,
-    password varchar(256) NOT NULL,
     userType varchar(32) DEFAULT 'Consumer' CHECK(userType in ('Consumer', 'Contributor' ,'Super Admin')),
     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
 );
