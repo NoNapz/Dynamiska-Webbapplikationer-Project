@@ -24,7 +24,7 @@
                   <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="">Login/SignUp</a>
+                  <a class="nav-link" href="login.html">Login/SignUp</a>
                 </li>
     
               </ul>
@@ -56,9 +56,7 @@
 
 
         <!--MODALS-->
-        <div class="fade-modal hidden">
-        </div>
-        <div class="login-Modal hidden">
+        <div class="login-Modal">
             <div class="container container-own">
                 <div class="container">
                     <div class="row">
@@ -101,9 +99,6 @@
         data: {
         },
         methods: {
-            showloginsignup(){
-                $()
-            },
             getUser() {
                 $.ajax({
                     url: '/getUser',

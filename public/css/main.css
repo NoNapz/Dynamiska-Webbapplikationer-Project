@@ -1,31 +1,4 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/***HIDDEN***/
-.hidden{
-    display: none;
-}
-/*************************MODALS***********************/
 .container-own{
-    z-index: 15;
     display: flex;
     justify-content: center;
 }
@@ -40,14 +13,4 @@
 }
 .col-own{
     min-width: 100%!important;
-}
-/***FADE***/
-.fade-modal{
-    z-index: 10;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.2);
 }
