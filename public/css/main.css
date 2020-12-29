@@ -1,29 +1,12 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /***HIDDEN***/
 .hidden{
     display: none;
 }
 /*************************MODALS***********************/
+/* #loginModal .modal-content {
+    width: 1280px;
+} */
+
 .container-own{
     z-index: 15;
     display: flex;
@@ -37,9 +20,6 @@
 }
 .form-control{
     width: auto;
-}
-.col-own{
-    min-width: 100%!important;
 }
 /***FADE***/
 .fade-modal{

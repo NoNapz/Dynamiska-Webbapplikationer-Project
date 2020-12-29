@@ -24,7 +24,7 @@
                   <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="">Login/SignUp</a>
+                  <a class="nav-link" href="!#" @click.prevent="showloginsignup">Login/SignUp</a>
                 </li>
     
               </ul>
@@ -44,51 +44,37 @@
         <footer>
 
         </footer>
-
-
-
-
-
-
-
-
-
-
-
-        <!--MODALS-->
-        <div class="fade-modal hidden">
-        </div>
-        <div class="login-Modal hidden">
-            <div class="container container-own">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-6 col-md-offset-3 col-own">
-                            <h2>log in</h2>
-                            <form action="/login" method="POST">
-                                <input id="logUsername" class="form-control" type="text" name="username" placeholder="Username"> <br>
-                                <input id="logPassword" class="form-control" type="password" name="password" placeholder="Password"> <br>
-                                <button type="submit">Log in</button>
-                            </form>
+            <div class="modal fade" id="loginModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Login / Signup</h5>
                         </div>
-                    </div>
-                </div>
-        
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-6 col-md-offset-3 col-own">
-                            <h2>Sign up</h2>
-                            <form>
-                                <input id="addUsername" class="form-control" type="text" name="username" placeholder="Username"> <br>
-                                <input id="addEmail" class="form-control" type="email" name="email" placeholder="Email"> <br>
-                                <input id="addName" class="form-control" type="text" name="name" placeholder="Name"> <br>
-                                <input id="addPassword" class="form-control" type="password" name="password" placeholder="Password"> <br>
-                                <button @click.prevent="addUser" type="submit">Sign Up</button>
-                            </form>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-6 col-md-offset-3">
+                                    <h2>log in</h2>
+                                    <form action="/login" method="POST">
+                                        <input id="logUsername" class="form-control" type="text" name="username" placeholder="Username"> <br>
+                                        <input id="logPassword" class="form-control" type="password" name="password" placeholder="Password"> <br>
+                                        <button type="submit">Log in</button>
+                                    </form>
+                                </div>
+                                <div class="col-md-6 col-md-offset-3">
+                                    <h2>Sign up</h2>
+                                    <form>
+                                        <input id="addUsername" class="form-control" type="text" name="username" placeholder="Username"> <br>
+                                        <input id="addEmail" class="form-control" type="email" name="email" placeholder="Email"> <br>
+                                        <input id="addName" class="form-control" type="text" name="name" placeholder="Name"> <br>
+                                        <input id="addPassword" class="form-control" type="password" name="password" placeholder="Password"> <br>
+                                        <button @click.prevent="addUser" type="submit">Sign Up</button>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
     </div>
 
 
@@ -102,7 +88,7 @@
         },
         methods: {
             showloginsignup(){
-                $()
+                $("#loginModal").modal("show");
             },
             getUser() {
                 $.ajax({
@@ -125,6 +111,7 @@
                     type: "POST",
                     data: user,
                 });
+                $("#loginModal").modal("hide");
             },
             loginUser(){
                 let user = {
@@ -136,7 +123,7 @@
                     type: "POST",
                     data: user,
                 });
-
+                $("#addModal").modal("hide");
             },
         },
     });
