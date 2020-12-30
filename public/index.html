@@ -41,20 +41,16 @@
         </header>
         <main>
         <form>
-            <input id="postTitle" class="form-control" type="text" name="post"
+            <input id="postTitle" class="form-control" type="text" name="title"
                 placeholder="Topic.."> <br>
-            <input id="postBody" class="form-control" type="text" name="postBody"
+            <input id="postBody" class="form-control" type="text" name="body"
                 placeholder="Type here.."> <br>
-            <button >Start Topic</button>
+            <button v-on:click="startTopic" type="submit">Start Topic</button>
         </form>
-        <div>
-            <p id = "test1"></p>
-        </div>
         <div id="posts">
             <div v-for="post in posts" v-bind:key="post.id">
                 <div class="post-header">
-                    <h5> {{ post.title }}</h5>
-                    
+                    <h5> {{ post.title }} - By: {{ post.username }}</h5>
                 </div>
                 <div class="post-body">
                     <p>{{ post.body }}</p>
@@ -82,7 +78,7 @@
                                         placeholder="Username"> <br>
                                     <input id="logPassword" class="form-control" type="password" name="password"
                                         placeholder="Password"> <br>
-                                    <button type="submit">Log in</button>
+                                    <button>Log in</button>
                                 </form>
                             </div>
                             <div class="col-md-6 col-md-offset-3">
@@ -96,7 +92,7 @@
                                     <br>
                                     <input id="addPassword" class="form-control" type="password" name="password"
                                         placeholder="Password"> <br>
-                                    <button type="submit">Sign Up</button>
+                                    <button>Sign Up</button>
                                 </form>
                             </div>
                         </div>
@@ -122,14 +118,12 @@
                     $("#loginModal").modal("show");
                 },
                 startTopic(){
-                    try{
-                        let post = {
-                        // we need username here lul
-                        body: $("#postBody").val(),
+                    let post = {
                         title: $("#postTitle").val(),
+                        body: $("#postBody").val(),
                     };
                     $.ajax({
-                        url: "/comment",
+                        url: "/post",
                         type: "POST",
                         data: post,
                         success: () => {
@@ -138,93 +132,16 @@
                                 self.post = jsondata;
                             });
                         },
-                        });
-                    }catch(err){
-                        console.log(err);
-                    }
-                },
-
-                // addProduct() {
-                //     var product = {
-                //         name: $("#addName").val(),
-                //         description: $("#addDescription").val(),
-                //         price: $("#addPrice").val(),
-                //         image: $("#addImage").val()
-                //     };
-                    
-                //     $.ajax({
-                //         url: "/api/products",
-                //         type: "POST",
-                //         data: product,
-                //         success: () => {
-                //             var self = this;
-                //             $.getJSON("/api/products/", function (jsondata) {
-                //                 self.products = jsondata;
-                //                 $("#addModal").modal("hide");
-                //             });
-                //         },
-                //     });
-                // },
-                // logInUser() {
-                //     let user = {
-                //         username: $("#logUsername").val()
-                //     }
-
-                //     $.ajax({
-                //         url : "/login",
-                //         type: "POST",
-                //         data: user,
-                //         success: () => {
-                //             var self = this;
-                //             $.getJSON("/user_data", (jsondata) =>{
-                //                 self.users = jsondata;
-                //             });
-                //         }
-                //     });
-                // },
-                printUser(){
-                    let this_user;
-                    try{
-                        $.ajax({
-                        url: "/getUser",
-                        type: "GET",
-                        success:  (user) =>{
-                            $("#test1").val(user.username);
-                        }
                     });
-                    }catch(err){
-                        console.log('Error finding user: ' + err);   
-                    }
-
-                    
-                },
-                // $.ajax({
-                //         url: "/api/products/" + id,
-                //         type: "GET",
-                //         success: (product) => {
-                //             $("#updateId").val(product.id);
-                //             $("#updateName").val(product.name);
-                //             $("#updateDescription").val(product.description);
-                //             $("#updatePrice").val(product.price);
-                //         },
-                //     });
-                //     $("#updateModal").modal("show");
-                // getUserFromDB(id){
-                //     $.ajax({
-                //         url: "/",
-                //         type: "GET",
-                //         dataType: "json",
-                //         success: (id) {
-
-                //         }
-                //     })
-                // }
-// };
+                }
             },
             mounted() {
                 var self = this;
                 $.getJSON("/posts", function (jsondata) {
                 self.posts = jsondata;
+                });
+                $.getJSON("/user_data", function (jsondata){
+                self.user = jsondata;
                 });
             },
         });

@@ -5,17 +5,13 @@ const router = express.Router();
 const passport = require("passport");
 const bcrypt = require("bcrypt");
 
-var user_id = null;
-
 router.get("/home", (req, res) => {
-    // console.log(req.user);
-    // console.log(req.isAuthenticated());
-    // console.log('hello');
+    console.log(req.user);
+    console.log(req.isAuthenticated());
     res.redirect("/index.html");
 });
 
 router.post("/login", async (req, res) => {
-    // console.log(req.body.username);
     try {
         const flag = await dbservice.getUserByUsername(req.body.username);
         if (!flag) {
@@ -24,8 +20,7 @@ router.post("/login", async (req, res) => {
             if (await bcrypt.compare(req.body.password, flag.password)) {
                 grabbedUserId = await dbservice.getUserId(flag.username);
                 req.login(grabbedUserId, (err) => {
-                    user_id = flag.id;
-                    // console.log(user_id);
+                    req.session.user = flag.username;
                     res.redirect("/home");
                 });
             } else {
@@ -48,6 +43,7 @@ router.post("/signup", async (req, res) => {
             password: hashPW,
         };
         await dbservice.addUser(user);
+        return user;
     } catch (err) {
         res.status(500).send(err);
     }
@@ -55,8 +51,8 @@ router.post("/signup", async (req, res) => {
 
 router.get("/user_data", async (req, res) => {
     try {
-        if (user_id != null) {
-            const loggedInUser = await dbservice.getUserById(user_id);
+        if (USER_NAME != null) {
+            const loggedInUser = await dbservice.getUserData(USER_NAME);
             res.send(loggedInUser);
         }
     } catch (err) {
@@ -64,22 +60,11 @@ router.get("/user_data", async (req, res) => {
     }
 });
 
-router.get("/getUser", async (req, res) =>{
-    try{
-            console.log('User id: ' + user_id);
-            const user = await dbservice.getUserById(user_id);
-            console.log('user in auth: ' + user.username);
-            return user;
-    }catch(err){
-        res.send('Error sending user: ' + err);
-    }
-});
-
 router.get("/logout", (req, res) => {
     req.logout();
     req.session.destroy();
-    user_id = null;
-    res.redirect("/home");
+    USER_NAME = null;
+    res.redirect("/index.html");
 });
 
 passport.serializeUser((grabbedUserId, done) => {

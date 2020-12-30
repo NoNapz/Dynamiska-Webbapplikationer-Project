@@ -3,19 +3,16 @@ const express = require("express");
 const dbservice = require("../../database");
 const router = express.Router();
 
-
-router.post('/comment', async (req, res) => {
-    // console.log(user_id);
+router.post('/post', async (req, res) => {
     try {
-        // user = await dbservice.getUserById();
         const topic = {
-            // postsID: req.body.postsid,
-            // userID: req.body.userid,
-            body: req.body.body,
-            title: req.body.title
+          username: USER_NAME,
+          title: req.body.title,
+          body: req.body.body
         };
+        console.log(topic);
         await dbservice.createPost(topic);
-        res.send(topic);
+        return topic;
     } catch (err) {
         res.send('Error sending commment');
     }
@@ -29,7 +26,5 @@ router.get("/posts", async (request, response) => {
     response.send(err);
   }
 });
-
-
 
 module.exports = router;
