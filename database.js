@@ -53,16 +53,50 @@ const getUserId = async (data) => {
 };
 
 const getUserById = async (data) => {
+    console.log('data: ' + data);
     try {
         const dbCon = await dbPromise();
         const user = await dbCon.get(
             "SELECT username, email, name, userType, id FROM users WHERE id = ?", 
             [data]
+            
         );
+        console.log('user: ' + user);
         return user;
     } catch (err) {
         throw new Error("Error getting User with ID: " + err);
     }
+};
+
+// TOPIC
+
+// * Add product to database
+const createPost = async (data) => {
+  try {
+    const dbCon = await dbPromise();
+    const post = await dbCon.run(
+      `INSERT INTO post (body , title) VALUES (?,?)`,
+      [data.body, data.title]
+    //   , userID
+    //   data.userID
+    );
+    return post;
+  } catch (err) {
+    throw new Error("Error adding Post to database: " + err);
+  }
+};
+
+// * Get all products from database
+const getPosts = async () => {
+  try {
+    const dbCon = await dbPromise();
+    const posts = await dbCon.all(
+      "SELECT * FROM post ORDER BY postID ASC"
+    );
+    return posts;
+  } catch (err) {
+    throw new Error("Error getting Comments from database: " + err);
+  }
 };
 
 // * EXPORT
@@ -72,5 +106,7 @@ module.exports = {
     getUserByUsername: getUserByUsername,
     getUserId: getUserId,
     getUserById: getUserById,
-    // * All comment exports
+    // * All Post exports
+    createPost: createPost,
+    getPosts: getPosts,
 };

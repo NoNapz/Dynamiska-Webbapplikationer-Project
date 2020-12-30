@@ -24,7 +24,7 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item active">
-                            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                            <a class="nav-link" @click="printUser()" href="#">Home</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="!#" @click.prevent="showloginsignup">Login/SignUp</a>
@@ -40,10 +40,32 @@
             </nav>
         </header>
         <main>
-
+        <form>
+            <input id="postTitle" class="form-control" type="text" name="post"
+                placeholder="Topic.."> <br>
+            <input id="postBody" class="form-control" type="text" name="postBody"
+                placeholder="Type here.."> <br>
+            <button >Start Topic</button>
+        </form>
+        <div>
+            <p id = "test1"></p>
+        </div>
+        <div id="posts">
+            <div v-for="post in posts" v-bind:key="post.id">
+                <div class="post-header">
+                    <h5> {{ post.title }}</h5>
+                    
+                </div>
+                <div class="post-body">
+                    <p>{{ post.body }}</p>
+                </div>
+                <div class="post-footer">
+                    <button class="Comment">Comment</button>
+                </div>
+            </div>
+        </div>
         </main>
         <footer>
-
         </footer>
         <div class="modal fade" id="loginModal">
             <div class="modal-dialog">
@@ -92,23 +114,118 @@
         const vm = new Vue({
             el: "#app",
             data: {
+                posts: [],
+                user: {}
             },
             methods: {
                 showloginsignup() {
                     $("#loginModal").modal("show");
                 },
-                dynamicNav(){
-
-                },
-                getUser() {
+                startTopic(){
+                    try{
+                        let post = {
+                        // we need username here lul
+                        body: $("#postBody").val(),
+                        title: $("#postTitle").val(),
+                    };
                     $.ajax({
-                        url: '/getUser',
-                        type: 'GET',
-                        success: (user) => {
-                            $('#username').val(user.username);
-                        }
-                    })
+                        url: "/comment",
+                        type: "POST",
+                        data: post,
+                        success: () => {
+                            var self = this;
+                            $.getJSON("/posts", function (jsondata) {
+                                self.post = jsondata;
+                            });
+                        },
+                        });
+                    }catch(err){
+                        console.log(err);
+                    }
                 },
+
+                // addProduct() {
+                //     var product = {
+                //         name: $("#addName").val(),
+                //         description: $("#addDescription").val(),
+                //         price: $("#addPrice").val(),
+                //         image: $("#addImage").val()
+                //     };
+                    
+                //     $.ajax({
+                //         url: "/api/products",
+                //         type: "POST",
+                //         data: product,
+                //         success: () => {
+                //             var self = this;
+                //             $.getJSON("/api/products/", function (jsondata) {
+                //                 self.products = jsondata;
+                //                 $("#addModal").modal("hide");
+                //             });
+                //         },
+                //     });
+                // },
+                // logInUser() {
+                //     let user = {
+                //         username: $("#logUsername").val()
+                //     }
+
+                //     $.ajax({
+                //         url : "/login",
+                //         type: "POST",
+                //         data: user,
+                //         success: () => {
+                //             var self = this;
+                //             $.getJSON("/user_data", (jsondata) =>{
+                //                 self.users = jsondata;
+                //             });
+                //         }
+                //     });
+                // },
+                printUser(){
+                    let this_user;
+                    try{
+                        $.ajax({
+                        url: "/getUser",
+                        type: "GET",
+                        success:  (user) =>{
+                            $("#test1").val(user.username);
+                        }
+                    });
+                    }catch(err){
+                        console.log('Error finding user: ' + err);   
+                    }
+
+                    
+                },
+                // $.ajax({
+                //         url: "/api/products/" + id,
+                //         type: "GET",
+                //         success: (product) => {
+                //             $("#updateId").val(product.id);
+                //             $("#updateName").val(product.name);
+                //             $("#updateDescription").val(product.description);
+                //             $("#updatePrice").val(product.price);
+                //         },
+                //     });
+                //     $("#updateModal").modal("show");
+                // getUserFromDB(id){
+                //     $.ajax({
+                //         url: "/",
+                //         type: "GET",
+                //         dataType: "json",
+                //         success: (id) {
+
+                //         }
+                //     })
+                // }
+// };
+            },
+            mounted() {
+                var self = this;
+                $.getJSON("/posts", function (jsondata) {
+                self.posts = jsondata;
+                });
             },
         });
     </script>

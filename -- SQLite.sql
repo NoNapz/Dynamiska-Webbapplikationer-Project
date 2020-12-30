@@ -8,15 +8,15 @@ CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
 );
 
--- DROP TABLE IF EXISTS post;
--- CREATE TABLE if not EXISTS post(
---     PostID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
---     userID INTEGER NOT NULL,
---     information varchar(256) NOT NULL,
---     title varchar(256) NOT NULL,
---     likes INTEGER DEFAULT 0,
---     FOREIGN KEY (userID) REFERENCES users(userID)
--- );
+DROP TABLE IF EXISTS post;
+CREATE TABLE if not EXISTS post(
+    postID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+   -- userID INTEGER NOT NULL,
+    body varchar(256) NOT NULL,
+    title varchar(256) NOT NULL,
+    likes INTEGER DEFAULT 0
+    --FOREIGN KEY (userID) REFERENCES users(userID)
+);
 
 -- DROP TABLE IF EXISTS reply;
 -- CREATE TABLE if not EXISTS reply(
