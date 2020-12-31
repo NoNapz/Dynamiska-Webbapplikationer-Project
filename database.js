@@ -9,7 +9,7 @@ const dbPromise = async () => {
         driver: sqlite3.Database,
     });
 };
-
+/**************** USER ****************/
 // * ADD USER TO DB
 const addUser = async (data) => {
     try {
@@ -65,7 +65,7 @@ const getUserData = async (data) => {
     }
 };
 
-// TOPIC
+/********************* POST ************************/
 
 // * Add product to database
 const createPost = async (data) => {
@@ -86,7 +86,7 @@ const getPosts = async () => {
     try {
         const dbCon = await dbPromise();
         const posts = await dbCon.all(
-            "SELECT * FROM post ORDER BY postID ASC"
+            "SELECT * FROM post ORDER BY postID DESC"
         );
         return posts;
     } catch (err) {
@@ -94,6 +94,59 @@ const getPosts = async () => {
     }
 };
 
+// * Get product by id from database
+const getPostByID = async (id) => {
+  try {
+    const dbCon = await dbPromise();
+    const post = await dbCon.get(
+      "SELECT * FROM post WHERE postID = ?",
+      [id]
+    );
+    return post;
+  } catch (err) {
+    throw new Error("Error getting Products by ID: " + err);
+  }
+};
+
+/********************* REPLY **************************/
+const createReply = async (data) =>{
+    try {
+        console.log('postID: ' + data.postID);
+        const dbCon = await dbPromise();
+        const reply = await dbCon.run(
+            `INSERT INTO reply (postID, username, reply) VALUES (?,?,?)`,
+            [data.postID, data.username, data.reply]
+        );
+        return reply;
+    } catch (err) {
+        throw new Error("Error adding Post to database: " + err);
+    }
+}
+
+const getRepliesByPostID = async (data) =>{
+    console.log('Data?: ' + data);
+    try {
+        const dbCon = await dbPromise();
+        const replies = await dbCon.get(
+            `SELECT * FROM reply WHERE postID = ?`, [data]
+        );
+        return replies;
+    } catch (err) {
+        throw new Error("Error getting shitaced XD from database: " + err);
+    }
+}
+
+const getReplies = async ()=>{
+    try {
+        const dbcon = await dbPromise();
+        const replies = await dbcon.all(
+            "SELECT * FROM reply ORDER BY replyID DESC"
+        );
+        return replies;
+    } catch(err){
+        console.log('Fuck you: ' + err);
+    }
+}
 // * EXPORT
 module.exports = {
     // * All user exports
@@ -104,4 +157,9 @@ module.exports = {
     // * All Post exports
     createPost: createPost,
     getPosts: getPosts,
+    getPostByID: getPostByID,
+    // * All Reply exports
+    createReply: createReply,
+    getRepliesByPostID: getRepliesByPostID,
+    getReplies : getReplies
 };

@@ -3,12 +3,13 @@ const express = require("express");
 const dbservice = require("../../database");
 const router = express.Router();
 
+// * Post a topic.
 router.post('/post', async (req, res) => {
     try {
         const topic = {
-          username: USER_NAME,
-          title: req.body.title,
-          body: req.body.body
+            username: USER_NAME,
+            title: req.body.title,
+            body: req.body.body
         };
         console.log(topic);
         await dbservice.createPost(topic);
@@ -18,13 +19,31 @@ router.post('/post', async (req, res) => {
     }
 });
 
-router.get("/posts", async (request, response) => {
+// * Get post by id
+router.get("/post/:id", async (req, res) => {
+  const paramID = req.params.id;
   try {
-    const posts = await dbservice.getPosts();
-    response.send(posts);
+    const found = await dbservice.getPostByID(paramID);
+    if (found) {
+      res.send(found);
+    } else {
+      res
+        .status(400)
+        .send({ ERROR: `Product with ID: ${paramID} does not exist.` });
+    }
   } catch (err) {
-    response.send(err);
+    res.send(err);
   }
+});
+
+// Get posts, get them all
+router.get("/posts", async (req, res) => {
+    try {
+        const posts = await dbservice.getPosts();
+        res.send(posts);
+    } catch (err) {
+        res.send(err);
+    }
 });
 
 module.exports = router;

@@ -56,8 +56,40 @@
                     <p>{{ post.body }}</p>
                 </div>
                 <div class="post-footer">
-                    <button class="Comment">Comment</button>
+                    <button class="Comment" v-on:click="showReplyModal(post.postID)">View/Reply</button>
                 </div>
+                <!-- Reply Modal -->
+                <div class="modal fade" id="replyModal">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="post-title"></h5>
+                                <p id="post-author"></p>
+                                <p id="post-id"></p>
+                            </div>
+                            <div class="modal-body">
+                                <!-- show every comment -->
+                                <div v-for="reply in replies">
+                                    <h5> {{ reply.username }}</h5>
+                                    <p> {{ reply.reply }}</p>
+                                </div>
+                                <!-- Topic -->
+                                <p id="post-body"></p>
+                                <!-- Replies -->
+                                <div class="row">
+                                    <div class="col-md-6 col-md-offset-3">
+                                        <form>
+                                            <textarea name="reply" id="reply-body" cols="60" rows="5"></textarea>
+                                            <button class="btn btn-primary" v-on:click="makeReply()">Submit</button>
+                                        </form>
+                                        <!-- v-on:click tassarna  -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Reply Modal -->
             </div>
         </div>
         </main>
@@ -111,11 +143,26 @@
             el: "#app",
             data: {
                 posts: [],
-                user: {}
+                user: {},
+                replies: []
             },
             methods: {
                 showloginsignup() {
                     $("#loginModal").modal("show");
+                },
+                showReplyModal(id){
+                    $("#replyModal").modal("show");
+                    $.ajax({
+                        url: "/post/" + id,
+                        type: "GET",
+                        success : (post) =>{
+                            $('#post-id').html(post.postID);
+                            $('#post-author').html(post.username);                        
+                            $('#post-title').html(post.title);                       
+                            $('#post-body').html(post.body);                     
+                        }
+                    });
+                    this.getReplies(id);
                 },
                 startTopic(){
                     let post = {
@@ -125,24 +172,44 @@
                     $.ajax({
                         url: "/post",
                         type: "POST",
-                        data: post,
-                        success: () => {
-                            var self = this;
-                            $.getJSON("/posts", function (jsondata) {
-                                self.post = jsondata;
-                            });
-                        },
+                        data: post
                     });
+                },
+                makeReply(){
+                    let reply = {
+                        postID: $("#post-id").html(),
+                        reply: $("#reply-body").val()
+                    }
+                    $.ajax({
+                        url: "/reply",
+                        type: "POST",
+                        data: reply
+                    });
+                },
+                getReplies(postID){
+                    // let replies = []
+                    $.ajax({
+                        url: "/reply",
+                        type: "GET",
+                        success: (replies)=>{
+                            var self = this;
+                            $.getJSON("/reply", function (jsondata){
+                                self.replies = jsondata;
+                            });
+                        }
+                    })
                 }
+
             },
             mounted() {
                 var self = this;
                 $.getJSON("/posts", function (jsondata) {
                 self.posts = jsondata;
-                });
-                $.getJSON("/user_data", function (jsondata){
-                self.user = jsondata;
-                });
+                }).then(
+                    $.getJSON("/replies", function (jsondata){
+                    self.replies = jsondata;
+                    })
+                );
             },
         });
     </script>
