@@ -95,17 +95,45 @@ const getPosts = async () => {
 };
 
 // * Get product by id from database
-const getPostByID = async (id) => {
+const getPostByID = async (postID) => {
   try {
     const dbCon = await dbPromise();
     const post = await dbCon.get(
       "SELECT * FROM post WHERE postID = ?",
-      [id]
+      [postID]
     );
     return post;
   } catch (err) {
-    throw new Error("Error getting Products by ID: " + err);
+    throw new Error("Error getting Post by ID: " + err);
   }
+};
+
+const likePost = async (data) => {
+    try {
+        const dbCon = await dbPromise();
+        const like = await dbCon.run(
+          `INSERT INTO likePost (username, postID) VALUES (?,?)
+            `,
+          [data.username, data.postID]
+        //   WHERE NOT EXIST (SELECT * FROM likePost WHERE username = ? and postID = ?)
+        );
+        return like;
+    } catch (err) {
+        throw new Error("Error adding like to Post: " + err);
+    }
+};
+
+const addPostLikes = async (postID) => {
+    try {
+        const dbCon = await dbPromise();
+        const addLike = await dbCon.get(
+            `UPDATE post SET likes = likes + 1 WHERE postID = ?`,
+            [postID]
+        );
+        return addLike;
+    } catch (err) {
+
+    }
 };
 
 /********************* REPLY **************************/
@@ -124,12 +152,13 @@ const createReply = async (data) =>{
 }
 
 const getRepliesByPostID = async (data) =>{
-    console.log('Data?: ' + data);
+    console.log('Data: ' + data);
     try {
         const dbCon = await dbPromise();
         const replies = await dbCon.get(
-            `SELECT * FROM reply WHERE postID = ?`, [data]
+            `SELECT *  FROM reply WHERE postID like ?`, [data]
         );
+        console.log(replies);
         return replies;
     } catch (err) {
         throw new Error("Error getting shitaced XD from database: " + err);
@@ -158,6 +187,8 @@ module.exports = {
     createPost: createPost,
     getPosts: getPosts,
     getPostByID: getPostByID,
+    likePost: likePost,
+    addPostLikes: addPostLikes,
     // * All Reply exports
     createReply: createReply,
     getRepliesByPostID: getRepliesByPostID,

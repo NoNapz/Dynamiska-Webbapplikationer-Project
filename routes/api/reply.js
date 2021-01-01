@@ -19,13 +19,11 @@ router.post('/reply', async (req, res) => {
     }
 });
 
-router.get('/reply', async (req, res) => {
-    console.log('postID: ' + req.body.postID);
+router.get('/reply/:postID', async (req, res) => {
+    const paramID = req.params.postID;
     try{
-        const replies = await dbservice.getRepliesByPostID(req.body.postID);
+        const replies = await dbservice.getRepliesByPostID(paramID);
         res.send(replies);
-        return replies;
-        
     }catch(err){
         console.log('Problem getting replies: ' + err);
     }

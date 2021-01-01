@@ -55,6 +55,11 @@
                 <div class="post-body">
                     <p>{{ post.body }}</p>
                 </div>
+                <div>
+                    <button v-on:click="likePost(post.postID)" class="btn"><i class="fa fa-thumbs-up fa-lg" aria-hidden="true"></i></button>
+                    <button class="btn"><i class="fa fa-thumbs-down fa-lg" aria-hidden="true"></i></button>
+                    <span> {{ post.likes }} </span>
+                </div>
                 <div class="post-footer">
                     <button class="Comment" v-on:click="showReplyModal(post.postID)">View/Reply</button>
                 </div>
@@ -68,18 +73,17 @@
                                 <p id="post-id"></p>
                             </div>
                             <div class="modal-body">
-                                <!-- show every comment -->
-                                <div v-for="reply in replies">
-                                    <h5> {{ reply.username }}</h5>
-                                    <p> {{ reply.reply }}</p>
-                                </div>
                                 <!-- Topic -->
                                 <p id="post-body"></p>
+                                <div>
+                                    <h6 id="replyUsername"></h6>
+                                    <h6 id="replyComment">No reply yet.</h6>
+                                </div>
                                 <!-- Replies -->
                                 <div class="row">
                                     <div class="col-md-6 col-md-offset-3">
                                         <form>
-                                            <textarea name="reply" id="reply-body" cols="60" rows="5"></textarea>
+                                            <textarea name="reply" id="reply-body" cols="60" rows="3"></textarea>
                                             <button class="btn btn-primary" v-on:click="makeReply()">Submit</button>
                                         </form>
                                         <!-- v-on:click tassarna  -->
@@ -143,7 +147,6 @@
             el: "#app",
             data: {
                 posts: [],
-                user: {},
                 replies: []
             },
             methods: {
@@ -159,10 +162,19 @@
                             $('#post-id').html(post.postID);
                             $('#post-author').html(post.username);                        
                             $('#post-title').html(post.title);                       
-                            $('#post-body').html(post.body);                     
+                            $('#post-body').html(post.body);           
                         }
-                    });
-                    this.getReplies(id);
+                    }).then(
+                        $.ajax({
+                            url: "/reply/" + id,
+                            type: "GET",
+                            success: (reply) =>{
+                                $('#replyUsername').html(reply.username);
+                                $('#replyComment').html(reply.reply);
+                                console.log(reply.username);
+                            }
+                        })
+                    );
                 },
                 startTopic(){
                     let post = {
@@ -186,30 +198,18 @@
                         data: reply
                     });
                 },
-                getReplies(postID){
-                    // let replies = []
+                likePost(postID){
                     $.ajax({
-                        url: "/reply",
-                        type: "GET",
-                        success: (replies)=>{
-                            var self = this;
-                            $.getJSON("/reply", function (jsondata){
-                                self.replies = jsondata;
-                            });
-                        }
-                    })
-                }
-
+                        url: "/postLike/" + postID,
+                        type: "POST"
+                    });
+                },
             },
             mounted() {
                 var self = this;
                 $.getJSON("/posts", function (jsondata) {
                 self.posts = jsondata;
-                }).then(
-                    $.getJSON("/replies", function (jsondata){
-                    self.replies = jsondata;
-                    })
-                );
+                });
             },
         });
     </script>

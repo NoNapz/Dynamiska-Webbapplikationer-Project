@@ -29,14 +29,14 @@ router.get("/post/:id", async (req, res) => {
     } else {
       res
         .status(400)
-        .send({ ERROR: `Product with ID: ${paramID} does not exist.` });
+        .send({ ERROR: `Post with ID: ${paramID} does not exist.` });
     }
   } catch (err) {
     res.send(err);
   }
 });
 
-// Get posts, get them all
+// * Get posts, get them all
 router.get("/posts", async (req, res) => {
     try {
         const posts = await dbservice.getPosts();
@@ -44,6 +44,23 @@ router.get("/posts", async (req, res) => {
     } catch (err) {
         res.send(err);
     }
+});
+
+// * LIKE POST
+router.post("/postlike/:id", async (req, res) => {
+  const paramID = req.params.id;
+  try {
+    const addLike = {
+      username: USER_NAME,
+      postID: paramID
+    };
+    console.log(addLike);
+    await dbservice.likePost(addLike);
+    await dbservice.addPostLikes(paramID);
+    return addLike;
+  } catch (err) {
+    res.send(err);
+  }
 });
 
 module.exports = router;

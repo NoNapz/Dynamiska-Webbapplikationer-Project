@@ -20,11 +20,21 @@ CREATE TABLE if not EXISTS post(
 DROP TABLE IF EXISTS reply;
 CREATE TABLE if not EXISTS reply(
     replyID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    postID INTEGER NOT NULL,
+    postID INTEGER UNIQUE NOT NULL,
     username varchar(64) NOT NULL,
     reply varchar(256) NOT NULL,
     likes INTEGER DEFAULT 0,
     FOREIGN KEY (postID) REFERENCES post(postID)
+);
+
+DROP TABLE IF EXISTS likePost;
+CREATE TABLE if not EXISTS likePost(
+    likeID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    username varchar(64) NOT NULL,
+    postID varchar(256),
+    replyID varchar(256),
+    FOREIGN KEY (postID) REFERENCES post(postID),
+    FOREIGN KEY (replyID) REFERENCES post(replyID)
 );
 
 INSERT INTO users (username, email, name, password, userType)
