@@ -34,7 +34,8 @@ CREATE TABLE if not EXISTS likePost(
     postID varchar(256),
     replyID varchar(256),
     FOREIGN KEY (postID) REFERENCES post(postID),
-    FOREIGN KEY (replyID) REFERENCES post(replyID)
+    FOREIGN KEY (replyID) REFERENCES post(replyID),
+    UNIQUE(username, postID) ON CONFLICT REPLACE
 );
 
 INSERT INTO users (username, email, name, password, userType)

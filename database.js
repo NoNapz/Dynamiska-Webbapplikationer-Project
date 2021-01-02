@@ -112,10 +112,8 @@ const likePost = async (data) => {
     try {
         const dbCon = await dbPromise();
         const like = await dbCon.run(
-          `INSERT INTO likePost (username, postID) VALUES (?,?)
-            `,
+          `INSERT INTO likePost (username, postID) VALUES (?,?)`,
           [data.username, data.postID]
-        //   WHERE NOT EXIST (SELECT * FROM likePost WHERE username = ? and postID = ?)
         );
         return like;
     } catch (err) {
@@ -126,9 +124,15 @@ const likePost = async (data) => {
 const addPostLikes = async (postID) => {
     try {
         const dbCon = await dbPromise();
-        const addLike = await dbCon.get(
-            `UPDATE post SET likes = likes + 1 WHERE postID = ?`,
+        const getLikes = await dbCon.all(
+            `SELECT * FROM likePost WHERE postID = ?`,
             [postID]
+        );
+        const likeAmount = getLikes.length;
+        console.log(likeAmount);
+        const addLike = await dbCon.get(
+            `UPDATE post SET likes = ? WHERE postID = ?`,
+            [likeAmount,postID]
         );
         return addLike;
     } catch (err) {
