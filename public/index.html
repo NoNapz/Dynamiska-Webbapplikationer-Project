@@ -81,7 +81,7 @@
                             </div>
                             <div class="modal-footer">
                                 <h1>Robins föötfettich </h1>
-                                <button class="btn btn-danger" id="delete-post" v-on:click="deletePost(post-id)">delete</button>
+                                <button class="btn btn-danger" id="delete-post" v-on:click="removePost">delete</button>
                             </div>
                         </div>
                     </div>
@@ -296,8 +296,21 @@
                         }
                     });
                 },
+                removePost(){
+                const id = $("#postID").html();
+                $.ajax({
+                    url: "/removeReplyOnPost/" + id,
+                    type: "DELETE"
+                });
+                $.ajax({
+                    url: "/removePost/" + id,
+                    type: "DELETE"
+                });
+            },
             
             },
+
+            
             mounted() {
                 var self = this;
                 $.getJSON("/posts", function (jsondata) {

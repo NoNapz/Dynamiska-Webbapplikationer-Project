@@ -67,6 +67,28 @@ const getUserData = async (data) => {
 
 /********************* POST ************************/
 
+
+
+
+
+
+
+
+
+
+// Delete post by ID
+const deletePostByID = async (data) =>{
+    try {
+        console.log(data);
+        const dbcon = await dbPromise();
+        const deletePost = await dbcon.get(
+            `DELETE FROM post WHERE postID = ?`, [data]
+        );
+    } catch (err) {
+        throw new Error ('Error: ' + err);
+    }
+};
+
 // * Add product to database
 const createPost = async (data) => {
     try {
@@ -156,7 +178,34 @@ const getLikes = async (postID) => {
     }
 };
 
+
+
 /********************* REPLY **************************/
+
+// Delete reply by postID
+const deleteReplyByPostID = async (data) =>{
+    try{
+        const dbcon = await dbPromise();
+        const deleteReplyByPostID = await dbcon.get(
+            `DELETE FROM reply WHERE postID = ?`, [data]
+        )
+    } catch (err){
+        throw new Error ('Error from database.js:' + err);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 const createReply = async (data) => {
     try {
         const dbCon = await dbPromise();
@@ -269,6 +318,7 @@ module.exports = {
     likePost: likePost,
     getLikes: getLikes,
     removePostLike: removePostLike,
+    deletePostByID: deletePostByID,
     // * All Reply exports
     createReply: createReply,
     getRepliesByPostID: getRepliesByPostID,
@@ -276,5 +326,6 @@ module.exports = {
     getReplies: getReplies,
     likeReply: likeReply,
     removeReplyLike: removeReplyLike,
-    getReplyLikes: getReplyLikes
+    getReplyLikes: getReplyLikes,
+    deleteReplyByPostID: deleteReplyByPostID,
 };

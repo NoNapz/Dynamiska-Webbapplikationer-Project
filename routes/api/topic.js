@@ -1,6 +1,7 @@
 const { request, response } = require("express");
 const express = require("express");
 const dbservice = require("../../database");
+const { route } = require("./reply");
 const router = express.Router();
 
 // * Post a topic.
@@ -55,7 +56,7 @@ router.post("/postlike/:id", async (req, res) => {
       username: USER_NAME,
       postID: paramID
     };
-    console.log("User: " + USER_NAME + ", -- LIKED POST: " + paramID);
+    console.log(addLike);
     await dbservice.likePost(addLike);
     return addLike;
   } catch (err) {
@@ -70,11 +71,21 @@ router.get("/postdislike/:id", async (req, res) =>{
       username : USER_NAME,
       postID : paramID
     };
-    console.log("User: " + USER_NAME + ", -- DISLIKED POST: " + paramID);
+    console.log(dislike);
     await dbservice.removePostLike(dislike);
     return dislike;
   }catch(err){
     console.log('Error: ' + err);
+  }
+});
+
+router.delete("/removePost/:id", async (req, res) =>{
+  const found = req.params.id;
+  console.log(found);
+  try{
+    await dbservice.deletePostByID(found);
+  }catch(err) {
+    console.log('Error from topic.js: ' + err);
   }
 });
 
