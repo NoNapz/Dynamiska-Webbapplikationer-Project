@@ -59,7 +59,9 @@ router.get("/user_data", async (req, res) => {
         res.send(err);
     }
 });
-
+router.get("/getUser"), (req, res) => {
+    return USEN_NAME;
+}
 router.get("/logout", (req, res) => {
     req.logout();
     req.session.destroy();

@@ -21,15 +21,14 @@ router.post('/reply', async (req, res) => {
 
 router.get('/reply/:postID', async (req, res) => {
     const paramID = req.params.postID;
-    try{
+    try {
         const replies = await dbservice.getRepliesByPostID(paramID);
         res.send(replies);
-    }catch(err){
+        return replies;
+    } catch (err) {
         console.log('Problem getting replies: ' + err);
     }
 });
-
-
 
 router.get("/replies", async (req, res) => {
     try {
@@ -40,5 +39,34 @@ router.get("/replies", async (req, res) => {
     }
 });
 
+router.post("/replylike/:id", async (req, res) => {
+    const paramID = req.params.id;
+    try {
+        const addLike = {
+            username: USER_NAME,
+            replyID: paramID,
+        };
+        console.log(addLike);
+        await dbservice.likeReply(addLike);
+        return addLike;
+    } catch (err) {
+        res.send(err);
+    }
+});
+
+router.get("/replydislike/:id", async (req, res) => {
+    const paramID = req.params.id;
+    try {
+        const dislike = {
+            username: USER_NAME,
+            replyID: paramID,
+        };
+        console.log(dislike);
+        await dbservice.removeReplyLike(dislike);
+        return dislike;
+    } catch (err) {
+        console.log("Error: " + err);
+    }
+});
 
 module.exports = router;

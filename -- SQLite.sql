@@ -20,7 +20,7 @@ CREATE TABLE if not EXISTS post(
 DROP TABLE IF EXISTS reply;
 CREATE TABLE if not EXISTS reply(
     replyID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    postID INTEGER UNIQUE NOT NULL,
+    postID INTEGER NOT NULL,
     username varchar(64) NOT NULL,
     reply varchar(256) NOT NULL,
     likes INTEGER DEFAULT 0,
@@ -36,6 +36,7 @@ CREATE TABLE if not EXISTS likePost(
     FOREIGN KEY (postID) REFERENCES post(postID),
     FOREIGN KEY (replyID) REFERENCES post(replyID),
     UNIQUE(username, postID) ON CONFLICT REPLACE
+    UNIQUE(username, replyID) ON CONFLICT REPLACE
 );
 
 INSERT INTO users (username, email, name, password, userType)

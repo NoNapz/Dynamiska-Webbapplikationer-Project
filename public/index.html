@@ -57,11 +57,34 @@
                 </div>
                 <div>
                     <button v-on:click="likePost(post.postID)" type="submit" class="btn"><i class="fa fa-thumbs-up fa-lg" aria-hidden="true"></i></button>
-                    <button class="btn"><i class="fa fa-thumbs-down fa-lg" aria-hidden="true"></i></button>
-                    <span> {{ post.likes }} </span>
+                    <button class="btn" v-on:click="dislikePost(post.postID)"><i class="fa fa-thumbs-down fa-lg" aria-hidden="true"></i></button>
+                    <span id="postLikes">{{ post.likes }}</span>
                 </div>
                 <div class="post-footer">
+                    <button class="CRUD" v-on:click="showEditModal(post.postID)">Edit</button>
                     <button class="Comment" v-on:click="showReplyModal(post.postID)">View/Reply</button>
+                </div>
+                <!-- Edit Modal -->
+                <div class = "modal fade" id="editModal">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                Edit topic
+                            </div>
+                            <div class="modal-body">
+                                <div class="modal-body-top">
+                                    <input type="text" id="editTitle">
+                                    <p id = "postID"></p>
+                                </div>
+                                
+                                <textarea name="body-edit" id="bodyEdit" cols="60" rows="5"></textarea>
+                            </div>
+                            <div class="modal-footer">
+                                <h1>Robins föötfettich </h1>
+                                <button class="btn btn-danger" id="delete-post" v-on:click="deletePost(post-id)">delete</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <!-- Reply Modal -->
                 <div class="modal fade" id="replyModal">
@@ -76,8 +99,15 @@
                                 <!-- Topic -->
                                 <p id="post-body"></p>
                                 <div>
-                                    <h6 id="replyUsername"></h6>
-                                    <h6 id="replyComment">No reply yet.</h6>
+                                    <div v-for="reply in replies">
+                                        <h5>{{reply.username}}</h5>
+                                        <h5>{{reply.reply}}</h5>
+                                        <div id="replyButtons">
+                                            <button v-on:click="likeReply(reply.replyID)" class="btn" ><i class="fa fa-thumbs-up fa-lg" aria-hidden="true"></i></button>
+                                            <button v-on:click="dislikeReply(reply.replyID)" class="btn" ><i class="fa fa-thumbs-down fa-lg" aria-hidden="true"></i></button>
+                                            <span id="replyLikes">{{ reply.likes }}</span>
+                                        </div>
+                                    </div>
                                 </div>
                                 <!-- Replies -->
                                 <div class="row">
@@ -128,7 +158,7 @@
                                     <br>
                                     <input id="addPassword" class="form-control" type="password" name="password"
                                         placeholder="Password"> <br>
-                                    <button>Sign Up</button>
+                                    <button type="submit">Sign Up</button>
                                 </form>
                             </div>
                         </div>
@@ -147,13 +177,15 @@
             el: "#app",
             data: {
                 posts: [],
-                replies: []
+                replies: [],
+                currentUser: {}
             },
             methods: {
                 showloginsignup() {
                     $("#loginModal").modal("show");
                 },
                 showReplyModal(id){
+
                     $("#replyModal").modal("show");
                     $.ajax({
                         url: "/post/" + id,
@@ -162,19 +194,31 @@
                             $('#post-id').html(post.postID);
                             $('#post-author').html(post.username);                        
                             $('#post-title').html(post.title);                       
-                            $('#post-body').html(post.body);           
+                            $('#post-body').html(post.body);     
+                            $.ajax({
+                                url: "/reply/" + id,
+                                type: "GET",
+                                success: (reply) =>{
+                                    console.log('Singular reply?' + JSON.stringify(reply));
+                                    this.replies = reply;
+                                    console.log('This is the reply: ' + JSON.stringify(reply));
+                                    console.log(self.replies);
+                                }
+                            });    
                         }
-                    }).then(
-                        $.ajax({
-                            url: "/reply/" + id,
-                            type: "GET",
-                            success: (reply) =>{
-                                $('#replyUsername').html(reply.username);
-                                $('#replyComment').html(reply.reply);
-                                console.log(reply.username);
-                            }
-                        })
-                    );
+                    });
+                },
+                showEditModal(id){
+                    $("#editModal").modal("show");
+                    $.ajax({
+                        url: "/post/" + id,
+                        type: "GET",
+                        success: (post)=>{
+                            $('#postID').html(post.postID);
+                            $('#editTitle').html(post.title);
+                            $('#bodyEdit').html(post.body);
+                        }
+                    })
                 },
                 startTopic(){
                     let post = {
@@ -201,9 +245,58 @@
                 likePost(postID){
                     $.ajax({
                         url: "/postLike/" + postID,
-                        type: "POST"
+                        type: "POST",
+                        success: () => {
+                            this.getLikes(postID);
+                        }
                     });
                 },
+                getLikes(postID){
+                    $.ajax({
+                        url:"/post/" + postID,
+                        type: "GET",
+                        success: (postLikes) => {
+                            $("#postLikes").html(postLikes.likes);
+                        }
+                    });
+                },
+                dislikePost(postID){
+                    $.ajax({
+                        url: "/postdislike/" + postID,
+                        type: "GET",
+                        success: ()=>{
+                            this.getLikes(postID);
+                        }
+                    });
+                },
+                likeReply(replyID){
+                    $.ajax({
+                        url: "/replyLike/" + replyID,
+                        type: "POST",
+                        success: () => {
+                            this.getLikes(replyID);
+                        }
+                    });
+                },
+                getReplyLikes(replyID){
+                    $.ajax({
+                        url:"/reply/" + replyID,
+                        type: "GET",
+                        success: (replyLikes) => {
+                            $("#replyLikes").html(replyLikes.likes);
+                        }
+                    });
+                },
+                dislikeReply(replyID){
+                    $.ajax({
+                        url: "/replydislike/" + replyID,
+                        type: "GET",
+                        success: ()=>{
+                            this.getLikes(replyID);
+                        }
+                    });
+                },
+            
             },
             mounted() {
                 var self = this;

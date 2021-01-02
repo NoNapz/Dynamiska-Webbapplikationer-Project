@@ -26,6 +26,7 @@ router.get("/post/:id", async (req, res) => {
     const found = await dbservice.getPostByID(paramID);
     if (found) {
       res.send(found);
+      return found;
     } else {
       res
         .status(400)
@@ -56,11 +57,27 @@ router.post("/postlike/:id", async (req, res) => {
     };
     console.log(addLike);
     await dbservice.likePost(addLike);
-    await dbservice.addPostLikes(paramID);
     return addLike;
   } catch (err) {
     res.send(err);
   }
 });
+
+router.get("/postdislike/:id", async (req, res) =>{
+  const paramID = req.params.id;
+  try{
+    const dislike = {
+      username : USER_NAME,
+      postID : paramID
+    };
+    console.log(dislike);
+    await dbservice.removePostLike(dislike);
+    return dislike;
+  }catch(err){
+    console.log('Error: ' + err);
+  }
+});
+
+
 
 module.exports = router;

@@ -96,32 +96,47 @@ const getPosts = async () => {
 
 // * Get product by id from database
 const getPostByID = async (postID) => {
-  try {
-    const dbCon = await dbPromise();
-    const post = await dbCon.get(
-      "SELECT * FROM post WHERE postID = ?",
-      [postID]
-    );
-    return post;
-  } catch (err) {
-    throw new Error("Error getting Post by ID: " + err);
-  }
+    try {
+        const dbCon = await dbPromise();
+        const post = await dbCon.get(
+            "SELECT * FROM post WHERE postID = ?",
+            [postID]
+        );
+        return post;
+    } catch (err) {
+        throw new Error("Error getting Post by ID: " + err);
+    }
 };
 
 const likePost = async (data) => {
     try {
         const dbCon = await dbPromise();
         const like = await dbCon.run(
-          `INSERT INTO likePost (username, postID) VALUES (?,?)`,
-          [data.username, data.postID]
+            `INSERT INTO likePost (username, postID) VALUES (?,?)`,
+            [data.username, data.postID]
         );
+        await getLikes(data.postID);
         return like;
     } catch (err) {
         throw new Error("Error adding like to Post: " + err);
     }
 };
 
-const addPostLikes = async (postID) => {
+const removePostLike = async (data) => {
+    try {
+        const dbCon = await dbPromise();
+        const removeLike = await dbCon.get(
+            `DELETE FROM likePost WHERE postID = ? AND username = ?`,
+            [data.postID, data.username]
+        );
+        await getLikes(data.postID);
+        return removeLike;
+    } catch (err) {
+        throw new Error('Error post like: ' + err);
+    }
+};
+
+const getLikes = async (postID) => {
     try {
         const dbCon = await dbPromise();
         const getLikes = await dbCon.all(
@@ -130,18 +145,18 @@ const addPostLikes = async (postID) => {
         );
         const likeAmount = getLikes.length;
         console.log(likeAmount);
-        const addLike = await dbCon.get(
+        const updateLikes = await dbCon.get(
             `UPDATE post SET likes = ? WHERE postID = ?`,
-            [likeAmount,postID]
+            [likeAmount, postID]
         );
-        return addLike;
+        return updateLikes;
     } catch (err) {
-
+        throw new Error("Error showing likes on Post: " + err);
     }
 };
 
 /********************* REPLY **************************/
-const createReply = async (data) =>{
+const createReply = async (data) => {
     try {
         console.log('postID: ' + data.postID);
         const dbCon = await dbPromise();
@@ -155,31 +170,78 @@ const createReply = async (data) =>{
     }
 }
 
-const getRepliesByPostID = async (data) =>{
-    console.log('Data: ' + data);
+const getRepliesByPostID = async (data) => {
     try {
         const dbCon = await dbPromise();
-        const replies = await dbCon.get(
-            `SELECT *  FROM reply WHERE postID like ?`, [data]
+        const replies = await dbCon.all(
+            `SELECT * FROM reply WHERE postID like ?`, [data]
         );
-        console.log(replies);
         return replies;
     } catch (err) {
         throw new Error("Error getting shitaced XD from database: " + err);
     }
 }
 
-const getReplies = async ()=>{
+const getReplies = async () => {
     try {
         const dbcon = await dbPromise();
         const replies = await dbcon.all(
             "SELECT * FROM reply ORDER BY replyID DESC"
         );
         return replies;
-    } catch(err){
+    } catch (err) {
         console.log('Fuck you: ' + err);
     }
 }
+
+const likeReply = async (data) => {
+    try {
+        const dbCon = await dbPromise();
+        const like = await dbCon.run(
+            `INSERT INTO likePost (username, replyID) VALUES (?,?)`,
+            [data.username, data.replyID]
+        );
+        await getLikes(data.postID);
+        return like;
+    } catch (err) {
+        throw new Error("Error adding like to Post: " + err);
+    }
+};
+
+const removeReplyLike = async (data) => {
+    try {
+        const dbCon = await dbPromise();
+        const removeLike = await dbCon.get(
+            `DELETE FROM likePost WHERE replyID = ? AND username = ?`,
+            [data.replyID, data.username]
+        );
+        await getReplyLikes(data.postID);
+        return removeLike;
+    } catch (err) {
+        throw new Error("Error post like: " + err);
+    }
+};
+
+const getReplyLikes = async (replyID) => {
+    try {
+        const dbCon = await dbPromise();
+        const getLikes = await dbCon.all(
+            `SELECT * FROM likePost WHERE replyID = ?`,
+            [replyID]
+        );
+        const likeAmount = getLikes.length;
+        console.log(likeAmount);
+        const updateLikes = await dbCon.get(
+            `UPDATE reply SET likes = ? WHERE replyID = ?`,
+            [likeAmount, replyID]
+        );
+        return updateLikes;
+    } catch (err) {
+        throw new Error("Error showing likes on Post: " + err);
+    }
+};
+
+
 // * EXPORT
 module.exports = {
     // * All user exports
@@ -192,9 +254,13 @@ module.exports = {
     getPosts: getPosts,
     getPostByID: getPostByID,
     likePost: likePost,
-    addPostLikes: addPostLikes,
+    getLikes: getLikes,
+    removePostLike: removePostLike,
     // * All Reply exports
     createReply: createReply,
     getRepliesByPostID: getRepliesByPostID,
-    getReplies : getReplies
+    getReplies: getReplies,
+    likeReply: likeReply,
+    removeReplyLike: removeReplyLike,
+    getReplyLikes: getReplyLikes
 };
