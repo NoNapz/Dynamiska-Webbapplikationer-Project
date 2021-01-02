@@ -25,7 +25,6 @@ server.use(
 USER_NAME = null;
 server.use(function (req, res, next) {
     USER_NAME = req.session.user;
-    console.log("Username: " + req.session.user);
     next();
 });
 server.use(passport.initialize());

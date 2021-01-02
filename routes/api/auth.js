@@ -21,6 +21,7 @@ router.post("/login", async (req, res) => {
                 grabbedUserId = await dbservice.getUserId(flag.username);
                 req.login(grabbedUserId, (err) => {
                     req.session.user = flag.username;
+                    console.log('LOGGED IN AS:' + flag.username + ', -- SESSION STARTED -- ');
                     res.redirect("/home");
                 });
             } else {
@@ -42,6 +43,7 @@ router.post("/signup", async (req, res) => {
             name: req.body.name,
             password: hashPW,
         };
+        console.log(user);
         await dbservice.addUser(user);
         return user;
     } catch (err) {
@@ -63,6 +65,7 @@ router.get("/getUser"), (req, res) => {
     return USEN_NAME;
 }
 router.get("/logout", (req, res) => {
+    console.log("LOGGED OUT: " + USER_NAME + ", -- SESSION ENDED -- ");
     req.logout();
     req.session.destroy();
     USER_NAME = null;

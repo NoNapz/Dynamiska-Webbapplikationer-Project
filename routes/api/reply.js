@@ -6,12 +6,12 @@ const router = express.Router();
 
 router.post('/reply', async (req, res) => {
     try {
-        console.log('postID: ' + req.body.postID);
         const reply = {
             postID: req.body.postID,
             username: USER_NAME,
             reply: req.body.reply,
         };
+        console.log(reply);
         await dbservice.createReply(reply);
         return reply;
     } catch (err) {
@@ -26,7 +26,7 @@ router.get('/reply/:postID', async (req, res) => {
         res.send(replies);
         return replies;
     } catch (err) {
-        console.log('Problem getting replies: ' + err);
+        res.send('Problem getting replies on post: ' + err);
     }
 });
 
@@ -39,6 +39,23 @@ router.get("/replies", async (req, res) => {
     }
 });
 
+router.get("/replies/:id", async (req, res) => {
+  const paramID = req.params.id;
+  try {
+    const found = await dbservice.getRepliesByID(paramID);
+    if (found) {
+      res.send(found);
+      return found;
+    } else {
+      res
+        .status(400)
+        .send({ ERROR: `Reply with ID: ${paramID} does not exist.` });
+    }
+  } catch (err) {
+    res.send(err);
+  }
+});
+
 router.post("/replylike/:id", async (req, res) => {
     const paramID = req.params.id;
     try {
@@ -46,7 +63,7 @@ router.post("/replylike/:id", async (req, res) => {
             username: USER_NAME,
             replyID: paramID,
         };
-        console.log(addLike);
+        console.log("User: " + USER_NAME + ", -- LIKED REPLY: " + paramID);
         await dbservice.likeReply(addLike);
         return addLike;
     } catch (err) {
@@ -61,7 +78,7 @@ router.get("/replydislike/:id", async (req, res) => {
             username: USER_NAME,
             replyID: paramID,
         };
-        console.log(dislike);
+        console.log('User: ' + USER_NAME + ', -- DISLIKED REPLY: ' + paramID);
         await dbservice.removeReplyLike(dislike);
         return dislike;
     } catch (err) {

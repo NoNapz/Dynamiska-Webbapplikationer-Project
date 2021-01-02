@@ -55,7 +55,7 @@ router.post("/postlike/:id", async (req, res) => {
       username: USER_NAME,
       postID: paramID
     };
-    console.log(addLike);
+    console.log("User: " + USER_NAME + ", -- LIKED POST: " + paramID);
     await dbservice.likePost(addLike);
     return addLike;
   } catch (err) {
@@ -70,7 +70,7 @@ router.get("/postdislike/:id", async (req, res) =>{
       username : USER_NAME,
       postID : paramID
     };
-    console.log(dislike);
+    console.log("User: " + USER_NAME + ", -- DISLIKED POST: " + paramID);
     await dbservice.removePostLike(dislike);
     return dislike;
   }catch(err){

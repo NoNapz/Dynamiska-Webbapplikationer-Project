@@ -19,7 +19,7 @@ const addUser = async (data) => {
             VALUES (?,?,?,?)`,
             [data.username, data.email, data.name, data.password]
         );
-        console.log("Worked");
+        console.log("ADDED User: " + data.username + ", to DB");
         return user;
     } catch (err) {
         throw new Error("Error adding User to database: " + err);
@@ -75,6 +75,7 @@ const createPost = async (data) => {
             `INSERT INTO post (username, title, body) VALUES (?,?,?)`,
             [data.username, data.title, data.body]
         );
+        console.log(data.username + ' CREATED new post!');
         return post;
     } catch (err) {
         throw new Error("Error adding Post to database: " + err);
@@ -94,7 +95,7 @@ const getPosts = async () => {
     }
 };
 
-// * Get product by id from database
+// * Get post by id from database
 const getPostByID = async (postID) => {
     try {
         const dbCon = await dbPromise();
@@ -144,7 +145,7 @@ const getLikes = async (postID) => {
             [postID]
         );
         const likeAmount = getLikes.length;
-        console.log(likeAmount);
+        console.log('Current likes: ' + likeAmount + ', POST ID: ' + postID);
         const updateLikes = await dbCon.get(
             `UPDATE post SET likes = ? WHERE postID = ?`,
             [likeAmount, postID]
@@ -158,15 +159,15 @@ const getLikes = async (postID) => {
 /********************* REPLY **************************/
 const createReply = async (data) => {
     try {
-        console.log('postID: ' + data.postID);
         const dbCon = await dbPromise();
         const reply = await dbCon.run(
             `INSERT INTO reply (postID, username, reply) VALUES (?,?,?)`,
             [data.postID, data.username, data.reply]
         );
+        console.log(data.username + ' REPLIED on POST: ' + data.postID);
         return reply;
     } catch (err) {
-        throw new Error("Error adding Post to database: " + err);
+        throw new Error("Error adding Reply to database: " + err);
     }
 }
 
@@ -182,6 +183,18 @@ const getRepliesByPostID = async (data) => {
     }
 }
 
+const getRepliesByID = async (replyID) => {
+  try {
+    const dbCon = await dbPromise();
+    const reply = await dbCon.get("SELECT * FROM post WHERE replyID = ?", [
+      postID,
+    ]);
+    return reply;
+  } catch (err) {
+    throw new Error("Error getting Post by ID: " + err);
+  }
+};
+
 const getReplies = async () => {
     try {
         const dbcon = await dbPromise();
@@ -190,7 +203,7 @@ const getReplies = async () => {
         );
         return replies;
     } catch (err) {
-        console.log('Fuck you: ' + err);
+        console.log('Error getting replies: ' + err);
     }
 }
 
@@ -201,7 +214,7 @@ const likeReply = async (data) => {
             `INSERT INTO likePost (username, replyID) VALUES (?,?)`,
             [data.username, data.replyID]
         );
-        await getLikes(data.postID);
+        await getReplyLikes(data.replyID);
         return like;
     } catch (err) {
         throw new Error("Error adding like to Post: " + err);
@@ -215,7 +228,7 @@ const removeReplyLike = async (data) => {
             `DELETE FROM likePost WHERE replyID = ? AND username = ?`,
             [data.replyID, data.username]
         );
-        await getReplyLikes(data.postID);
+        await getReplyLikes(data.replyID);
         return removeLike;
     } catch (err) {
         throw new Error("Error post like: " + err);
@@ -230,14 +243,14 @@ const getReplyLikes = async (replyID) => {
             [replyID]
         );
         const likeAmount = getLikes.length;
-        console.log(likeAmount);
+        console.log("Current likes: " + likeAmount + ", REPLY ID:" + postID);
         const updateLikes = await dbCon.get(
             `UPDATE reply SET likes = ? WHERE replyID = ?`,
             [likeAmount, replyID]
         );
         return updateLikes;
     } catch (err) {
-        throw new Error("Error showing likes on Post: " + err);
+        throw new Error("Error showing likes on Reply: " + err);
     }
 };
 
@@ -259,6 +272,7 @@ module.exports = {
     // * All Reply exports
     createReply: createReply,
     getRepliesByPostID: getRepliesByPostID,
+    getRepliesByID: getRepliesByID,
     getReplies: getReplies,
     likeReply: likeReply,
     removeReplyLike: removeReplyLike,

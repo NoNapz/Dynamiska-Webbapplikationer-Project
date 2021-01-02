@@ -271,16 +271,16 @@
                 },
                 likeReply(replyID){
                     $.ajax({
-                        url: "/replyLike/" + replyID,
+                        url: "/replylike/" + replyID,
                         type: "POST",
                         success: () => {
-                            this.getLikes(replyID);
+                            this.getReplyLikes(replyID);
                         }
                     });
                 },
                 getReplyLikes(replyID){
                     $.ajax({
-                        url:"/reply/" + replyID,
+                        url:"/replies/" + replyID,
                         type: "GET",
                         success: (replyLikes) => {
                             $("#replyLikes").html(replyLikes.likes);
@@ -292,7 +292,7 @@
                         url: "/replydislike/" + replyID,
                         type: "GET",
                         success: ()=>{
-                            this.getLikes(replyID);
+                            this.getReplyLikes(replyID);
                         }
                     });
                 },
