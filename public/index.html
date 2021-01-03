@@ -50,10 +50,10 @@
         <div id="posts">
             <div v-for="post in posts" v-bind:key="post.id">
                 <div class="post-header">
-                    <h5> {{ post.title }} - By: {{ post.username }}</h5>
+                    <h5> <span id="postTitleSpan">{{ post.title }}</span> - By: <span id="postUsername">{{ post.username }}</span></h5>
                 </div>
                 <div class="post-body">
-                    <p>{{ post.body }}</p>
+                    <p id="postBodySpan">{{ post.body }}</p>
                 </div>
                 <div>
                     <button v-on:click="likePost(post.postID)" type="submit" class="btn"><i class="fa fa-thumbs-up fa-lg" aria-hidden="true"></i></button>
@@ -81,7 +81,8 @@
                             </div>
                             <div class="modal-footer">
                                 <h1>Robins föötfettich </h1>
-                                <button class="btn btn-danger" id="delete-post" v-on:click="removePost">delete</button>
+                                <button class="btn btn-primary" id="updatePost" v-on:click="updatePost">Update</button>
+                                <button class="btn btn-danger" id="delete-post" v-on:click="removePost">Delete</button>
                             </div>
                         </div>
                     </div>
@@ -215,7 +216,7 @@
                         type: "GET",
                         success: (post)=>{
                             $('#postID').html(post.postID);
-                            $('#editTitle').html(post.title);
+                            $('#editTitle').val(post.title);
                             $('#bodyEdit').html(post.body);
                         }
                     })
@@ -295,6 +296,22 @@
                             this.getReplyLikes(replyID);
                         }
                     });
+                },
+                updatePost(){
+                    const postEdit = {
+                        postID:  $('#postID').html(),
+                        postTitle: $('#editTitle').val(),
+                        postBody: $('#bodyEdit').html()
+                    }
+                    $.ajax({
+                        url: "/updatePostByID/" + postEdit.postID,
+                        type: "PUT",
+                        data: postEdit,
+                        success: (post)=>{
+                            $("#postTitleSpan").html(post.postTitle);
+                            $("#postBodySpan").html(post.postBody);
+                        }
+                    })
                 },
                 removePost(){
                 const id = $("#postID").html();

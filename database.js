@@ -88,6 +88,17 @@ const deletePostByID = async (data) =>{
         throw new Error ('Error: ' + err);
     }
 };
+const updatePostByID = async(data)=>{
+    try{
+        console.log('Data in db: '+ JSON.stringify(data));
+        const dbcon = await dbPromise();
+        const updatePost = await dbcon.get(
+            "UPDATE post SET title=?, body=? WHERE postID = ?", [data.postTitle, data.postBody, data.postID]
+        );
+    }catch(err){
+        throw new Error('Error: ' + err);
+    }
+}
 
 // * Add product to database
 const createPost = async (data) => {
@@ -319,6 +330,7 @@ module.exports = {
     getLikes: getLikes,
     removePostLike: removePostLike,
     deletePostByID: deletePostByID,
+    updatePostByID: updatePostByID,
     // * All Reply exports
     createReply: createReply,
     getRepliesByPostID: getRepliesByPostID,
