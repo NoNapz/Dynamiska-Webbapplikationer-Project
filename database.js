@@ -292,7 +292,7 @@ const getReplyLikes = async (replyID) => {
             [replyID]
         );
         const likeAmount = getLikes.length;
-        console.log("Current likes: " + likeAmount + ", REPLY ID:" + postID);
+        console.log("Current likes: " + likeAmount + ", REPLY ID:" + replyID);
         const updateLikes = await dbCon.get(
             `UPDATE reply SET likes = ? WHERE replyID = ?`,
             [likeAmount, replyID]
