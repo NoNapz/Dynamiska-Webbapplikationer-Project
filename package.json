@@ -23,6 +23,7 @@
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "nodemon": "^2.0.6",
+    "passport": "^0.4.1",
     "sqlite": "^4.0.18",
     "sqlite3": "^5.0.0"
   }

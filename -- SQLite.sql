@@ -10,24 +10,33 @@ CREATE TABLE IF NOT EXISTS users (
 
 DROP TABLE IF EXISTS post;
 CREATE TABLE if not EXISTS post(
-    PostID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    userID INTEGER NOT NULL,
-    information varchar(256) NOT NULL,
+    postID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    username varchar(64) NOT NULL,
     title varchar(256) NOT NULL,
-    likes INTEGER DEFAULT 0,
-    FOREIGN KEY (userID) REFERENCES users(userID)
+    body varchar(256) NOT NULL,
+    likes INTEGER DEFAULT 0
 );
 
 DROP TABLE IF EXISTS reply;
 CREATE TABLE if not EXISTS reply(
     replyID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    userID INTEGER NOT NULL,
-    Post_ID INTEGER NOT NULL,
-    information varchar(256) NOT NULL,
-    title varchar(256) NOT NULL,
+    postID INTEGER NOT NULL,
+    username varchar(64) NOT NULL,
+    reply varchar(256) NOT NULL,
     likes INTEGER DEFAULT 0,
-    FOREIGN KEY (userID) REFERENCES users(userID)
-    FOREIGN KEY (Post_ID) REFERENCES post(Post_ID)
+    FOREIGN KEY (postID) REFERENCES post(postID)
+);
+
+DROP TABLE IF EXISTS likePost;
+CREATE TABLE if not EXISTS likePost(
+    likeID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    username varchar(64) NOT NULL,
+    postID varchar(256),
+    replyID varchar(256),
+    FOREIGN KEY (postID) REFERENCES post(postID),
+    FOREIGN KEY (replyID) REFERENCES post(replyID),
+    UNIQUE(username, postID) ON CONFLICT REPLACE
+    UNIQUE(username, replyID) ON CONFLICT REPLACE
 );
 
 INSERT INTO users (username, email, name, password, userType)
