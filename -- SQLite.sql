@@ -39,6 +39,8 @@ CREATE TABLE if not EXISTS likePost(
     UNIQUE(username, replyID) ON CONFLICT REPLACE
 );
 
+SELECT replyID FROM reply WHERE postID = 6
+
 INSERT INTO users (username, email, name, password, userType)
 VALUES ('Tassarna', 'h19robhe@du.se', 'Robin Hellström', 12345, 'Super Admin');
 INSERT INTO users (username, email, name, password, userType)

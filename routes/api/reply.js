@@ -69,11 +69,11 @@ router.get("/replydislike/:id", async (req, res) => {
     }
 });
 
-router.delete("/removeReplyOnPost/:id", async (req, res) =>{
+router.delete("/removeReply/:id", async (req, res) =>{
     const paramID = req.params.id;
     console.log('post ID: '+ paramID);
     try{
-        await dbservice.deleteReplyByPostID(paramID);
+        await dbservice.deleteReply(paramID);
     }catch (err) {
         console.log('Error from reply.js: ' + err);
     }

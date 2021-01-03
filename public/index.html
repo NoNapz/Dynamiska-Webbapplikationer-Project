@@ -50,15 +50,17 @@
         <div id="posts">
             <div v-for="post in posts" v-bind:key="post.id">
                 <div class="post-header">
-                    <h5> <span id="postTitleSpan">{{ post.title }}</span> - By: <span id="postUsername">{{ post.username }}</span></h5>
+                    <h5> {{ post.title }} - By: {{ post.username }}</h5>
                 </div>
                 <div class="post-body">
-                    <p id="postBodySpan">{{ post.body }}</p>
+                    <p>{{ post.body }}</p>
                 </div>
                 <div>
-                    <button v-on:click="likePost(post.postID)" type="submit" class="btn"><i class="fa fa-thumbs-up fa-lg" aria-hidden="true"></i></button>
-                    <button class="btn" v-on:click="dislikePost(post.postID)"><i class="fa fa-thumbs-down fa-lg" aria-hidden="true"></i></button>
+                    <form>
+                    <button @click="likePost(post.postID)" type="submit" class="btn"><i class="fa fa-thumbs-up fa-lg" aria-hidden="true"></i></button>
+                    <button class="btn" @click="dislikePost(post.postID)" type="submit"><i class="fa fa-thumbs-down fa-lg" aria-hidden="true"></i></button>
                     <span id="postLikes">{{ post.likes }}</span>
+                    </form>
                 </div>
                 <div class="post-footer">
                     <button class="CRUD" v-on:click="showEditModal(post.postID)">Edit</button>
@@ -76,17 +78,21 @@
                                     <input type="text" id="editTitle">
                                     <p id = "postID"></p>
                                 </div>
-                                
+
                                 <textarea name="body-edit" id="bodyEdit" cols="60" rows="5"></textarea>
                             </div>
                             <div class="modal-footer">
                                 <h1>Robins föötfettich </h1>
+                                <!-- !! REMOVE/ EDIT-->
+                                <form>
                                 <button class="btn btn-primary" id="updatePost" v-on:click="updatePost">Update</button>
-                                <button class="btn btn-danger" id="delete-post" v-on:click="removePost">Delete</button>
+                                <button type="submit" class="btn btn-danger" id="delete-post" v-on:click="removePost">Delete</button>
+                                </form>
                             </div>
                         </div>
                     </div>
                 </div>
+                
                 <!-- Reply Modal -->
                 <div class="modal fade" id="replyModal">
                     <div class="modal-dialog">
@@ -103,10 +109,17 @@
                                     <div v-for="reply in replies">
                                         <h5>{{reply.username}}</h5>
                                         <h5>{{reply.reply}}</h5>
+                                        <p id="replyID">{{reply.replyID}}</p>
                                         <div id="replyButtons">
                                             <button v-on:click="likeReply(reply.replyID)" class="btn" ><i class="fa fa-thumbs-up fa-lg" aria-hidden="true"></i></button>
                                             <button v-on:click="dislikeReply(reply.replyID)" class="btn" ><i class="fa fa-thumbs-down fa-lg" aria-hidden="true"></i></button>
                                             <span id="replyLikes">{{ reply.likes }}</span>
+                                        </div>
+                                        <div class="replyCrud">
+                                            <!-- ? This is where the fun begins! ? -->
+                                                <button class="removeReply btn btn-danger" @click = "removeReply">Delete</button>
+                                                <button class="editReply btn btn-primary">Edit</button>
+
                                         </div>
                                     </div>
                                 </div>
@@ -193,9 +206,9 @@
                         type: "GET",
                         success : (post) =>{
                             $('#post-id').html(post.postID);
-                            $('#post-author').html(post.username);                        
-                            $('#post-title').html(post.title);                       
-                            $('#post-body').html(post.body);     
+                            $('#post-author').html(post.username);
+                            $('#post-title').html(post.title);
+                            $('#post-body').html(post.body);
                             $.ajax({
                                 url: "/reply/" + id,
                                 type: "GET",
@@ -205,7 +218,7 @@
                                     console.log('This is the reply: ' + JSON.stringify(reply));
                                     console.log(self.replies);
                                 }
-                            });    
+                            });
                         }
                     });
                 },
@@ -258,6 +271,9 @@
                         type: "GET",
                         success: (postLikes) => {
                             $("#postLikes").html(postLikes.likes);
+                            $.getJSON("/posts", function (jsondata) {
+                            self.posts = jsondata;
+                            });
                         }
                     });
                 },
@@ -301,7 +317,7 @@
                     const postEdit = {
                         postID:  $('#postID').html(),
                         postTitle: $('#editTitle').val(),
-                        postBody: $('#bodyEdit').html()
+                        postBody: $('#bodyEdit').val()
                     }
                     $.ajax({
                         url: "/updatePostByID/" + postEdit.postID,
@@ -314,20 +330,27 @@
                     })
                 },
                 removePost(){
-                const id = $("#postID").html();
-                $.ajax({
-                    url: "/removeReplyOnPost/" + id,
-                    type: "DELETE"
-                });
-                $.ajax({
-                    url: "/removePost/" + id,
-                    type: "DELETE"
-                });
-            },
-            
-            },
+                    const id = $("#postID").html();
+                    $.ajax({
+                        url: "/removePost/" + id,
+                        type: "DELETE",
+                        success: () => {
+                            $.getJSON("/posts", function (jsondata) {
+                            self.posts = jsondata;
+                            });
+                        }
+                    });
+                    $("#editModal").modal("hide");
+                },
+                removeReply(){
+                    const id = $("#replyID").html();
+                    $.ajax({
+                        url: "/removeReply/" + id,
+                        type: "DELETE",
+                    })
+                }
 
-            
+            },
             mounted() {
                 var self = this;
                 $.getJSON("/posts", function (jsondata) {

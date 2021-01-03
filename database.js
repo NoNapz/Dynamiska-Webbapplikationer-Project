@@ -81,13 +81,27 @@ const deletePostByID = async (data) =>{
     try {
         console.log(data);
         const dbcon = await dbPromise();
+
+
+        const wipeLikesOnReply = await dbcon.all(
+            `DELETE FROM likePost WHERE replyID in (SELECT replyID FROM reply WHERE postID = ?)`, [data]
+        )
+        const wipeLikesOnPost = await dbcon.all(
+            `DELETE FROM likePost WHERE postID = ?`, [data]
+        )
+        const deleteReplyOnPost = await dbcon.all(
+            `DELETE FROM reply WHERE postID = ?`, [data]
+        );
         const deletePost = await dbcon.get(
             `DELETE FROM post WHERE postID = ?`, [data]
         );
+        console.log('DELETED Replys, Likes and (on) POST: ' + data)
     } catch (err) {
         throw new Error ('Error: ' + err);
     }
 };
+
+
 const updatePostByID = async(data)=>{
     try{
         console.log('Data in db: '+ JSON.stringify(data));
@@ -95,6 +109,7 @@ const updatePostByID = async(data)=>{
         const updatePost = await dbcon.get(
             "UPDATE post SET title=?, body=? WHERE postID = ?", [data.postTitle, data.postBody, data.postID]
         );
+        return updatePost;
     }catch(err){
         throw new Error('Error: ' + err);
     }
@@ -194,28 +209,19 @@ const getLikes = async (postID) => {
 /********************* REPLY **************************/
 
 // Delete reply by postID
-const deleteReplyByPostID = async (data) =>{
+const deleteReply = async (data) =>{
     try{
         const dbcon = await dbPromise();
-        const deleteReplyByPostID = await dbcon.get(
+        const deleteLikesOnReply = await dbcon.get(
+            "DELETE FROM likePost WHERE postID = ?", [data]
+        )
+        const deleteReply = await dbcon.get(
             `DELETE FROM reply WHERE postID = ?`, [data]
         )
     } catch (err){
         throw new Error ('Error from database.js:' + err);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 const createReply = async (data) => {
     try {
@@ -314,6 +320,8 @@ const getReplyLikes = async (replyID) => {
     }
 };
 
+// const wipeLikesOnPost = async ()
+
 
 // * EXPORT
 module.exports = {
@@ -339,5 +347,5 @@ module.exports = {
     likeReply: likeReply,
     removeReplyLike: removeReplyLike,
     getReplyLikes: getReplyLikes,
-    deleteReplyByPostID: deleteReplyByPostID,
+    deleteReply: deleteReply,
 };
