@@ -14,7 +14,9 @@ CREATE TABLE if not EXISTS post(
     username varchar(64) NOT NULL,
     title varchar(256) NOT NULL,
     body varchar(256) NOT NULL,
-    likes INTEGER DEFAULT 0
+    category varchar(32) NOT NULL,
+    likes INTEGER DEFAULT 0,
+    created DATETIME DEFAULT (datetime('now','localtime'))
 );
 
 DROP TABLE IF EXISTS reply;
@@ -24,6 +26,7 @@ CREATE TABLE if not EXISTS reply(
     username varchar(64) NOT NULL,
     reply varchar(256) NOT NULL,
     likes INTEGER DEFAULT 0,
+    created DATETIME DEFAULT (datetime('now','localtime')),
     FOREIGN KEY (postID) REFERENCES post(postID)
 );
 

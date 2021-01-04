@@ -107,7 +107,7 @@ const updatePostByID = async(data)=>{
         console.log('Data in db: '+ JSON.stringify(data));
         const dbcon = await dbPromise();
         const updatePost = await dbcon.get(
-            "UPDATE post SET title=?, body=? WHERE postID = ?", [data.postTitle, data.postBody, data.postID]
+            "UPDATE post SET title=?, body=?, category=? WHERE postID = ?", [data.postTitle, data.postBody, data.postCategory, data.postID]
         );
         return updatePost;
     }catch(err){
@@ -120,8 +120,8 @@ const createPost = async (data) => {
     try {
         const dbCon = await dbPromise();
         const post = await dbCon.run(
-            `INSERT INTO post (username, title, body) VALUES (?,?,?)`,
-            [data.username, data.title, data.body]
+            `INSERT INTO post (username, title, body, category) VALUES (?,?,?,?)`,
+            [data.username, data.title, data.body, data.category]
         );
         console.log(data.username + ' CREATED new post!');
         return post;
@@ -213,11 +213,11 @@ const deleteReply = async (data) =>{
     try{
         const dbcon = await dbPromise();
         const deleteLikesOnReply = await dbcon.get(
-            "DELETE FROM likePost WHERE postID = ?", [data]
-        )
+            "DELETE FROM likePost WHERE replyID = ?", [data]
+        );
         const deleteReply = await dbcon.get(
-            `DELETE FROM reply WHERE postID = ?`, [data]
-        )
+            `DELETE FROM reply WHERE replyID = ?`, [data]
+        );
     } catch (err){
         throw new Error ('Error from database.js:' + err);
     }
@@ -320,6 +320,31 @@ const getReplyLikes = async (replyID) => {
     }
 };
 
+/**************** SORTING *****************/
+const sortByUser = async (user)=>{
+    try{
+        dbcon = await dbPromise();
+        const getPosts = await dbcon.all(
+            "SELECT * FROM post where username = ?",[user]
+        )
+        return getPosts
+    }catch(err){
+        throw new Error('Error: ' + err);
+    }
+}
+
+const sortByCategory = async (category)=>{
+    try{
+        dbcon = await dbPromise();
+        const getPosts = await dbcon.all(
+            "SELECT * FROM post where category = ?",[category]
+        )
+        return getPosts
+    }catch(err){
+        throw new Error('Error: ' + err);
+    }
+}
+
 // const wipeLikesOnPost = async ()
 
 
@@ -348,4 +373,7 @@ module.exports = {
     removeReplyLike: removeReplyLike,
     getReplyLikes: getReplyLikes,
     deleteReply: deleteReply,
+    // * Sorting Exports
+    sortByUser: sortByUser,
+    sortByCategory: sortByCategory
 };

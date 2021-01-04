@@ -49,16 +49,33 @@
                                 <input id="postTitle" class="form-control" type="text" name="title" placeholder="Topic..">
                             </div>
                             <div class="input-container">
+                                <label class="lable" for="postCategory">Chose a category: </label>
+                                <select name="category" id="postCategory">
+                                    <option value="Databases">Databases</option>
+                                    <option value="Algorithms">Algorithms</option>
+                                    <option value="Webb">Webb</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="input-container">
                                 <label name="body" class="lable">Content</label>
                                 <textarea name="reply" id="postBody" class="form-control" rows="3" placeholder="What do you need help with?.."></textarea>
                             </div>
                             <button v-on:click="startTopic" type="submit" class="btn btn-white">Create post</button>
                         </form>
                         <!-- !! MAYBE ADD SORTING HERE -->
+                        
                     </div>
                     <!-- * CREATE POST END -->
-
-                    <div class="col-sm-12 col-md-8">
+                    <div class="col-sm-12 col-md-8 pt-4">
+                        <form d-flex>
+                            <button class="btn btn-white" v-on:click.prevent="sortByUser">My Posts</button>
+                            <button class="btn btn-white" v-on:click.prevent="sortByCategory('Databases')">Databases</button>
+                            <button class="btn btn-white" v-on:click.prevent="sortByCategory('Algorithms')">Algorithms</button>
+                            <button class="btn btn-white" v-on:click.prevent="sortByCategory('Webb')">Webb</button>
+                            <button class="btn btn-white" v-on:click.prevent="sortByCategory('Other')">Other</button>
+                            <button class="btn btn-white">View All</button>
+                        </form>
                         <div>
                             <!-- !! POST SECTION GOES HERE LATER XD -->
                         </div>
@@ -74,11 +91,13 @@
             <div id="posts">
                 <div v-for="post in posts" v-bind:key="post.id">
                     <div class="post-header">
-                        <h5> {{ post.title }} - By: {{ post.username }}</h5>
+                        <h5> Title: {{ post.title }} - By: {{ post.username }}</h5>
                     </div>
+                    <span>Category: {{ post.category}}</span>
                     <div class="post-body">
                         <p>{{ post.body }}</p>
                     </div>
+                    <span>Created: {{ post.created }}</span>
                     <div>
                         <form>
                             <button @click="likePost(post.postID)" type="submit" class="btn"><i
@@ -101,19 +120,25 @@
                                 </div>
                                 <div class="modal-body">
                                     <div class="modal-body-top">
-                                        <input type="text" id="editTitle">
+                                        <input type="text" class="editTitle">
                                         <p id="postID"></p>
                                     </div>
-
+                                        <label class="lable" for="editCategory">Chose a category: </label>
+                                        <select name="category" id="editCategory">
+                                            <option value="Databases">Databases</option>
+                                            <option value="Algorithms">Algorithms</option>
+                                            <option value="Webb">Webb</option>
+                                            <option value="Other">Other</option>
+                                        </select>
                                     <textarea name="body-edit" id="bodyEdit" cols="60" rows="5"></textarea>
                                 </div>
                                 <div class="modal-footer">
                                     <h1>Robins föötfettich </h1>
                                     <!-- !! REMOVE/ EDIT-->
                                     <form>
-                                        <button class="btn btn-primary" id="updatePost"
+                                        <button class="btn btn-primary updatePost"
                                             v-on:click="updatePost">Update</button>
-                                        <button type="submit" class="btn btn-danger" id="delete-post"
+                                        <button type="submit" class="btn btn-danger delete-post"
                                             v-on:click="removePost">Delete</button>
                                     </form>
                                 </div>
@@ -138,6 +163,7 @@
                                             <h5>{{reply.username}}</h5>
                                             <h5>{{reply.reply}}</h5>
                                             <p id="replyID">{{reply.replyID}}</p>
+                                            <span> {{ reply.created }} </span>
                                             <div id="replyButtons">
                                                 <button v-on:click="likeReply(reply.replyID)" class="btn"><i
                                                         class="fa fa-thumbs-up fa-lg" aria-hidden="true"></i></button>
@@ -148,7 +174,7 @@
                                             <div class="replyCrud">
                                                 <!-- ? This is where the fun begins! ? -->
                                                 <button class="removeReply btn btn-danger"
-                                                    @click="removeReply">Delete</button>
+                                                    @click="removeReply(reply.replyID)">Delete</button>
                                                 <button class="editReply btn btn-primary">Edit</button>
 
                                             </div>
@@ -158,7 +184,7 @@
                                     <div class="row">
                                         <div class="col-md-6 col-md-offset-3">
                                             <form>
-                                                <textarea name="reply" id="reply-body" cols="60" rows="3"></textarea>
+                                                <textarea name="reply" class="reply-body" cols="60" rows="3"></textarea>
                                                 <button class="btn btn-primary" v-on:click="makeReply()">Submit</button>
                                             </form>
                                             <!-- v-on:click tassarna  -->
@@ -175,14 +201,14 @@
         </main>
         <footer>
         </footer>
-        <!--  FIXME: LOGIN / SIGNUP MODAL * STILL NEEDS WORK -->
+        <!-- * LOGIN / SIGNUP MODAL -->
         <div class="modal fade" id="loginModal">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="bs-example bs-example-tabs">
                         <ul id="myTab" class="nav nav-tabs">
-                            <li id="loginTab1" class="tab-design"><a href="#login" data-toggle="tab">Log In</a></li>
-                            <li id="signupTab2" class=" tab-design"><a href="#signup" data-toggle="tab">Sign Up</a></li>
+                            <li id="loginTab" class="tab-design"><a href="#login" data-toggle="tab">Log In</a></li>
+                            <li id="signupTab" class=" tab-design"><a href="#signup" data-toggle="tab">Sign Up</a></li>
                         </ul>
                     </div>
                     <div class="modal-body">
@@ -218,7 +244,7 @@
                                         <label class="lable">Password</label>
                                         <input id="addPassword" class="form-control" type="password" name="password">
                                     </div>
-                                    <button href="#login" class="btn btn-white">Sign Up</button>
+                                    <button href="#" class="btn btn-white">Sign Up</button>
                                 </form>
                             </div>
                         </div>
@@ -276,7 +302,7 @@
                         type: "GET",
                         success: (post) => {
                             $('#postID').html(post.postID);
-                            $('#editTitle').val(post.title);
+                            $('.editTitle').val(post.title);
                             $('#bodyEdit').html(post.body);
                         }
                     })
@@ -285,6 +311,7 @@
                     let post = {
                         title: $("#postTitle").val(),
                         body: $("#postBody").val(),
+                        category: $("#postCategory").val(),
                     };
                     $.ajax({
                         url: "/post",
@@ -295,7 +322,7 @@
                 makeReply() {
                     let reply = {
                         postID: $("#post-id").html(),
-                        reply: $("#reply-body").val()
+                        reply: $(".reply-body").val()
                     }
                     $.ajax({
                         url: "/reply",
@@ -363,8 +390,9 @@
                 updatePost() {
                     const postEdit = {
                         postID: $('#postID').html(),
-                        postTitle: $('#editTitle').val(),
-                        postBody: $('#bodyEdit').val()
+                        postTitle: $('.editTitle').val(),
+                        postBody: $('#bodyEdit').val(),
+                        postCategory: $('#editCategory').val()
                     }
                     $.ajax({
                         url: "/updatePostByID/" + postEdit.postID,
@@ -373,6 +401,7 @@
                         success: (post) => {
                             $("#postTitleSpan").html(post.postTitle);
                             $("#postBodySpan").html(post.postBody);
+                            $("#postCategory").val(post.category);
                         }
                     })
                 },
@@ -389,14 +418,31 @@
                     });
                     $("#editModal").modal("hide");
                 },
-                removeReply() {
-                    const id = $("#replyID").html();
+                removeReply(id) {
                     $.ajax({
                         url: "/removeReply/" + id,
                         type: "DELETE",
                     })
-                }
-
+                },
+                // TODO: Edit reply
+                sortByCategory(category) {
+                    $.ajax({
+                        url: "/sortByCategory/" + category,
+                        type: "GET", 
+                        success: (jsondata) =>{
+                            this.posts = jsondata;
+                        }
+                    });
+                },
+                sortByUser() {
+                    $.ajax({
+                        url: "/userPost",
+                        type: "GET",
+                        success: (jsondata) => {
+                            this.posts = jsondata;
+                        }
+                    });
+                },
             },
             mounted() {
                 var self = this;

@@ -45,6 +45,7 @@ router.post("/signup", async (req, res) => {
         };
         console.log(user);
         await dbservice.addUser(user);
+        res.redirect("/home");
         return user;
     } catch (err) {
         res.status(500).send(err);

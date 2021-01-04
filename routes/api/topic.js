@@ -10,7 +10,8 @@ router.post('/post', async (req, res) => {
         const topic = {
             username: USER_NAME,
             title: req.body.title,
-            body: req.body.body
+            body: req.body.body,
+            category: req.body.category
         };
         console.log(topic);
         await dbservice.createPost(topic);
@@ -97,6 +98,31 @@ router.put("/updatePostByID/:id", async (req, res) =>{
     await dbservice.updatePostByID(req.body);
   }catch(err){  
     console.log('Error updating post: ' + err);
+  }
+});
+
+router.get('/userPost', async (req, res) => {
+  try {
+    const username = USER_NAME;
+    const userPosts = await dbservice.sortByUser(username);
+    res.send(userPosts);
+    console.log(username + " viewing their posts");
+    return userPosts;
+  } catch(err) {
+    console.log("Error finding user posts: " + err);
+  }
+
+});
+
+router.get('/sortByCategory/:category', async (req, res) =>{
+  try{
+    const sortByCategory = req.params.category;
+    const categoryPosts = await dbservice.sortByCategory(sortByCategory);
+    res.send(categoryPosts);
+    console.log(USER_NAME + ' sorted posts by: ' + sortByCategory);
+    return categoryPosts;
+  }catch(err){
+    throw new Error('Error: ' + err);
   }
 })
 
