@@ -17,14 +17,14 @@
         <header>
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
                 <div class="container">
-                    <a class="navbar-brand" href="#"><img src="#" height="30" alt="TEMP"></a>
+                    <div class="brand"> Scuffed<span>&#45;</span>Flow <span>&#62; &#62;</span></div>
                     <ul class="navbar-nav ml-auto">
-                        <li class="nav-item active">
-                            <a class="nav-link" href="#signup" @click.prevent="showloginsignup"><i class="fa fa-user"></i>
-                                Login / Signup</a>
+                        <li class="nav-item" v-if="currentUser.username == undefined">
+                            <a class="nav-link" href="#signup" @click.prevent="showloginsignup">
+                                Login <span>&#47;</span> Signup  <i class="fa fa-user"></i></a>
                         </li>
-                        <li class="nav-item active">
-                            <a class="nav-link" href="/logout"><i class="fa fa-user"></i> Logout</a>
+                        <li class="nav-item" v-else="currentUser.username">
+                            <a class="nav-link" href="/logout">Logout  <i class="fa fa-user"></i></a>
                         </li>
                     </ul>
                 </div>
@@ -39,18 +39,23 @@
                     <!-- * CREATE POST START -->
                     <div class="col-sm-12 col-md-4 pt-4">
                         <div class="createPost_container">
-                            <h3 class="title_mini" >Ask Us</h3>
-                            <h2 class="title_big">We answer you</h2>
-                            <span class="underline"></span>
+                            <h2 class="title_big pb-2">
+                                <span v-if="currentUser.username == undefined">Guest</span>
+                                <span v-else="currentUser.username">{{ currentUser.username }}</span>
+                            </h2>
+                            <h3 class="title_mini" >
+                                <span v-if="currentUser.username == undefined">Login to ask.</span>
+                                <span v-else="currentUser.username">{{ currentUser.userType }}</span>
+                            </h3>
                         </div>
                         <form>
                             <div class="input-container">
                                 <label class="lable">Title</label>
                                 <input id="postTitle" class="form-control" type="text" name="title" placeholder="Topic..">
                             </div>
-                            <div class="input-container">
-                                <label class="lable" for="postCategory">Chose a category: </label>
-                                <select name="category" id="postCategory">
+                            <div class="input-container form-group">
+                                <label class="lable " for="postCategory">Chose a category: </label>
+                                <select name="category" class="form-control" id="postCategory">
                                     <option value="Databases">Databases</option>
                                     <option value="Algorithms">Algorithms</option>
                                     <option value="Webb">Webb</option>
@@ -100,11 +105,11 @@
                     <span>Created: {{ post.created }}</span>
                     <div>
                         <form>
-                            <button @click="likePost(post.postID)" type="submit" class="btn"><i
+                            <button @click="likePost(post.postID)" class="btn"><i
                                     class="fa fa-thumbs-up fa-lg" aria-hidden="true"></i></button>
-                            <button class="btn" @click="dislikePost(post.postID)" type="submit"><i
+                            <button class="btn" @click="dislikePost(post.postID)"><i
                                     class="fa fa-thumbs-down fa-lg" aria-hidden="true"></i></button>
-                            <span id="postLikes">{{ post.likes }}</span>
+                            <span id="postLikes"></span>
                         </form>
                     </div>
                     <div class="post-footer">
@@ -259,201 +264,7 @@
     <script src="http://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
-    <script>
-        const vm = new Vue({
-            el: "#app",
-            data: {
-                posts: [],
-                replies: [],
-                currentUser: {}
-            },
-            methods: {
-                showloginsignup() {
-                    $("#loginModal").modal("show");
-                },
-                showReplyModal(id) {
-
-                    $("#replyModal").modal("show");
-                    $.ajax({
-                        url: "/post/" + id,
-                        type: "GET",
-                        success: (post) => {
-                            $('#post-id').html(post.postID);
-                            $('#post-author').html(post.username);
-                            $('#post-title').html(post.title);
-                            $('#post-body').html(post.body);
-                            $.ajax({
-                                url: "/reply/" + id,
-                                type: "GET",
-                                success: (reply) => {
-                                    console.log('Singular reply?' + JSON.stringify(reply));
-                                    this.replies = reply;
-                                    console.log('This is the reply: ' + JSON.stringify(reply));
-                                    console.log(self.replies);
-                                }
-                            });
-                        }
-                    });
-                },
-                showEditModal(id) {
-                    $("#editModal").modal("show");
-                    $.ajax({
-                        url: "/post/" + id,
-                        type: "GET",
-                        success: (post) => {
-                            $('#postID').html(post.postID);
-                            $('.editTitle').val(post.title);
-                            $('#bodyEdit').html(post.body);
-                        }
-                    })
-                },
-                startTopic() {
-                    let post = {
-                        title: $("#postTitle").val(),
-                        body: $("#postBody").val(),
-                        category: $("#postCategory").val(),
-                    };
-                    $.ajax({
-                        url: "/post",
-                        type: "POST",
-                        data: post
-                    });
-                },
-                makeReply() {
-                    let reply = {
-                        postID: $("#post-id").html(),
-                        reply: $(".reply-body").val()
-                    }
-                    $.ajax({
-                        url: "/reply",
-                        type: "POST",
-                        data: reply
-                    });
-                },
-                likePost(postID) {
-                    $.ajax({
-                        url: "/postLike/" + postID,
-                        type: "POST",
-                        success: () => {
-                            this.getLikes(postID);
-                        }
-                    });
-                },
-                getLikes(postID) {
-                    $.ajax({
-                        url: "/post/" + postID,
-                        type: "GET",
-                        success: (postLikes) => {
-                            $("#postLikes").html(postLikes.likes);
-                            $.getJSON("/posts", function (jsondata) {
-                                self.posts = jsondata;
-                            });
-                        }
-                    });
-                },
-                dislikePost(postID) {
-                    $.ajax({
-                        url: "/postdislike/" + postID,
-                        type: "GET",
-                        success: () => {
-                            this.getLikes(postID);
-                        }
-                    });
-                },
-                likeReply(replyID) {
-                    $.ajax({
-                        url: "/replylike/" + replyID,
-                        type: "POST",
-                        success: () => {
-                            this.getReplyLikes(replyID);
-                        }
-                    });
-                },
-                getReplyLikes(replyID) {
-                    $.ajax({
-                        url: "/replies/" + replyID,
-                        type: "GET",
-                        success: (replyLikes) => {
-                            $("#replyLikes").html(replyLikes.likes);
-                        }
-                    });
-                },
-                dislikeReply(replyID) {
-                    $.ajax({
-                        url: "/replydislike/" + replyID,
-                        type: "GET",
-                        success: () => {
-                            this.getReplyLikes(replyID);
-                        }
-                    });
-                },
-                updatePost() {
-                    const postEdit = {
-                        postID: $('#postID').html(),
-                        postTitle: $('.editTitle').val(),
-                        postBody: $('#bodyEdit').val(),
-                        postCategory: $('#editCategory').val()
-                    }
-                    $.ajax({
-                        url: "/updatePostByID/" + postEdit.postID,
-                        type: "PUT",
-                        data: postEdit,
-                        success: (post) => {
-                            $("#postTitleSpan").html(post.postTitle);
-                            $("#postBodySpan").html(post.postBody);
-                            $("#postCategory").val(post.category);
-                        }
-                    })
-                },
-                removePost() {
-                    const id = $("#postID").html();
-                    $.ajax({
-                        url: "/removePost/" + id,
-                        type: "DELETE",
-                        success: () => {
-                            $.getJSON("/posts", function (jsondata) {
-                                self.posts = jsondata;
-                            });
-                        }
-                    });
-                    $("#editModal").modal("hide");
-                },
-                removeReply(id) {
-                    $.ajax({
-                        url: "/removeReply/" + id,
-                        type: "DELETE",
-                    })
-                },
-                // TODO: Edit reply
-                sortByCategory(category) {
-                    $.ajax({
-                        url: "/sortByCategory/" + category,
-                        type: "GET", 
-                        success: (jsondata) =>{
-                            this.posts = jsondata;
-                        }
-                    });
-                },
-                sortByUser() {
-                    $.ajax({
-                        url: "/userPost",
-                        type: "GET",
-                        success: (jsondata) => {
-                            this.posts = jsondata;
-                        }
-                    });
-                },
-            },
-            mounted() {
-                var self = this;
-                $.getJSON("/posts", function (jsondata) {
-                    self.posts = jsondata;
-                });
-            },
-        });
-    </script>
-
-
+    <script src="/js/AllVue.js"></script>
 </body>
 
 </html>
