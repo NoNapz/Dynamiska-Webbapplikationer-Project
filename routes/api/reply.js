@@ -13,6 +13,7 @@ router.post('/reply', async (req, res) => {
             reply: req.body.reply,
         };
         await dbservice.createReply(reply);
+        console.log(USER_NAME + ' Created reply:\n' + reply);
         return reply;
     } catch (err) {
         res.send('Error sending commment' + err);
@@ -46,8 +47,8 @@ router.post("/replylike/:id", async (req, res) => {
             username: USER_NAME,
             replyID: paramID,
         };
-        console.log(addLike);
         await dbservice.likeReply(addLike);
+        console.log(USER_NAME + ' - added like on Reply: ' + paramID);
         return addLike;
     } catch (err) {
         res.send(err);
@@ -61,8 +62,8 @@ router.get("/replydislike/:id", async (req, res) => {
             username: USER_NAME,
             replyID: paramID,
         };
-        console.log(dislike);
         await dbservice.removeReplyLike(dislike);
+        console.log(USER_NAME + " - removed like on Reply: " + paramID);
         return dislike;
     } catch (err) {
         console.log("Error: " + err);
@@ -74,6 +75,7 @@ router.delete("/removeReply/:id", async (req, res) =>{
     console.log('post ID: '+ paramID);
     try{
         await dbservice.deleteReply(paramID);
+        console.log(USER_NAME + " - Removed Reply: " + paramID);
     }catch (err) {
         console.log('Error from reply.js: ' + err);
     }

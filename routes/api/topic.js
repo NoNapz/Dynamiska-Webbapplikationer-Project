@@ -13,8 +13,8 @@ router.post('/post', async (req, res) => {
             body: req.body.body,
             category: req.body.category
         };
-        console.log(topic);
         await dbservice.createPost(topic);
+        console.log(USER_NAME + ' Created Post:\n ' +topic);
         return topic;
     } catch (err) {
         res.send('Error sending commment');
@@ -30,9 +30,7 @@ router.get("/post/:id", async (req, res) => {
       res.send(found);
       return found;
     } else {
-      res
-        .status(400)
-        .send({ ERROR: `Post with ID: ${paramID} does not exist.` });
+      res.status(400).send({ ERROR: `Post with ID: ${paramID} does not exist.` });
     }
   } catch (err) {
     res.send(err);
@@ -57,8 +55,8 @@ router.post("/postlike/:id", async (req, res) => {
       username: USER_NAME,
       postID: paramID
     };
-    console.log(addLike);
     await dbservice.likePost(addLike);
+    console.log(USER_NAME + " added like on Post: " + paramID);
     return addLike;
   } catch (err) {
     res.send(err);
@@ -72,8 +70,8 @@ router.get("/postdislike/:id", async (req, res) =>{
       username : USER_NAME,
       postID : paramID
     };
-    console.log(dislike);
     await dbservice.removePostLike(dislike);
+    console.log(USER_NAME + " removed like on Post: " + paramID);
     return dislike;
   }catch(err){
     console.log('Error: ' + err);
@@ -85,6 +83,7 @@ router.delete("/removePost/:id", async (req, res) =>{
   console.log(found);
   try{
     await dbservice.deletePostByID(found);
+    console.log(USER_NAME + ' - Removed Post: ' + found);
   }catch(err) {
     console.log('Error from topic.js: ' + err);
   }
@@ -93,9 +92,9 @@ router.delete("/removePost/:id", async (req, res) =>{
 router.put("/updatePostByID/:id", async (req, res) =>{
   const found = req.body.postID;
   console.log('found: ' + found);
-
   try{
     await dbservice.updatePostByID(req.body);
+    console.log(USER_NAME + ': updated Post: ' + found);
   }catch(err){  
     console.log('Error updating post: ' + err);
   }

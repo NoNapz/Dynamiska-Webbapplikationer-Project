@@ -43,8 +43,8 @@ router.post("/signup", async (req, res) => {
             name: req.body.name,
             password: hashPW,
         };
-        console.log(user);
         await dbservice.addUser(user);
+        console.log('New user created:\n' + user);
         res.redirect("/home");
         return user;
     } catch (err) {

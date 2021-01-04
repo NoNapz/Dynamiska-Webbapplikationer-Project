@@ -16,7 +16,7 @@ server.use(cookieParser());
 server.use(express.static(__dirname + "/public"));
 server.use(
     session({
-        secret: "Version2Test",
+        secret: "ThisIsTheLegendarySession",
         resave: false,
         saveUninitialized: false
     })
