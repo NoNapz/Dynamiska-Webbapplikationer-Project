@@ -1,10 +1,22 @@
-.tab-design{
+#myTab .tab-design {
     display: flex;
     font-size: 1.2rem;
     width: 50%;
-    border-bottom: 1px solid var(--main-color);
     text-align: center;
-    /* background-color: ; */
+    background-color: var(--main-color);
+}
+
+#myTab .tab-design a {
+    color: #fff;
+}
+
+#myTab .tab-design a:hover {
+    color: var(--main-highlight);
+}
+
+#myTab .active {
+    background-color: #fff;
+    color: #000 !important;
 }
 
 .tab-design a {

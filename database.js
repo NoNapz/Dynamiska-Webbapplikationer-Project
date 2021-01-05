@@ -70,7 +70,6 @@ const getFullUser = async(data)=>{
     }
 }
 const updateUser = async(data, username) =>{
-    console.log(JSON.stringify(data));
     try{
         const dbcon = await dbPromise();
         const user = await dbcon.get(

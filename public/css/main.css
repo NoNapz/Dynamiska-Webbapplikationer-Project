@@ -41,9 +41,6 @@ nav i {
 .nav-link {
     color: #fff !important;
 }
-select:active, select:hover {
-  outline-color: red !important
-}
 .input-container { 
 	margin: 1rem 0 1rem 0; 
 }
@@ -67,10 +64,24 @@ select:active, select:hover {
 .createPost_container span {
     padding-left: 1rem;
 }
-.lable {
+.label {
     text-transform: uppercase;
     font-weight: 600;
-
+}
+.modal-header {
+    text-transform: uppercase;
+    background-color: var(--main-color);
+    color: #fff;
+    font-size: 1.2rem;
+    font-weight: 600;
+    padding: .5rem 1rem !important;
+    border-bottom: 2px solid var(--main-highlight-2) !important;
+}
+.modal-header span {
+    color: var(--main-highlight);
+}
+.modal-header p {
+    margin: 0;
 }
 button.btn-white  {
     background-color: var(--main-color);

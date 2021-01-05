@@ -50,11 +50,11 @@
                         </div>
                         <form>
                             <div class="input-container">
-                                <label class="lable">Title</label>
+                                <label class="label">Title</label>
                                 <input id="postTitle" class="form-control" type="text" name="title" placeholder="Topic..">
                             </div>
                             <div class="input-container form-group">
-                                <label class="lable " for="postCategory">Chose a category: </label>
+                                <label class="label " for="postCategory">Chose a category: </label>
                                 <select name="category" class="form-control" id="postCategory">
                                     <option value="Databases">Databases</option>
                                     <option value="Algorithms">Algorithms</option>
@@ -63,7 +63,7 @@
                                 </select>
                             </div>
                             <div class="input-container">
-                                <label name="body" class="lable">Content</label>
+                                <label name="body" class="label">Content</label>
                                 <textarea name="reply" id="postBody" class="form-control" rows="3" placeholder="What do you need help with?.."></textarea>
                             </div>
                             <button v-on:click="startTopic" type="submit" class="btn btn-white">Create post</button>
@@ -113,42 +113,44 @@
                         </form>
                     </div>
                     <div class="post-footer">
-                        <!-- FIXME -->
                         <button class="btn btn-white"><i class="fas fa-thumbtack"></i></button>
                         <button v-on:click="showActionModal(post.username)" class="btn btn-white"><i class="fas fa-users-cog"></i></button>
                         <button v-if="currentUser.username == post.username || currentUser.userType == 'Super Admin'"  class="btn btn-white" v-on:click="showEditModal(post.postID)"><i class="fas fa-edit"></i></button>
                         <button class="btn btn-white" v-on:click="showReplyModal(post.postID)"><i class="far fa-eye"></i> / <i class="fas fa-comment-dots"></i></button>
                     </div>
+
                     <!-- Edit Modal -->
                     <div class="modal fade" id="editModal">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    Edit topic
+                                    <p class="modal-title">Edit Post <span>&#62; &#62;</span></p>
+                                    <p class="m-0">ID: <span id="postID"></span></p>
                                 </div>
                                 <div class="modal-body">
-                                    <div class="modal-body-top">
-                                        <input type="text" class="editTitle">
-                                        <p id="postID"></p>
+                                    <div>
+                                        <form action="" method="" class="form-horizontal">
+                                            <div class="input-container">
+                                                <label class="label">Title</label>
+                                                <input class="form-control editTitle" type="text" name="editTitle">
+                                            </div>
+                                            <div class="input-container form-group">
+                                                <label class="label" for="editCategory">Chose a category: </label>
+                                                <select name="category" class="form-control" id="editCategory">
+                                                    <option value="Databases">Databases</option>
+                                                    <option value="Algorithms">Algorithms</option>
+                                                    <option value="Webb">Webb</option>
+                                                    <option value="Other">Other</option>
+                                                </select>
+                                            </div>     
+                                            <div class="input-container">
+                                                <label name="body" class="label">Body</label>
+                                                <textarea name="body-edit" id="bodyEdit" class="form-control" rows="5"></textarea>
+                                            </div>
+                                            <button class="btn btn-white updatePost" v-on:click="updatePost">Update</button>
+                                            <button type="submit" class="btn btn-white delete-post" v-on:click="removePost">Delete</button>
+                                        </form>
                                     </div>
-                                        <label class="lable" for="editCategory">Chose a category: </label>
-                                        <select name="category" id="editCategory">
-                                            <option value="Databases">Databases</option>
-                                            <option value="Algorithms">Algorithms</option>
-                                            <option value="Webb">Webb</option>
-                                            <option value="Other">Other</option>
-                                        </select>
-                                    <textarea name="body-edit" id="bodyEdit" cols="60" rows="5"></textarea>
-                                </div>
-                                <div class="modal-footer">
-                                    <h1>Robins föötfettich </h1>
-                                    <!-- !! REMOVE/ EDIT-->
-                                    <form>
-                                        <button class="btn btn-white updatePost"
-                                            v-on:click="updatePost">Update</button>
-                                        <button type="submit" class="btn btn-danger delete-post"
-                                            v-on:click="removePost">Delete</button>
-                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -228,8 +230,8 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="bs-example bs-example-tabs">
-                        <ul id="myTab" class="nav nav-tabs">
-                            <li id="loginTab" class="tab-design"><a href="#login" data-toggle="tab">Log In</a></li>
+                        <ul id="myTab" class="nav nav-pills">
+                            <li id="loginTab" class="tab-design"><a href="#login" data-toggle="tab" class="active"><span></span> Log In <span></span></a></li>
                             <li id="signupTab" class=" tab-design"><a href="#signup" data-toggle="tab">Sign Up</a></li>
                         </ul>
                     </div>
@@ -238,11 +240,11 @@
                             <div class="tab-pane active" id="login">
                                 <form class="form-horizontal" action="/login" method="POST">
                                     <div class="input-container">
-                                        <label class="lable">Username</label>
+                                        <label class="label">Username</label>
                                         <input id="logUsername" class="form-control" type="text" name="username">
                                     </div>
                                     <div class="input-container">
-                                        <label class="lable">Password</label>
+                                        <label class="label">Password</label>
                                         <input id="logPassword" class="form-control" type="password" name="password">
                                     </div>
                                     <button class="btn btn-white">Login</button>
@@ -251,19 +253,19 @@
                             <div class="tab-pane" id="signup">
                                 <form class="form-horizontal" action="/signup" method="POST">
                                     <div class="input-container">
-                                        <label class="lable">Username</label>
+                                        <label class="label">Username</label>
                                         <input id="addUsername" class="form-control" type="text" name="username">
                                     </div>
                                     <div class="input-container">
-                                        <label class="lable">Email</label>
+                                        <label class="label">Email</label>
                                         <input id="addEmail" class="form-control" type="email" name="email">
                                     </div>
                                     <div class="input-container">
-                                        <label class="lable">Full Name</label>
+                                        <label class="label">Full Name</label>
                                         <input id="addName" class="form-control" type="text" name="name">
                                     </div>
                                     <div class="input-container">
-                                        <label class="lable">Password</label>
+                                        <label class="label">Password</label>
                                         <input id="addPassword" class="form-control" type="password" name="password">
                                     </div>
                                     <button class="btn btn-white">Sign Up</button>
@@ -280,34 +282,35 @@
         <div class="modal fade" id="actionModal">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Modifying user: <span id="spanUsername"></span></h5>
+                    <div class="modal-header align-items-center">
+                        <p class="modal-title">Modifying user <span>&#62; &#62;</span></p>
+                        <p><span id="spanUsername"></span></p>
                     </div>
                     <div class="modal-body">
                         <div>
                             <form action="" method="" class="form-horizontal">
                                 
                                 <div class="input-container">
-                                    <label class="lable">Username</label>
+                                    <label class="label">Username</label>
                                     <input id="username" class="form-control" type="text" name="username">
                                 </div>
                                 <div class="input-container">
-                                    <label class="lable">Email</label>
+                                    <label class="label">Email</label>
                                     <input id="email" class="form-control" type="email" name="email">
                                 </div>
                                 <div class="input-container">
-                                    <label class="lable">Name</label>
+                                    <label class="label">Name</label>
                                     <input id="name" class="form-control" type="text" name="name">
                                 </div>
                                 <div class="input-container">
-                                    <label class="lable">Status</label>
+                                    <label class="label">Status</label>
                                     <select name="status" class="form-control" id="status">
                                         <option value="Active">Active</option>
                                         <option value="Suspended">Suspended</option>
                                     </select>
                                 </div>
                                 <div class="input-container form-group">
-                                    <label class="lable " for="userType">Chose a type: </label>
+                                    <label class="label " for="userType">Chose a type: </label>
                                     <select name="userType" class="form-control" id="userType">
                                         <option value="Consumer">Consumer</option>
                                         <option value="Contributor">Contributor</option>
