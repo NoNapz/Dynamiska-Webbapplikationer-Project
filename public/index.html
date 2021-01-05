@@ -118,7 +118,6 @@
                         <button v-if="currentUser.username == post.username || currentUser.userType == 'Super Admin'"  class="btn btn-white" v-on:click="showEditModal(post.postID)"><i class="fas fa-edit"></i></button>
                         <button class="btn btn-white" v-on:click="showReplyModal(post.postID)"><i class="far fa-eye"></i> / <i class="fas fa-comment-dots"></i></button>
                     </div>
-
                     <!-- Edit Modal -->
                     <div class="modal fade" id="editModal">
                         <div class="modal-dialog">

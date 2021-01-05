@@ -52,8 +52,8 @@ const vm = new Vue({
                     $("#email").val(user.email);
                     $("#name").val(user.name);
                     $("#status").val(user.status);
-                    $("#userType").html(user.type);  
-                    $("#spanUsername").html(user.username);         
+                    $("#userType").html(user.type);
+                    $("#spanUsername").html(user.username);
                 },
             });
         },
@@ -198,6 +198,7 @@ const vm = new Vue({
                 type: "DELETE",
             });
         },
+
         // TODO: Edit reply
         sortByCategory(category) {
             $.ajax({

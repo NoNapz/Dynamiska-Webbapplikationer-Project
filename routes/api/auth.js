@@ -73,13 +73,11 @@ router.get("/getUser/:username", async (req, res) => {
     }
 });
 router.put("/updateUser/:username", async (req, res) =>{
-    // const username = req.params.username;
     try {
         
         console.log(JSON.stringify(req.body));
         await dbservice.updateUser(req.body, req.params.username);
         console.log('LOL PLS');
-        // console.log(USER_NAME + ": updated User: " + username);
     } catch(err) {
         console.log('Error: ' + err)
     }
@@ -88,6 +86,7 @@ router.get("/logout", (req, res) => {
     console.log("LOGGED OUT: " + USER_NAME + ", -- SESSION ENDED -- ");
     req.logout();
     req.session.destroy();
+    console.log(req.isAuthenticated());
     USER_NAME = null;
     res.redirect("/index.html");
 });
