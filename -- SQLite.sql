@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS users (
     email varchar(128) UNIQUE NOT NULL,
     name varchar(128) NOT NULL,
     password varchar(256) NOT NULL,
+    status varchar(32) DEFAULT 'ACTIVE' check(status in ('ACTIVE', 'SUSPENDED'))
     userType varchar(32) DEFAULT 'Consumer' CHECK(userType in ('Consumer', 'Contributor' ,'Super Admin')),
     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
 );

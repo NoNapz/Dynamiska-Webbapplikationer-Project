@@ -220,11 +220,11 @@ const getRepliesByPostID = async (data) => {
 const getRepliesByID = async (replyID) => {
     try {
         const dbCon = await dbPromise();
-        const reply = await dbCon.get("SELECT * FROM post WHERE replyID = ?", [replyID]
+        const reply = await dbCon.get("SELECT * FROM reply WHERE replyID = ?", [replyID]
         );
         return reply;
     } catch (err) {
-        throw new Error("Error getting Post by ID: " + err);
+        throw new Error("Error getting Reply by ID: " + err);
     }
 };
 
@@ -238,6 +238,20 @@ const getReplies = async () => {
     } catch (err) {
         throw new Error('Error getting replies: ' + err);
     }
+}
+
+const editReply = async(data) => {
+    try{
+        console.log('Data in database: ' + JSON.stringify(data));
+        const dbcon = await dbPromise();
+        const editReply = await dbcon.get(
+            "UPDATE reply SET reply = ? WHERE replyID = ?", [data.reply, data.replyID]
+        );
+        return editReply;    
+    }catch(err){
+        throw new Error('Error editing reply: ' + err);
+    }
+    
 }
 
 const likeReply = async (data) => {
@@ -328,6 +342,7 @@ module.exports = {
     deletePostByID: deletePostByID,
     updatePostByID: updatePostByID,
     // * All Reply exports
+    editReply: editReply,
     createReply: createReply,
     getRepliesByPostID: getRepliesByPostID,
     getRepliesByID: getRepliesByID,

@@ -32,7 +32,7 @@ router.post("/login", async (req, res) => {
         console.log(err);
     }
 });
-
+// TODO: 
 router.post("/signup", async (req, res) => {
     try {
         const salt = await bcrypt.genSalt(10);

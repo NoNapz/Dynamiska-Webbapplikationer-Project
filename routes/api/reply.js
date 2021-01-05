@@ -19,7 +19,15 @@ router.post('/reply', async (req, res) => {
         res.send('Error sending commment' + err);
     }
 });
+router.get('/getReplyByID/:id', async(req, res) => {
+    try{
+        const reply = await dbservice.getRepliesByID(req.params.id);
+        return reply;
+    } catch(err) {
+        console.log('Error: ' + err);
+    }
 
+})
 router.get('/reply/:postID', async (req, res) => {
     const paramID = req.params.postID;
     try {
@@ -78,6 +86,17 @@ router.delete("/removeReply/:id", async (req, res) =>{
         console.log(USER_NAME + " - Removed Reply: " + paramID);
     }catch (err) {
         console.log('Error from reply.js: ' + err);
+    }
+});
+
+
+router.put("/editReply/:id", async (req, res) =>{
+    const paramID = req.params.id;
+    try{
+        await dbservice.editReply(req.body)
+
+    }catch(err){
+        console.log('Error: ' + err);
     }
 })
 module.exports = router;

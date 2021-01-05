@@ -74,7 +74,7 @@
                     <!-- * CREATE POST END -->
                     <div class="col-sm-12 col-md-8 pt-4">
                         <form d-flex>
-                            <button class="btn btn-white" v-on:click.prevent="sortByUser">My Posts</button>
+                            <button v-if="currentUser.username" class="btn btn-white" v-on:click.prevent="sortByUser">My Posts</button>
                             <button class="btn btn-white" v-on:click.prevent="sortByCategory('Databases')">Databases</button>
                             <button class="btn btn-white" v-on:click.prevent="sortByCategory('Algorithms')">Algorithms</button>
                             <button class="btn btn-white" v-on:click.prevent="sortByCategory('Webb')">Webb</button>
@@ -113,8 +113,11 @@
                         </form>
                     </div>
                     <div class="post-footer">
-                        <button class="CRUD" v-on:click="showEditModal(post.postID)">Edit</button>
-                        <button class="Comment" v-on:click="showReplyModal(post.postID)">View/Reply</button>
+                        <!-- FIXME -->
+                        <!--TODO: Fix action modal-->
+                        <button v-on:click="showActionModal" class="btn btn-primary"><i class="fas fa-users-cog"></i></button>
+                        <button v-if="currentUser.username == post.username || currentUser.userType == 'Super Admin'"  class="btn btn-primary" v-on:click="showEditModal(post.postID)"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-primary" v-on:click="showReplyModal(post.postID)"><i class="far fa-eye"></i> / <i class="fas fa-comment-dots"></i></button>
                     </div>
                     <!-- Edit Modal -->
                     <div class="modal fade" id="editModal">
@@ -166,7 +169,13 @@
                                     <div>
                                         <div v-for="reply in replies">
                                             <h5>{{reply.username}}</h5>
-                                            <h5>{{reply.reply}}</h5>
+                                            
+                                            <div v-if="editMode == reply.replyID" class="test">
+                                                <textarea name="editReply" id="editReply" cols="60" rows="5"></textarea>
+                                            </div>
+                                            <div v-else class="test">
+                                                <p class = "replyBody">{{reply.reply}}</p>
+                                            </div>
                                             <p id="replyID">{{reply.replyID}}</p>
                                             <span> {{ reply.created }} </span>
                                             <div id="replyButtons">
@@ -179,8 +188,16 @@
                                             <div class="replyCrud">
                                                 <!-- ? This is where the fun begins! ? -->
                                                 <button class="removeReply btn btn-danger"
-                                                    @click="removeReply(reply.replyID)">Delete</button>
-                                                <button class="editReply btn btn-primary">Edit</button>
+                                                    @click="removeReply(reply.replyID)"><i class="fas fa-trash"></i></button>
+                                                <div v-if="editMode == reply.replyID">
+                                                    <button class = "editReply btn btn-primary"
+                                                        @click="updateReply(reply.replyID)"><i class="fas fa-save"></i></button>
+                                                </div>
+                                                <div v-else>
+                                                    <button class="toggleReply btn btn-primary"
+                                                    @click="toggleEdit(reply.replyID)"><i class="fas fa-edit"></i></button>
+                                                </div>
+
 
                                             </div>
                                         </div>
@@ -249,7 +266,7 @@
                                         <label class="lable">Password</label>
                                         <input id="addPassword" class="form-control" type="password" name="password">
                                     </div>
-                                    <button href="#" class="btn btn-white">Sign Up</button>
+                                    <button class="btn btn-white">Sign Up</button>
                                 </form>
                             </div>
                         </div>
@@ -257,7 +274,60 @@
                 </div>
             </div>
         </div>
+        
         <!-- END OF LOGIN / SIGNUP MODAL -->
+        <!-- USER ACTIONS MODAL -->
+        <div class="modal fade" id="actionModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title"></h5>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <form action="" method="" class="form-horizontal">
+                                
+                                <div class="input-container">
+                                    <label class="lable">Username</label>
+                                    <input id="username" class="form-control" type="text" name="username">
+                                </div>
+                                <div class="input-container">
+                                    <label class="lable">Email</label>
+                                    <input id="email" class="form-control" type="email" name="email">
+                                </div>
+                                <div class="input-container">
+                                    <label class="lable">Name</label>
+                                    <input id="name" class="form-control" type="text" name="name">
+                                </div>
+                                <div class="input-container">
+                                    <label class="lable">Password</label>
+                                    <input id="password" class="form-control" type="password" name="password">
+                                </div>
+                                <div class="input-container">
+                                    <label class="lable">Status</label>
+                                    <select name="status" class="form-control" id="userStatus">
+                                        <option value="Active">Active</option>
+                                        <option value="Suspended">Suspended</option>
+                                    </select>
+                                </div>
+                                <div class="input-container form-group">
+                                    <label class="lable " for="postCategory">Chose a type: </label>
+                                    <select name="category" class="form-control" id="userType">
+                                        <option value="Consumer">Consumer</option>
+                                        <option value="Contributor">Contributor</option>
+                                        <option value="Super Admin">Super Admin</option>
+                                    </select>
+                                </div>
+                          
+
+                                    
+                                <button class = "btn btn-primary">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
 

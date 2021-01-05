@@ -4,6 +4,7 @@ const vm = new Vue({
         posts: [],
         replies: [],
         currentUser: {},
+        editMode: false
     },
     methods: {
         showloginsignup() {
@@ -40,6 +41,9 @@ const vm = new Vue({
                     $("#bodyEdit").html(post.body);
                 },
             });
+        },
+        showActionModal(){
+            $("#actionModal").modal("show");
         },
         startTopic() {
             let post = {
@@ -149,6 +153,36 @@ const vm = new Vue({
             });
             $("#editModal").modal("hide");
         },
+        toggleEdit(id) {
+            this.editMode = id;
+            $.ajax({
+                url: "/getReplyByID/"+id,
+                type: "GET",
+                success: (reply)=>{
+                    $("#editReply").attr('Value', reply.reply);
+                    $("#editReply").html('Fuck no');
+                }
+            })
+        },
+        updateReply(id){
+            let reply = {
+                replyID : id,
+                reply: $("#editReply").val()
+            }
+            $.ajax({
+                url: "/editReply/" + id,
+                type: "PUT",
+                data: reply,
+                success: (post) =>{
+                    // $(".")
+                }
+            })
+            if(this.editMode){
+                this.editMode = false
+            } else {
+                this.editMode = true
+            }
+        },
         removeReply(id) {
             $.ajax({
                 url: "/removeReply/" + id,
@@ -174,6 +208,11 @@ const vm = new Vue({
                 },
             });
         },
+        updateUser(id) {
+            user = {
+
+            }
+        }
     },
     mounted() {
         var self = this;
