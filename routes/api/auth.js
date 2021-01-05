@@ -62,9 +62,28 @@ router.get("/user_data", async (req, res) => {
         res.send(err);
     }
 });
-router.get("/getUser"), (req, res) => {
-    return USEN_NAME;
-}
+router.get("/getUser/:username", async (req, res) => {
+    try{
+        let paramUsername = req.params.username;
+        const user =  await dbservice.getFullUser(paramUsername);
+        res.send(user);
+        return user;
+    }catch(err){
+        console.log('Error: ' + err);
+    }
+});
+router.put("/updateUser/:username", async (req, res) =>{
+    // const username = req.params.username;
+    try {
+        
+        console.log(JSON.stringify(req.body));
+        await dbservice.updateUser(req.body, req.params.username);
+        console.log('LOL PLS');
+        // console.log(USER_NAME + ": updated User: " + username);
+    } catch(err) {
+        console.log('Error: ' + err)
+    }
+})
 router.get("/logout", (req, res) => {
     console.log("LOGGED OUT: " + USER_NAME + ", -- SESSION ENDED -- ");
     req.logout();

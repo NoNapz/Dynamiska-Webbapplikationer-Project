@@ -42,8 +42,20 @@ const vm = new Vue({
                 },
             });
         },
-        showActionModal(){
+        showActionModal(username){
             $("#actionModal").modal("show");
+            $.ajax({
+                url: "/getUser/" + username,
+                type: "GET",
+                success: (user)=>{
+                    $("#username").val(user.username);
+                    $("#email").val(user.email);
+                    $("#name").val(user.name);
+                    $("#status").val(user.status);
+                    $("#userType").html(user.type);  
+                    $("#spanUsername").html(user.username);         
+                },
+            });
         },
         startTopic() {
             let post = {
@@ -173,9 +185,6 @@ const vm = new Vue({
                 url: "/editReply/" + id,
                 type: "PUT",
                 data: reply,
-                success: (post) =>{
-                    // $(".")
-                }
             })
             if(this.editMode){
                 this.editMode = false
@@ -208,10 +217,20 @@ const vm = new Vue({
                 },
             });
         },
-        updateUser(id) {
-            user = {
-
-            }
+        updateUser() {
+            let username = $("#spanUsername").html();
+            let user = {
+                username: $("#username").val(),
+                email: $("#email").val(),
+                name: $("#name").val(),
+                status: $("#status").val(),
+                userType: $("#userType").val(),
+            };
+            $.ajax({
+                url: "/updateUser/" + username,
+                type: "PUT",
+                data: user,
+            })
         }
     },
     mounted() {

@@ -58,7 +58,39 @@ const getUserData = async (data) => {
         throw new Error("Error getting User with ID: " + err);
     }
 };
-
+const getFullUser = async(data)=>{
+    try{
+        const dbcon = await dbPromise();
+        const user = await dbcon.get(
+            "SELECT * FROM users WHERE username = ?", [data]
+        )
+        return user;
+    }catch(err){
+        throw new Error('Error: ' + err);
+    }
+}
+const updateUser = async(data, username) =>{
+    console.log(JSON.stringify(data));
+    try{
+        const dbcon = await dbPromise();
+        const user = await dbcon.get(
+            "UPDATE users SET username = ?, email = ?, name = ?, status = ?, userType = ? WHERE username = ?",
+            [data.username, data.email, data.name, data.status, data.userType, username]
+        );
+        const post = await dbcon.get(
+            "UPDATE post SET username = ? WHERE username = ?", [data.username, username]
+        );
+        const reply = await dbcon.get(
+            "UPDATE reply SET username = ? WHERE username = ?", [data.username, username]
+        );
+        const likePost = await dbcon.get(
+            "UPDATE likePost SET username = ? WHERE username = ?", [data.username, username]
+        );
+        return user;
+    }catch(err){
+        throw new Error('Error: ' + err);
+    }
+}
 /********************* POST ************************/
 
 // Delete post by ID
@@ -332,6 +364,8 @@ module.exports = {
     getUserByUsername: getUserByUsername,
     getUserId: getUserId,
     getUserData: getUserData,
+    getFullUser: getFullUser,
+    updateUser: updateUser,
     // * All Post exports
     createPost: createPost,
     getPosts: getPosts,

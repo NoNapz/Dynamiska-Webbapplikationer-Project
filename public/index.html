@@ -114,10 +114,10 @@
                     </div>
                     <div class="post-footer">
                         <!-- FIXME -->
-                        <!--TODO: Fix action modal-->
-                        <button v-on:click="showActionModal" class="btn btn-primary"><i class="fas fa-users-cog"></i></button>
-                        <button v-if="currentUser.username == post.username || currentUser.userType == 'Super Admin'"  class="btn btn-primary" v-on:click="showEditModal(post.postID)"><i class="fas fa-edit"></i></button>
-                        <button class="btn btn-primary" v-on:click="showReplyModal(post.postID)"><i class="far fa-eye"></i> / <i class="fas fa-comment-dots"></i></button>
+                        <button class="btn btn-white"><i class="fas fa-thumbtack"></i></button>
+                        <button v-on:click="showActionModal(post.username)" class="btn btn-white"><i class="fas fa-users-cog"></i></button>
+                        <button v-if="currentUser.username == post.username || currentUser.userType == 'Super Admin'"  class="btn btn-white" v-on:click="showEditModal(post.postID)"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-white" v-on:click="showReplyModal(post.postID)"><i class="far fa-eye"></i> / <i class="fas fa-comment-dots"></i></button>
                     </div>
                     <!-- Edit Modal -->
                     <div class="modal fade" id="editModal">
@@ -144,7 +144,7 @@
                                     <h1>Robins föötfettich </h1>
                                     <!-- !! REMOVE/ EDIT-->
                                     <form>
-                                        <button class="btn btn-primary updatePost"
+                                        <button class="btn btn-white updatePost"
                                             v-on:click="updatePost">Update</button>
                                         <button type="submit" class="btn btn-danger delete-post"
                                             v-on:click="removePost">Delete</button>
@@ -190,11 +190,11 @@
                                                 <button class="removeReply btn btn-danger"
                                                     @click="removeReply(reply.replyID)"><i class="fas fa-trash"></i></button>
                                                 <div v-if="editMode == reply.replyID">
-                                                    <button class = "editReply btn btn-primary"
+                                                    <button class = "editReply btn btn-white"
                                                         @click="updateReply(reply.replyID)"><i class="fas fa-save"></i></button>
                                                 </div>
                                                 <div v-else>
-                                                    <button class="toggleReply btn btn-primary"
+                                                    <button class="toggleReply btn btn-white"
                                                     @click="toggleEdit(reply.replyID)"><i class="fas fa-edit"></i></button>
                                                 </div>
 
@@ -207,7 +207,7 @@
                                         <div class="col-md-6 col-md-offset-3">
                                             <form>
                                                 <textarea name="reply" class="reply-body" cols="60" rows="3"></textarea>
-                                                <button class="btn btn-primary" v-on:click="makeReply()">Submit</button>
+                                                <button class="btn btn-white" v-on:click="makeReply()">Submit</button>
                                             </form>
                                             <!-- v-on:click tassarna  -->
                                         </div>
@@ -281,7 +281,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title"></h5>
+                        <h5 class="modal-title">Modifying user: <span id="spanUsername"></span></h5>
                     </div>
                     <div class="modal-body">
                         <div>
@@ -300,28 +300,21 @@
                                     <input id="name" class="form-control" type="text" name="name">
                                 </div>
                                 <div class="input-container">
-                                    <label class="lable">Password</label>
-                                    <input id="password" class="form-control" type="password" name="password">
-                                </div>
-                                <div class="input-container">
                                     <label class="lable">Status</label>
-                                    <select name="status" class="form-control" id="userStatus">
+                                    <select name="status" class="form-control" id="status">
                                         <option value="Active">Active</option>
                                         <option value="Suspended">Suspended</option>
                                     </select>
                                 </div>
                                 <div class="input-container form-group">
-                                    <label class="lable " for="postCategory">Chose a type: </label>
-                                    <select name="category" class="form-control" id="userType">
+                                    <label class="lable " for="userType">Chose a type: </label>
+                                    <select name="userType" class="form-control" id="userType">
                                         <option value="Consumer">Consumer</option>
                                         <option value="Contributor">Contributor</option>
                                         <option value="Super Admin">Super Admin</option>
                                     </select>
-                                </div>
-                          
-
-                                    
-                                <button class = "btn btn-primary">Submit</button>
+                                </div>                         
+                                <button class = "btn btn-white" v-on:click="updateUser()">Submit</button>
                             </form>
                         </div>
                     </div>
@@ -329,7 +322,6 @@
             </div>
         </div>
     </div>
-
 
     <script src="http://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>

@@ -91,7 +91,6 @@ router.delete("/removePost/:id", async (req, res) =>{
 
 router.put("/updatePostByID/:id", async (req, res) =>{
   const found = req.body.postID;
-  console.log('found: ' + found);
   try{
     await dbservice.updatePostByID(req.body);
     console.log(USER_NAME + ': updated Post: ' + found);

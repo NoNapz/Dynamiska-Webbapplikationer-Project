@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS users (
     email varchar(128) UNIQUE NOT NULL,
     name varchar(128) NOT NULL,
     password varchar(256) NOT NULL,
-    status varchar(32) DEFAULT 'ACTIVE' check(status in ('ACTIVE', 'SUSPENDED'))
+    status varchar(32) DEFAULT 'Active' check(status in ('Active', 'Suspended')),
     userType varchar(32) DEFAULT 'Consumer' CHECK(userType in ('Consumer', 'Contributor' ,'Super Admin')),
     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
 );
@@ -42,8 +42,6 @@ CREATE TABLE if not EXISTS likePost(
     UNIQUE(username, postID) ON CONFLICT REPLACE
     UNIQUE(username, replyID) ON CONFLICT REPLACE
 );
-
-SELECT replyID FROM reply WHERE postID = 6
 
 INSERT INTO users (username, email, name, password, userType)
 VALUES ('Tassarna', 'h19robhe@du.se', 'Robin Hellström', 12345, 'Super Admin');
