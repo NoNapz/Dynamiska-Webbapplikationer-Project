@@ -1,97 +1,124 @@
 /*  * Google Fonts * */
-@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700;800;900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700;800;900&display=swap");
 /*  * Login-Signup Modal * */
 @import url("/css/LogsignModal.css");
 
 /* * Main * */
 :root {
-    --main-color: 	#343a40;
-    --main-highlight: #82e79c;
-    --main-highlight-2: #4e6bbb;
-    /* #059e5c */
-    /* #5dbcd2 */
+  --main-color: #343a40;
+  --main-highlight: #82e79c;
+  --main-highlight-2: #4e6bbb;
+  /* #059e5c */
+  /* #5dbcd2 */
 }
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-    font-family: 'Raleway', sans-serif;
+  font-family: "Raleway", sans-serif;
 }
 
 .nav-link {
-    text-transform: uppercase;
-    font-weight: 400;
+  text-transform: uppercase;
+  font-weight: 400;
 }
 
 /* * Styles used all over * */
 .brand {
-    color: #fff;
-    font-weight: 600;
-    text-transform: uppercase;
-    font-size: 1.2rem;
+  color: #fff;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 1.2rem;
 }
 nav span,
 nav i {
-    color: var(--main-highlight);
+  color: var(--main-highlight);
 }
 .nav-link {
-    color: #fff !important;
+  color: #fff !important;
 }
-.input-container { 
-	margin: 1rem 0 1rem 0; 
+.input-container {
+  margin: 1rem 0 1rem 0;
 }
 .title_mini {
-    color: rgba(0,0,0,.5);
-    letter-spacing: .2em;
-    font-weight: 700;
-    font-size: 1.3rem;
-    text-transform: uppercase;
-    font-style: italic;
+  color: rgba(0, 0, 0, 0.5);
+  letter-spacing: 0.2em;
+  font-weight: 700;
+  font-size: 1.3rem;
+  text-transform: uppercase;
+  font-style: italic;
 }
 .title_big {
-    font-size: 2rem;
-    margin: 0;
-    font-style: italic;
-    text-transform: uppercase;
+  font-size: 2rem;
+  margin: 0;
+  font-style: italic;
+  text-transform: uppercase;
 }
 .createPost_container {
-    border-left: 2px solid var(--main-highlight-2);
+  border-left: 2px solid var(--main-highlight-2);
 }
 .createPost_container span {
-    padding-left: 1rem;
+  padding-left: 1rem;
 }
 .label {
-    text-transform: uppercase;
-    font-weight: 600;
+  text-transform: uppercase;
+  font-weight: 600;
 }
 .modal-header {
-    text-transform: uppercase;
-    background-color: var(--main-color);
-    color: #fff;
-    font-size: 1.2rem;
-    font-weight: 600;
-    padding: .5rem 1rem !important;
-    border-bottom: 2px solid var(--main-highlight-2) !important;
+  text-transform: uppercase;
+  background-color: var(--main-color);
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 600;
+  padding: 0.5rem 1rem !important;
+  border-bottom: 2px solid var(--main-highlight-2) !important;
 }
 .modal-header span {
-    color: var(--main-highlight);
+  color: var(--main-highlight);
 }
 .modal-header p {
-    margin: 0;
+  margin: 0;
 }
-button.btn-white  {
-    background-color: var(--main-color);
-    color: #fff;
+button.btn-white {
+  background-color: var(--main-color);
+  color: #fff;
 }
 .btn-white {
-    text-transform: uppercase;
-    font-weight: 500;
+  text-transform: uppercase;
+  font-weight: 500;
 }
 button.btn-white:hover {
-    color: var(--main-highlight);
-    background-color: ;
+  color: var(--main-highlight);
+  background-color: ;
+}
+
+.post-container {
+  margin: 1rem 0;
+  padding: 1rem 1rem 1rem 3rem;
+  background: #fff;
+  position: relative;
+  border-left: .2rem solid var(--main-highlight-2);
+  border-right: .4rem solid var(--main-highlight-2);
+  box-shadow: 2px 2px 2px #ccc;
+}
+
+.post-container-icon {
+    position: absolute;
+    color: rgba(0, 0, 0, 0.26);
+    font-size: 1.6rem;
+    left: 10px;
+    top:5px; 
+}
+
+  /* position: absolute;
+  left: 10px;
+  top:5px; */
+
+.post-like-container i{
+    font-size: 1.5rem;
+    color: #4e6bbb;
 }

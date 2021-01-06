@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/main.css"/>
+    <link rel="stylesheet" href="/css/main.css" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
     <script src="https://kit.fontawesome.com/d82fdbf1c7.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
@@ -21,10 +21,10 @@
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item" v-if="currentUser.username == undefined">
                             <a class="nav-link" href="#signup" @click.prevent="showloginsignup">
-                                Login <span>&#47;</span> Signup  <i class="fa fa-user"></i></a>
+                                Login <span>&#47;</span> Signup <i class="fa fa-user"></i></a>
                         </li>
                         <li class="nav-item" v-else="currentUser.username">
-                            <a class="nav-link" href="/logout">Logout  <i class="fa fa-user"></i></a>
+                            <a class="nav-link" href="/logout">Logout <i class="fa fa-user"></i></a>
                         </li>
                     </ul>
                 </div>
@@ -32,205 +32,221 @@
         </header>
         <!-- !! END OF HEADER -->
         <!-- !! MAIN -->
-
-        <!-- * PLAYGROUND -->
-            <div class="container">
-                <div class="row">
-                    <!-- * CREATE POST START -->
-                    <div class="col-sm-12 col-md-4 pt-4">
-                        <div class="createPost_container">
-                            <h2 class="title_big pb-2">
-                                <span v-if="currentUser.username == undefined">Guest</span>
-                                <span v-else="currentUser.username">{{ currentUser.username }}</span>
-                            </h2>
-                            <h3 class="title_mini" >
-                                <span v-if="currentUser.username == undefined">Login to ask.</span>
-                                <span v-else="currentUser.username">{{ currentUser.userType }}</span>
-                            </h3>
-                        </div>
-                        <form>
-                            <div class="input-container">
-                                <label class="label">Title</label>
-                                <input id="postTitle" class="form-control" type="text" name="title" placeholder="Topic..">
-                            </div>
-                            <div class="input-container form-group">
-                                <label class="label " for="postCategory">Chose a category: </label>
-                                <select name="category" class="form-control" id="postCategory">
-                                    <option value="Databases">Databases</option>
-                                    <option value="Algorithms">Algorithms</option>
-                                    <option value="Webb">Webb</option>
-                                    <option value="Other">Other</option>
-                                </select>
-                            </div>
-                            <div class="input-container">
-                                <label name="body" class="label">Content</label>
-                                <textarea name="reply" id="postBody" class="form-control" rows="3" placeholder="What do you need help with?.."></textarea>
-                            </div>
-                            <button v-on:click="startTopic" type="submit" class="btn btn-white">Create post</button>
-                        </form>
-                        <!-- !! MAYBE ADD SORTING HERE -->
-                        
+<main>
+        <div class="container">
+            <div class="row">
+                <!-- * CREATE POST START -->
+                <div class="col-sm-12 col-md-4 pt-4">
+                    <div class="createPost_container">
+                        <h2 class="title_big pb-2">
+                            <span v-if="currentUser.username == undefined">Guest</span>
+                            <span v-else="currentUser.username">{{ currentUser.username }}</span>
+                        </h2>
+                        <h3 class="title_mini">
+                            <span v-if="currentUser.username == undefined">Login to ask.</span>
+                            <span v-else="currentUser.username">{{ currentUser.userType }}</span>
+                        </h3>
                     </div>
-                    <!-- * CREATE POST END -->
-                    <div class="col-sm-12 col-md-8 pt-4">
-                        <form d-flex>
-                            <button v-if="currentUser.username" class="btn btn-white" v-on:click.prevent="sortByUser">My Posts</button>
-                            <button class="btn btn-white" v-on:click.prevent="sortByCategory('Databases')">Databases</button>
-                            <button class="btn btn-white" v-on:click.prevent="sortByCategory('Algorithms')">Algorithms</button>
-                            <button class="btn btn-white" v-on:click.prevent="sortByCategory('Webb')">Webb</button>
-                            <button class="btn btn-white" v-on:click.prevent="sortByCategory('Other')">Other</button>
-                            <button class="btn btn-white">View All</button>
-                        </form>
-                        <div>
-                            <!-- !! POST SECTION GOES HERE LATER XD -->
+                    <form>
+                        <div class="input-container">
+                            <label class="label">Title</label>
+                            <input id="postTitle" class="form-control" type="text" name="title" placeholder="Topic..">
                         </div>
-                    </div>
+                        <div class="input-container form-group">
+                            <label class="label " for="postCategory">Chose a category: </label>
+                            <select name="category" class="form-control" id="postCategory">
+                                <option value="Databases">Databases</option>
+                                <option value="Algorithms">Algorithms</option>
+                                <option value="Webb">Webb</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="input-container">
+                            <label name="body" class="label">Content</label>
+                            <textarea name="reply" id="postBody" class="form-control" rows="3"
+                                placeholder="What do you need help with?.."></textarea>
+                        </div>
+                        <button v-on:click="startTopic" type="submit" class="btn btn-white">Create post</button>
+                    </form>
+                    <!-- !! MAYBE ADD SORTING HERE -->
 
                 </div>
-            </div>
-        <!-- * END OF PLAYGROUND -->
-
-
-        <main>
-        <div class="container mt-4">
-            <div id="posts">
-                <div v-for="post in posts" v-bind:key="post.id">
-                    <div class="post-header">
-                        <h5> Title: {{ post.title }} - By: {{ post.username }}</h5>
-                    </div>
-                    <span>Category: {{ post.category}}</span>
-                    <div class="post-body">
-                        <p>{{ post.body }}</p>
-                    </div>
-                    <span>Created: {{ post.created }}</span>
+                <!-- * CREATE POST END -->
+                <div class="col-sm-12 col-md-8 pt-4">
+                    <form class="d-flex justify-content-end">
+                        <button v-if="currentUser.username" class="btn btn-white" v-on:click.prevent="sortByUser">My
+                            Posts</button>
+                        <button class="btn btn-white mr-1"
+                            v-on:click.prevent="sortByCategory('Databases')">Databases</button>
+                        <button class="btn btn-white mr-1"
+                            v-on:click.prevent="sortByCategory('Algorithms')">Algorithms</button>
+                        <button class="btn btn-white mr-1" v-on:click.prevent="sortByCategory('Webb')">Webb</button>
+                        <button class="btn btn-white mr-1" v-on:click.prevent="sortByCategory('Other')">Other</button>
+                        <button class="btn btn-white mr-1">View All</button>
+                    </form>
                     <div>
-                        <form>
-                            <button @click="likePost(post.postID)" class="btn"><i
-                                    class="fa fa-thumbs-up fa-lg" aria-hidden="true"></i></button>
-                            <button class="btn" @click="dislikePost(post.postID)"><i
-                                    class="fa fa-thumbs-down fa-lg" aria-hidden="true"></i></button>
-                            <span id="postLikes"></span>
-                        </form>
-                    </div>
-                    <div class="post-footer">
-                        <button class="btn btn-white"><i class="fas fa-thumbtack"></i></button>
-                        <button v-on:click="showActionModal(post.username)" class="btn btn-white"><i class="fas fa-users-cog"></i></button>
-                        <button v-if="currentUser.username == post.username || currentUser.userType == 'Super Admin'"  class="btn btn-white" v-on:click="showEditModal(post.postID)"><i class="fas fa-edit"></i></button>
-                        <button class="btn btn-white" v-on:click="showReplyModal(post.postID)"><i class="far fa-eye"></i> / <i class="fas fa-comment-dots"></i></button>
-                    </div>
-                    <!-- Edit Modal -->
-                    <div class="modal fade" id="editModal">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <p class="modal-title">Edit Post <span>&#62; &#62;</span></p>
-                                    <p class="m-0">ID: <span id="postID"></span></p>
+                        <div id="posts">
+                            <!-- * POST -->
+                            <div v-for="post in posts" v-bind:key="post.id" class="post-container">
+                                    <i v-if="post.category == 'Other'" class="fas fa-question post-container-icon"></i>
+                                    <i v-else-if="post.category == 'Algorithms'" class="fas fa-square-root-alt post-container-icon"></i>
+                                    <i v-else-if="post.category == 'Databases'" class="fas fa-database post-container-icon"></i>
+                                    <i v-else="post.category == 'Webb'" class="fas fa-code post-container-icon"></i>
+                                <div class="post-header d-flex justify-content-between align-items-center">
+                                    <h5>{{ post.title }}</h5>
+                                    <p>{{ post.username }}</p>
                                 </div>
-                                <div class="modal-body">
+                                <div class="post-body d-flex justify-content-between align-items-center">
+                                    <p>{{ post.body }}</p>
+                                    <form class="post-like-container">
+                                        <button @click="likePost(post.postID)" class="btn"><i
+                                                class="fas fa-thumbs-up"></i></button>
+                                        <span id="postLikes"></span>
+                                        <button @click="dislikePost(post.postID)" class="btn"><i
+                                                class="fas fa-thumbs-down"></i></button>
+                                    </form>
+                                </div>
+                                <div class="post-footer d-flex justify-content-between align-items-end">
+                                    <span>{{ post.category }}<br>- {{ post.created }}</span>
                                     <div>
-                                        <form action="" method="" class="form-horizontal">
-                                            <div class="input-container">
-                                                <label class="label">Title</label>
-                                                <input class="form-control editTitle" type="text" name="editTitle">
-                                            </div>
-                                            <div class="input-container form-group">
-                                                <label class="label" for="editCategory">Chose a category: </label>
-                                                <select name="category" class="form-control" id="editCategory">
-                                                    <option value="Databases">Databases</option>
-                                                    <option value="Algorithms">Algorithms</option>
-                                                    <option value="Webb">Webb</option>
-                                                    <option value="Other">Other</option>
-                                                </select>
-                                            </div>     
-                                            <div class="input-container">
-                                                <label name="body" class="label">Body</label>
-                                                <textarea name="body-edit" id="bodyEdit" class="form-control" rows="5"></textarea>
-                                            </div>
-                                            <button class="btn btn-white updatePost" v-on:click="updatePost">Update</button>
-                                            <button type="submit" class="btn btn-white delete-post" v-on:click="removePost">Delete</button>
-                                        </form>
+                                        <button class="btn btn-white"><i class="fas fa-thumbtack"></i></button>
+                                        <button v-on:click="showActionModal(post.username)" class="btn btn-white"><i
+                                                class="fas fa-users-cog"></i></button>
+                                        <button
+                                            v-if="currentUser.username == post.username || currentUser.userType == 'Super Admin'"
+                                            class="btn btn-white" v-on:click="showEditModal(post.postID)"><i
+                                                class="fas fa-edit"></i></button>
+                                        <button v-on:click="showReplyModal(post.postID)" class="btn btn-white"><i
+                                                class="far fa-eye"></i> / <i class="fas fa-comment-dots"></i></button>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-
-                    <!-- Reply Modal -->
-                    <div class="modal fade" id="replyModal">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="post-title"></h5>
-                                    <p id="post-author"></p>
-                                    <p id="post-id"></p>
-                                </div>
-                                <div class="modal-body">
-                                    <!-- Topic -->
-                                    <p id="post-body"></p>
-                                    <div>
-                                        <div v-for="reply in replies">
-                                            <h5>{{reply.username}}</h5>
-                                            
-                                            <div v-if="editMode == reply.replyID" class="test">
-                                                <textarea name="editReply" id="editReply" cols="60" rows="5"></textarea>
-                                            </div>
-                                            <div v-else class="test">
-                                                <p class = "replyBody">{{reply.reply}}</p>
-                                            </div>
-                                            <p id="replyID">{{reply.replyID}}</p>
-                                            <span> {{ reply.created }} </span>
-                                            <div id="replyButtons">
-                                                <button v-on:click="likeReply(reply.replyID)" class="btn"><i
-                                                        class="fa fa-thumbs-up fa-lg" aria-hidden="true"></i></button>
-                                                <button v-on:click="dislikeReply(reply.replyID)" class="btn"><i
-                                                        class="fa fa-thumbs-down fa-lg" aria-hidden="true"></i></button>
-                                                <span id="replyLikes">{{ reply.likes }}</span>
-                                            </div>
-                                            <div class="replyCrud">
-                                                <!-- ? This is where the fun begins! ? -->
-                                                <button class="removeReply btn btn-danger"
-                                                    @click="removeReply(reply.replyID)"><i class="fas fa-trash"></i></button>
-                                                <div v-if="editMode == reply.replyID">
-                                                    <button class = "editReply btn btn-white"
-                                                        @click="updateReply(reply.replyID)"><i class="fas fa-save"></i></button>
-                                                </div>
-                                                <div v-else>
-                                                    <button class="toggleReply btn btn-white"
-                                                    @click="toggleEdit(reply.replyID)"><i class="fas fa-edit"></i></button>
-                                                </div>
-
-
-                                            </div>
+                            <!-- Edit Modal -->
+                            <div class="modal fade" id="editModal">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <p class="modal-title">Edit Post <span>&#62; &#62;</span></p>
+                                            <p class="m-0">ID: <span id="postID"></span></p>
                                         </div>
-                                    </div>
-                                    <!-- Replies -->
-                                    <div class="row">
-                                        <div class="col-md-6 col-md-offset-3">
-                                            <form>
-                                                <textarea name="reply" class="reply-body" cols="60" rows="3"></textarea>
-                                                <button class="btn btn-white" v-on:click="makeReply()">Submit</button>
-                                            </form>
-                                            <!-- v-on:click tassarna  -->
+                                        <div class="modal-body">
+                                            <div>
+                                                <form action="" method="" class="form-horizontal">
+                                                    <div class="input-container">
+                                                        <label class="label">Title</label>
+                                                        <input class="form-control editTitle" type="text"
+                                                            name="editTitle">
+                                                    </div>
+                                                    <div class="input-container form-group">
+                                                        <label class="label" for="editCategory">Chose a category:
+                                                        </label>
+                                                        <select name="category" class="form-control" id="editCategory">
+                                                            <option value="Databases">Databases</option>
+                                                            <option value="Algorithms">Algorithms</option>
+                                                            <option value="Webb">Webb</option>
+                                                            <option value="Other">Other</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="input-container">
+                                                        <label name="body" class="label">Body</label>
+                                                        <textarea name="body-edit" id="bodyEdit" class="form-control"
+                                                            rows="5"></textarea>
+                                                    </div>
+                                                    <button class="btn btn-white updatePost"
+                                                        v-on:click="updatePost">Update</button>
+                                                    <button type="submit" class="btn btn-white delete-post"
+                                                        v-on:click="removePost">Delete</button>
+                                                </form>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                            <!-- Reply Modal -->
+                            <div class="modal fade" id="replyModal">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="post-title"></h5>
+                                            <p id="post-author"></p>
+                                            <p id="post-id"></p>
+                                        </div>
+                                        <div class="modal-body">
+                                            <!-- Topic -->
+                                            <p id="post-body"></p>
+                                            <div>
+                                                <div v-for="reply in replies">
+                                                    <h5>{{reply.username}}</h5>
+
+                                                    <div v-if="editMode == reply.replyID" class="test">
+                                                        <textarea name="editReply" id="editReply" cols="60"
+                                                            rows="5"></textarea>
+                                                    </div>
+                                                    <div v-else class="test">
+                                                        <p class="replyBody">{{reply.reply}}</p>
+                                                    </div>
+                                                    <p id="replyID">{{reply.replyID}}</p>
+                                                    <span> {{ reply.created }} </span>
+                                                    <div id="replyButtons">
+                                                        <button v-on:click="likeReply(reply.replyID)" class="btn"><i
+                                                                class="fa fa-thumbs-up fa-lg"
+                                                                aria-hidden="true"></i></button>
+                                                        <button v-on:click="dislikeReply(reply.replyID)" class="btn"><i
+                                                                class="fa fa-thumbs-down fa-lg"
+                                                                aria-hidden="true"></i></button>
+                                                        <span id="replyLikes">{{ reply.likes }}</span>
+                                                    </div>
+                                                    <div class="replyCrud">
+                                                        <!-- ? This is where the fun begins! ? -->
+                                                        <button class="removeReply btn btn-danger"
+                                                            @click="removeReply(reply.replyID)"><i
+                                                                class="fas fa-trash"></i></button>
+                                                        <div v-if="editMode == reply.replyID">
+                                                            <button class="editReply btn btn-white"
+                                                                @click="updateReply(reply.replyID)"><i
+                                                                    class="fas fa-save"></i></button>
+                                                        </div>
+                                                        <div v-else>
+                                                            <button class="toggleReply btn btn-white"
+                                                                @click="toggleEdit(reply.replyID)"><i
+                                                                    class="fas fa-edit"></i></button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Replies -->
+                                            <div class="row">
+                                                <div class="col-md-6 col-md-offset-3">
+                                                    <form>
+                                                        <textarea name="reply" class="reply-body" cols="60"
+                                                            rows="3"></textarea>
+                                                        <button class="btn btn-white"
+                                                            v-on:click="makeReply()">Submit</button>
+                                                    </form>
+                                                    <!-- v-on:click tassarna  -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- * END OF POST -->
                         </div>
                     </div>
-                    <!-- End Reply Modal -->
                 </div>
             </div>
         </div>
-        </main>
-        <footer>
-        </footer>
+</main>
+<footer>
+</footer>
         <!-- * LOGIN / SIGNUP MODAL -->
         <div class="modal fade" id="loginModal">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="bs-example bs-example-tabs">
                         <ul id="myTab" class="nav nav-pills">
-                            <li id="loginTab" class="tab-design"><a href="#login" data-toggle="tab" class="active"><span></span> Log In <span></span></a></li>
+                            <li id="loginTab" class="tab-design"><a href="#login" data-toggle="tab"
+                                    class="active"><span></span> Log In <span></span></a></li>
                             <li id="signupTab" class=" tab-design"><a href="#signup" data-toggle="tab">Sign Up</a></li>
                         </ul>
                     </div>
@@ -275,7 +291,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- END OF LOGIN / SIGNUP MODAL -->
         <!-- USER ACTIONS MODAL -->
         <div class="modal fade" id="actionModal">
@@ -288,7 +304,7 @@
                     <div class="modal-body">
                         <div>
                             <form action="" method="" class="form-horizontal">
-                                
+
                                 <div class="input-container">
                                     <label class="label">Username</label>
                                     <input id="username" class="form-control" type="text" name="username">
@@ -315,8 +331,8 @@
                                         <option value="Contributor">Contributor</option>
                                         <option value="Super Admin">Super Admin</option>
                                     </select>
-                                </div>                         
-                                <button class = "btn btn-white" v-on:click="updateUser()">Submit</button>
+                                </div>
+                                <button class="btn btn-white" v-on:click="updateUser()">Submit</button>
                             </form>
                         </div>
                     </div>
