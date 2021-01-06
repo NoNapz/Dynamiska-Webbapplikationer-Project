@@ -8,6 +8,7 @@
   --main-color: #343a40;
   --main-highlight: #82e79c;
   --main-highlight-2: #4e6bbb;
+  --duplicate-color: #00000042;
   /* #059e5c */
   /* #5dbcd2 */
 }
@@ -93,7 +94,6 @@ button.btn-white {
 }
 button.btn-white:hover {
   color: var(--main-highlight);
-  background-color: ;
 }
 
 .post-container {
@@ -106,19 +106,50 @@ button.btn-white:hover {
   box-shadow: 2px 2px 2px #ccc;
 }
 
+.duplicate {
+    filter: grayscale(100%);
+}
+
+
+
 .post-container-icon {
     position: absolute;
-    color: rgba(0, 0, 0, 0.26);
+    color: #00000042;
     font-size: 1.6rem;
     left: 10px;
     top:5px; 
 }
-
-  /* position: absolute;
-  left: 10px;
-  top:5px; */
-
 .post-like-container i{
     font-size: 1.5rem;
     color: #4e6bbb;
+}
+.parent-FAQ{
+  position: relative;
+}
+.FAQ{
+  max-height: 20rem;
+  overflow: scroll;
+}
+
+.hideScroll{
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.hideScroll::-webkit-scrollbar{
+  width: 0px;
+  background: transparent;
+}
+
+.FAQ-container-icon{
+  z-index: 5;
+ color: black;
+  position: absolute;
+  left: 4%;
+  opacity: .5;
+  /* left: 50%; */
+  top: 90%;
+  font-size: 2rem;
+  color: var(--main-highlight-2);
+  /* transform: translateX(-50%); */
+  
 }

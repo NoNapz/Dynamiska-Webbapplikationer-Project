@@ -66,28 +66,86 @@
                             <textarea name="reply" id="postBody" class="form-control" rows="3"
                                 placeholder="What do you need help with?.."></textarea>
                         </div>
-                        <button v-on:click="startTopic" type="submit" class="btn btn-white">Create post</button>
+                        <button v-on:click="startTopic" type="button" class="btn btn-white">Create post</button>
                     </form>
-                    <!-- !! MAYBE ADD SORTING HERE -->
+                    <!--  HERE -->
+
+                    <div class="parent-FAQ">
+                        <i class="fas fa-angle-double-down FAQ-container-icon"></i>
+                        <div class = "FAQ hideScroll">
+
+                            <div class="post-container">
+                                <i class="fas fa-question post-container-icon"></i>
+                                <div class="post-header d-flex justify-content-between align-items-center">
+                                    <h5>FAQ: Help with Databases needed!</h5>
+                                </div>
+                                <div class="post-body d-flex justify-content-between align-items-center">
+                                    <p>You're having problem with connecting to the database you're trying to connect to?</p>
+                                </div>
+                            </div>
+                            <div class="post-container">
+                                <i class="fas fa-question post-container-icon"></i>
+                                <div class="post-header d-flex justify-content-between align-items-center">
+                                    <h5>FAQ: Help with Webb needed!</h5>
+                                </div>
+                                <div class="post-body d-flex justify-content-between align-items-center">
+                                    <p>You're having problem with HTML/CSS?
+                                        First of all. Try with a different method, and after that, learn how
+                                        to use google efficiently.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="post-container">
+                                <i class="fas fa-question post-container-icon"></i>
+                                <div class="post-header d-flex justify-content-between align-items-center">
+                                    <h5>FAQ: Help with Algorithms needed!</h5>
+                                </div>
+                                <div class="post-body d-flex justify-content-between align-items-center">
+                                    <p>Algorithms can be difficult at times, and I know it can be frustrating.
+                                        But the easiest way to learn is to use google.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="post-container">
+                                <i class="fas fa-question post-container-icon"></i>
+                                <div class="post-header d-flex justify-content-between align-items-center">
+                                    <h5>FAQ: Help with [Insert topic] needed!</h5>
+                                </div>
+                                <div class="post-body d-flex justify-content-between align-items-center">
+                                    <p>You're having trouble with [insert topic]?
+                                        It can be frustrating at times, but the one most important thing to know
+                                        is that when things get hard, you can learn a lot from your experience with tampering
+                                        with the problem.
+                                    </p>
+                                </div>
+                            </div>
+                            
+    
+    
+    
+                            
+                        </div>
+                    </div>
+                    
 
                 </div>
                 <!-- * CREATE POST END -->
                 <div class="col-sm-12 col-md-8 pt-4">
                     <form class="d-flex justify-content-end">
-                        <button v-if="currentUser.username" class="btn btn-white" v-on:click.prevent="sortByUser">My
+                        <button v-if="currentUser.username" class="btn btn-white mr-1" v-on:click.prevent="sortByUser">My
                             Posts</button>
-                        <button class="btn btn-white mr-1"
-                            v-on:click.prevent="sortByCategory('Databases')">Databases</button>
-                        <button class="btn btn-white mr-1"
-                            v-on:click.prevent="sortByCategory('Algorithms')">Algorithms</button>
-                        <button class="btn btn-white mr-1" v-on:click.prevent="sortByCategory('Webb')">Webb</button>
-                        <button class="btn btn-white mr-1" v-on:click.prevent="sortByCategory('Other')">Other</button>
-                        <button class="btn btn-white mr-1">View All</button>
+                        <button class="btn btn-white mr-1" type="button"
+                            v-on:click="sortByCategory('Databases')">Databases</button>
+                        <button class="btn btn-white mr-1" type="button"
+                            v-on:click="sortByCategory('Algorithms')">Algorithms</button>
+                        <button class="btn btn-white mr-1" type="button" v-on:click="sortByCategory('Webb')">Webb</button>
+                        <button class="btn btn-white mr-1" type="button" v-on:click="sortByCategory('Other')">Other</button>
+                        <button class="btn btn-white" type="button" v-on:click="showAll">View All</button>
                     </form>
                     <div>
                         <div id="posts">
                             <!-- * POST -->
-                            <div v-for="post in posts" v-bind:key="post.id" class="post-container">
+                            <div v-for="post in posts" v-bind:key="post.id" v-bind:class="post.isDuplicate == 0 ? 'post-container' : 'post-container duplicate'">
                                     <i v-if="post.category == 'Other'" class="fas fa-question post-container-icon"></i>
                                     <i v-else-if="post.category == 'Algorithms'" class="fas fa-square-root-alt post-container-icon"></i>
                                     <i v-else-if="post.category == 'Databases'" class="fas fa-database post-container-icon"></i>
@@ -99,26 +157,26 @@
                                 <div class="post-body d-flex justify-content-between align-items-center">
                                     <p>{{ post.body }}</p>
                                     <form class="post-like-container">
-                                        <button @click="likePost(post.postID)" class="btn"><i
+                                        <button class="btn"><i
                                                 class="fas fa-thumbs-up"></i></button>
-                                        <span id="postLikes"></span>
-                                        <button @click="dislikePost(post.postID)" class="btn"><i
+                                        <span id="postLikes"> </span>
+                                        <button class="btn"><i
                                                 class="fas fa-thumbs-down"></i></button>
                                     </form>
                                 </div>
                                 <div class="post-footer d-flex justify-content-between align-items-end">
                                     <span>{{ post.category }}<br>- {{ post.created }}</span>
-                                    <div>
-                                        <button class="btn btn-white"><i class="fas fa-thumbtack"></i></button>
-                                        <button v-on:click="showActionModal(post.username)" class="btn btn-white"><i
+                                    <form>
+                                        <button v-if="currentUser.userType == 'Super Admin' || currentUser.userType == 'Contributor'" v-on:click="markAsDuplicate(post.postID)" class="btn btn-white" type="button" ><i class="fas fa-thumbtack"></i></button>
+                                        <button v-if="currentUser.userType  == 'Super Admin'" v-on:click.prevent="showActionModal(post.username)" class="btn btn-white"><i
                                                 class="fas fa-users-cog"></i></button>
                                         <button
-                                            v-if="currentUser.username == post.username || currentUser.userType == 'Super Admin'"
-                                            class="btn btn-white" v-on:click="showEditModal(post.postID)"><i
+                                            v-if="currentUser.userType == 'Super Admin' || currentUser.username == post.username"
+                                            class="btn btn-white" v-on:click.prevent="showEditModal(post.postID)"><i
                                                 class="fas fa-edit"></i></button>
-                                        <button v-on:click="showReplyModal(post.postID)" class="btn btn-white"><i
+                                        <button v-on:click.prevent="showReplyModal(post.postID)" class="btn btn-white"><i
                                                 class="far fa-eye"></i> / <i class="fas fa-comment-dots"></i></button>
-                                    </div>
+                                    </form>
                                 </div>
                             </div>
                             <!-- Edit Modal -->
@@ -152,9 +210,9 @@
                                                         <textarea name="body-edit" id="bodyEdit" class="form-control"
                                                             rows="5"></textarea>
                                                     </div>
-                                                    <button class="btn btn-white updatePost"
+                                                    <button type="button" class="btn btn-white updatePost"
                                                         v-on:click="updatePost">Update</button>
-                                                    <button type="submit" class="btn btn-white delete-post"
+                                                    <button type="button" class="btn btn-white delete-post"
                                                         v-on:click="removePost">Delete</button>
                                                 </form>
                                             </div>
@@ -198,11 +256,11 @@
                                                     </div>
                                                     <div class="replyCrud">
                                                         <!-- ? This is where the fun begins! ? -->
-                                                        <button class="removeReply btn btn-danger"
+                                                        <button type="button" class="removeReply btn btn-danger"
                                                             @click="removeReply(reply.replyID)"><i
                                                                 class="fas fa-trash"></i></button>
                                                         <div v-if="editMode == reply.replyID">
-                                                            <button class="editReply btn btn-white"
+                                                            <button type="button" class="editReply btn btn-white"
                                                                 @click="updateReply(reply.replyID)"><i
                                                                     class="fas fa-save"></i></button>
                                                         </div>
@@ -216,14 +274,17 @@
                                             </div>
                                             <!-- Replies -->
                                             <div class="row">
-                                                <div class="col-md-6 col-md-offset-3">
+                                                <div class="col-md-6 col-md-offset-3" v-if="currentUser.userType == 'Super Admin' || currentUser.userType == 'Contributor'">
                                                     <form>
                                                         <textarea name="reply" class="reply-body" cols="60"
                                                             rows="3"></textarea>
-                                                        <button class="btn btn-white"
+                                                        <button type="button" class="btn btn-white"
                                                             v-on:click="makeReply()">Submit</button>
                                                     </form>
                                                     <!-- v-on:click tassarna  -->
+                                                </div>
+                                                <div v-else>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -332,7 +393,7 @@
                                         <option value="Super Admin">Super Admin</option>
                                     </select>
                                 </div>
-                                <button class="btn btn-white" v-on:click="updateUser()">Submit</button>
+                                <button type="button" class="btn btn-white" v-on:click="updateUser()">Submit</button>
                             </form>
                         </div>
                     </div>
@@ -340,7 +401,6 @@
             </div>
         </div>
     </div>
-
     <script src="http://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
@@ -348,3 +408,6 @@
 </body>
 
 </html>
+<script>
+
+</script>

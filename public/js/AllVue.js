@@ -4,9 +4,22 @@ const vm = new Vue({
         posts: [],
         replies: [],
         currentUser: {},
-        editMode: false
+        editMode: false,
+        postLikes: 0,
     },
     methods: {
+        getPosts() {
+            var self = this;
+            $.getJSON("/posts", function (jsondata) {
+                self.posts = jsondata;
+            });
+        },
+        getReplies(postID) {
+            var self = this;
+            $.getJSON("/reply/" + postID, function (jsondata) {
+                self.replies = jsondata;
+            });
+        },
         showloginsignup() {
             $("#loginModal").modal("show");
         },
@@ -42,12 +55,12 @@ const vm = new Vue({
                 },
             });
         },
-        showActionModal(username){
+        showActionModal(username) {
             $("#actionModal").modal("show");
             $.ajax({
                 url: "/getUser/" + username,
                 type: "GET",
-                success: (user)=>{
+                success: (user) => {
                     $("#username").val(user.username);
                     $("#email").val(user.email);
                     $("#name").val(user.name);
@@ -67,6 +80,9 @@ const vm = new Vue({
                 url: "/post",
                 type: "POST",
                 data: post,
+                success: () => {
+                    this.getPosts();
+                },
             });
         },
         makeReply() {
@@ -78,59 +94,8 @@ const vm = new Vue({
                 url: "/reply",
                 type: "POST",
                 data: reply,
-            });
-        },
-        likePost(postID) {
-            $.ajax({
-                url: "/postLike/" + postID,
-                type: "POST",
                 success: () => {
-                    this.getLikes(postID);
-                },
-            });
-        },
-        getLikes(postID) {
-            $.ajax({
-                url: "/post/" + postID,
-                type: "GET",
-                success: (postLikes) => {
-                    $("#postLikes").html(postLikes.likes);
-                },
-            });
-        },
-        dislikePost(postID) {
-            $.ajax({
-                url: "/postdislike/" + postID,
-                type: "GET",
-                success: () => {
-                    this.getLikes(postID);
-                },
-            });
-        },
-        likeReply(replyID) {
-            $.ajax({
-                url: "/replylike/" + replyID,
-                type: "POST",
-                success: () => {
-                    this.getReplyLikes(replyID);
-                },
-            });
-        },
-        getReplyLikes(replyID) {
-            $.ajax({
-                url: "/replies/" + replyID,
-                type: "GET",
-                success: (replyLikes) => {
-                    $("#replyLikes").html(replyLikes.likes);
-                },
-            });
-        },
-        dislikeReply(replyID) {
-            $.ajax({
-                url: "/replydislike/" + replyID,
-                type: "GET",
-                success: () => {
-                    this.getReplyLikes(replyID);
+                    this.getReplies(reply.postID);
                 },
             });
         },
@@ -141,6 +106,7 @@ const vm = new Vue({
                 postBody: $("#bodyEdit").val(),
                 postCategory: $("#editCategory").val(),
             };
+            $("#editModal").modal("hide");
             $.ajax({
                 url: "/updatePostByID/" + postEdit.postID,
                 type: "PUT",
@@ -149,6 +115,7 @@ const vm = new Vue({
                     $("#postTitleSpan").html(post.postTitle);
                     $("#postBodySpan").html(post.postBody);
                     $("#postCategory").val(post.category);
+                    this.getPosts();
                 },
             });
         },
@@ -158,9 +125,7 @@ const vm = new Vue({
                 url: "/removePost/" + id,
                 type: "DELETE",
                 success: () => {
-                    $.getJSON("/posts", function (jsondata) {
-                        this.posts = jsondata;
-                    });
+                    this.getPosts();
                 },
             });
             $("#editModal").modal("hide");
@@ -168,38 +133,44 @@ const vm = new Vue({
         toggleEdit(id) {
             this.editMode = id;
             $.ajax({
-                url: "/getReplyByID/"+id,
+                url: "/getReplyByID/" + id,
                 type: "GET",
-                success: (reply)=>{
-                    $("#editReply").attr('Value', reply.reply);
-                    $("#editReply").html('Fuck no');
-                }
-            })
+                success: (reply) => {
+                    $("#editReply").attr("Value", reply.reply);
+                    $("#editReply").html("Fuck no");
+                },
+            });
         },
-        updateReply(id){
+        updateReply(id) {
+            const postID = $("#post-id").html();
             let reply = {
-                replyID : id,
-                reply: $("#editReply").val()
-            }
+                replyID: id,
+                reply: $("#editReply").val(),
+            };
             $.ajax({
                 url: "/editReply/" + id,
                 type: "PUT",
                 data: reply,
-            })
-            if(this.editMode){
-                this.editMode = false
+                success: () => {
+                    this.getReplies(postID);
+                },
+            });
+            if (this.editMode) {
+                this.editMode = false;
             } else {
-                this.editMode = true
+                this.editMode = true;
             }
         },
         removeReply(id) {
+            const postID = $("#post-id").html();
             $.ajax({
                 url: "/removeReply/" + id,
                 type: "DELETE",
+                success: () => {
+                    this.getReplies(postID);
+                },
             });
         },
-
-        // TODO: Edit reply
         sortByCategory(category) {
             $.ajax({
                 url: "/sortByCategory/" + category,
@@ -218,6 +189,9 @@ const vm = new Vue({
                 },
             });
         },
+        showAll() {
+            this.getPosts();
+        },
         updateUser() {
             let username = $("#spanUsername").html();
             let user = {
@@ -227,12 +201,25 @@ const vm = new Vue({
                 status: $("#status").val(),
                 userType: $("#userType").val(),
             };
+            $("#actionModal").modal("hide");
             $.ajax({
                 url: "/updateUser/" + username,
                 type: "PUT",
                 data: user,
-            })
-        }
+                success: () => {
+                    this.getPosts();
+                },
+            });
+        },
+        markAsDuplicate(id) {
+            $.ajax({
+                url: "/isDuplicate/" + id,
+                type: "PUT",
+                success: () => {
+                    this.getPosts();
+                },
+            });
+        },
     },
     mounted() {
         var self = this;

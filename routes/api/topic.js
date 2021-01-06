@@ -13,8 +13,9 @@ router.post('/post', async (req, res) => {
             body: req.body.body,
             category: req.body.category
         };
-        await dbservice.createPost(topic);
+        const post = await dbservice.createPost(topic);
         console.log(USER_NAME + ' Created Post:\n ' +topic);
+        res.send(post);
         return topic;
     } catch (err) {
         res.send('Error sending commment');
@@ -26,7 +27,9 @@ router.get("/post/:id", async (req, res) => {
   const paramID = req.params.id;
   try {
     const found = await dbservice.getPostByID(paramID);
+    
     if (found) {
+      console.log('Likes: ' + found);
       res.send(found);
       return found;
     } else {
@@ -47,43 +50,15 @@ router.get("/posts", async (req, res) => {
     }
 });
 
-// * LIKE POST
-router.post("/postlike/:id", async (req, res) => {
-  const paramID = req.params.id;
-  try {
-    const addLike = {
-      username: USER_NAME,
-      postID: paramID
-    };
-    await dbservice.likePost(addLike);
-    console.log(USER_NAME + " added like on Post: " + paramID);
-    return addLike;
-  } catch (err) {
-    res.send(err);
-  }
-});
-
-router.get("/postdislike/:id", async (req, res) =>{
-  const paramID = req.params.id;
-  try{
-    const dislike = {
-      username : USER_NAME,
-      postID : paramID
-    };
-    await dbservice.removePostLike(dislike);
-    console.log(USER_NAME + " removed like on Post: " + paramID);
-    return dislike;
-  }catch(err){
-    console.log('Error: ' + err);
-  }
-});
+// post:id UPDATE SET whee liikes - + 1
 
 router.delete("/removePost/:id", async (req, res) =>{
   const found = req.params.id;
   console.log(found);
   try{
-    await dbservice.deletePostByID(found);
+    const deleted = await dbservice.deletePostByID(found);
     console.log(USER_NAME + ' - Removed Post: ' + found);
+    res.send(deleted);
   }catch(err) {
     console.log('Error from topic.js: ' + err);
   }
@@ -92,8 +67,9 @@ router.delete("/removePost/:id", async (req, res) =>{
 router.put("/updatePostByID/:id", async (req, res) =>{
   const found = req.body.postID;
   try{
-    await dbservice.updatePostByID(req.body);
+    const update = await dbservice.updatePostByID(req.body);
     console.log(USER_NAME + ': updated Post: ' + found);
+    res.send(update);
   }catch(err){  
     console.log('Error updating post: ' + err);
   }
@@ -122,6 +98,18 @@ router.get('/sortByCategory/:category', async (req, res) =>{
   }catch(err){
     throw new Error('Error: ' + err);
   }
+});
+
+router.put('/isDuplicate/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    console.log('postID: ' + id);
+    const isDuplicate = await dbservice.duplicate(id);
+    res.send(isDuplicate);
+  } catch(err) {
+    console.log('Error: ' + err);
+  }
+
 })
 
 

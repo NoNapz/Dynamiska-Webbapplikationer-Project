@@ -37,57 +37,80 @@ https://codeforgeek.com/manage-session-using-node-js-express-4/
 
 - Project flow - 
 
-TODO:
-
 -As Consumer- (Ask questions and consume information (answers))
 
+<!-- * COMPLETE -->
 • I should be able to login as a consumer.
 
+<!-- * COMPLETE -->
 • I should be able to administer my questions i.e. add, delete and update them. The data that each question has is: question title, the question text, date/time when it was created and the category that the question falls under.
-
 (You have to think about database design, for example: qsID which is a primary key, unique and automatically enumerated).
 
+<!-- * COMPLETE -->
 • I should also be able to see a list of FAQ (frequently asked questions) returned as a result of a search query (linked to category).
 
+<!-- * COMPLETE -->
 • I should be able to view all my questions.
 
+<!-- * COMPLETE -->
 • Once a contributor has added an answer to my question, I should be able to see it below my question.
 
 -As Contributor- (Provide information (answers) to questions)
 
+<!-- * COMPLETE -->
 • I should be able to login as contributor.
 
+<!-- * COMPLETE -->
 • I should be able to see a list of questions classified by category.
 
+<!-- * COMPLETE -->
 • Under each question there should be a place for me to add my answer with my username and answer text. The date/time should be appended automatically.
 
+<!-- * COMPLETE -->
 • I should also be able to update my answer or delete it.
 
+<!-- * COMPLETE -->
 • The consumer should be able to see the answer I have provided to their question.
 
 -As Super Admin- (See a list of all questions and administer the questions and the users)
 
+<!-- * COMPLETE -->
 I should be able to login as super admin.
 
+<!-- * COMPLETE -->
 • Under each question I should be able to see all answers related to it. For both the questions and answers I should be able to see all related information: user, 
 text and date/time. For answers, I should be able to view up-votes/down-votes (see further functionality requirements below).
 
+<!-- * COMPLETE --> TODO: Actually ban
 • I should be able to block a user (i.e. consumer or contributor) for misconduct. In this scenario, when that user attempts to login they should not be able to login and should read somewhere that their account has been blocked.
 
+<!-- * COMPLETE -->
 • I should be able to manage contributors (i.e. add contributor, delete contributor and update contributor information).
 
 Further functionality for contributor:
 
+<!-- * COMPLETE --> TODO: Dynamically
 • I should be able to label a question as duplicate.
 
+<!-- * COMPLETE -->
 • More than one contributor can add answers to the same question.
 
 Further functionality for consumer:
 
+FIXME:
 • I should be able to up-vote/down-vote an answer to my question.
 
-NEEDS FIX:
+TODO:
 
-COMPLETE:
+Dynamiska saker, lol.
+Fix, duplicate -> Contributors and Admins can see the button. And make it update Dynamically.
+Ban user, make him/her unable to login. and mark as banned in posts / replys.
+As a user I can not reply to quetions.
 
 
+Prevent undefiend user to post, like and reply.
+
+
+
+
+Likes: create, and remove likes, one like/user.

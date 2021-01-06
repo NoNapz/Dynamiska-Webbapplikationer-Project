@@ -78,6 +78,7 @@ router.put("/updateUser/:username", async (req, res) =>{
         console.log(JSON.stringify(req.body));
         await dbservice.updateUser(req.body, req.params.username);
         console.log('LOL PLS');
+        res.send();
     } catch(err) {
         console.log('Error: ' + err)
     }
