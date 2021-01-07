@@ -47,7 +47,7 @@
                             <span v-else="currentUser.username">{{ currentUser.userType }}</span>
                         </h3>
                     </div>
-                    <form>
+                    <form id="createPost">
                         <div class="input-container">
                             <label class="label">Title</label>
                             <input id="postTitle" class="form-control" type="text" name="title" placeholder="Topic..">
@@ -66,15 +66,15 @@
                             <textarea name="reply" id="postBody" class="form-control" rows="3"
                                 placeholder="What do you need help with?.."></textarea>
                         </div>
-                        <button v-on:click="startTopic" type="button" class="btn btn-white">Create post</button>
+                        <button v-on:click="startTopic" type="button"  class="btn btn-white">Create post</button>
                     </form>
                     <!--  HERE -->
 
-                    <div class="parent-FAQ">
-                        <i class="fas fa-angle-double-down FAQ-container-icon"></i>
+                    <div class="parent-FAQ pt-3">
+                        <i class="fas fa-angle-double-down FAQ-icon container-icon"></i>
                         <div class = "FAQ hideScroll">
 
-                            <div class="post-container">
+                            <div class="post-container FAQ-post-Container">
                                 <i class="fas fa-question post-container-icon"></i>
                                 <div class="post-header d-flex justify-content-between align-items-center">
                                     <h5>FAQ: Help with Databases needed!</h5>
@@ -83,7 +83,7 @@
                                     <p>You're having problem with connecting to the database you're trying to connect to?</p>
                                 </div>
                             </div>
-                            <div class="post-container">
+                            <div class="post-container FAQ-post-Container">
                                 <i class="fas fa-question post-container-icon"></i>
                                 <div class="post-header d-flex justify-content-between align-items-center">
                                     <h5>FAQ: Help with Webb needed!</h5>
@@ -95,7 +95,7 @@
                                     </p>
                                 </div>
                             </div>
-                            <div class="post-container">
+                            <div class="post-container FAQ-post-Container">
                                 <i class="fas fa-question post-container-icon"></i>
                                 <div class="post-header d-flex justify-content-between align-items-center">
                                     <h5>FAQ: Help with Algorithms needed!</h5>
@@ -106,7 +106,7 @@
                                     </p>
                                 </div>
                             </div>
-                            <div class="post-container">
+                            <div class="post-container FAQ-post-Container">
                                 <i class="fas fa-question post-container-icon"></i>
                                 <div class="post-header d-flex justify-content-between align-items-center">
                                     <h5>FAQ: Help with [Insert topic] needed!</h5>
@@ -142,8 +142,9 @@
                         <button class="btn btn-white mr-1" type="button" v-on:click="sortByCategory('Other')">Other</button>
                         <button class="btn btn-white" type="button" v-on:click="showAll">View All</button>
                     </form>
-                    <div>
-                        <div id="posts">
+                    <div class="pt-3">
+                        <i class="fas fa-angle-double-down POST-icon container-icon"></i>
+                        <div id="posts" class="hideScroll">
                             <!-- * POST -->
                             <div v-for="post in posts" v-bind:key="post.id" v-bind:class="post.isDuplicate == 0 ? 'post-container' : 'post-container duplicate'">
                                     <i v-if="post.category == 'Other'" class="fas fa-question post-container-icon"></i>
@@ -157,10 +158,10 @@
                                 <div class="post-body d-flex justify-content-between align-items-center">
                                     <p>{{ post.body }}</p>
                                     <form class="post-like-container">
-                                        <button class="btn"><i
+                                        <button type="button" class="btn" v-on:click="likePost(post.postID)"><i
                                                 class="fas fa-thumbs-up"></i></button>
-                                        <span id="postLikes"> </span>
-                                        <button class="btn"><i
+                                        <span>{{ post.likes }}</span>
+                                        <button type="button" class="btn" v-on:click="dislikePost(post.postID)"><i
                                                 class="fas fa-thumbs-down"></i></button>
                                     </form>
                                 </div>
@@ -189,7 +190,7 @@
                                         </div>
                                         <div class="modal-body">
                                             <div>
-                                                <form action="" method="" class="form-horizontal">
+                                                <form class="form-horizontal" id="editPostForm">
                                                     <div class="input-container">
                                                         <label class="label">Title</label>
                                                         <input class="form-control editTitle" type="text"
@@ -246,10 +247,10 @@
                                                     <p id="replyID">{{reply.replyID}}</p>
                                                     <span> {{ reply.created }} </span>
                                                     <div id="replyButtons">
-                                                        <button v-on:click="likeReply(reply.replyID)" class="btn"><i
+                                                        <button type="button" v-on:click="likeReply(reply.replyID)" class="btn"><i
                                                                 class="fa fa-thumbs-up fa-lg"
                                                                 aria-hidden="true"></i></button>
-                                                        <button v-on:click="dislikeReply(reply.replyID)" class="btn"><i
+                                                        <button type="button" v-on:click="dislikeReply(reply.replyID)" class="btn"><i
                                                                 class="fa fa-thumbs-down fa-lg"
                                                                 aria-hidden="true"></i></button>
                                                         <span id="replyLikes">{{ reply.likes }}</span>
@@ -275,7 +276,7 @@
                                             <!-- Replies -->
                                             <div class="row">
                                                 <div class="col-md-6 col-md-offset-3" v-if="currentUser.userType == 'Super Admin' || currentUser.userType == 'Contributor'">
-                                                    <form>
+                                                    <form id="replyForm">
                                                         <textarea name="reply" class="reply-body" cols="60"
                                                             rows="3"></textarea>
                                                         <button type="button" class="btn btn-white"
@@ -314,7 +315,7 @@
                     <div class="modal-body">
                         <div id="myTabContent" class="tab-content">
                             <div class="tab-pane active" id="login">
-                                <form class="form-horizontal" action="/login" method="POST">
+                                <form class="form-horizontal" action="/login" method="POST" id="loginForm">
                                     <div class="input-container">
                                         <label class="label">Username</label>
                                         <input id="logUsername" class="form-control" type="text" name="username">
@@ -327,7 +328,7 @@
                                 </form>
                             </div>
                             <div class="tab-pane" id="signup">
-                                <form class="form-horizontal" action="/signup" method="POST">
+                                <form class="form-horizontal" action="/signup" method="POST" id="signupForm">
                                     <div class="input-container">
                                         <label class="label">Username</label>
                                         <input id="addUsername" class="form-control" type="text" name="username">
@@ -364,7 +365,7 @@
                     </div>
                     <div class="modal-body">
                         <div>
-                            <form action="" method="" class="form-horizontal">
+                            <form class="form-horizontal" id="actionForm">
 
                                 <div class="input-container">
                                     <label class="label">Username</label>
@@ -404,7 +405,9 @@
     <script src="http://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.2/dist/jquery.validate.js"></script>
     <script src="/js/AllVue.js"></script>
+    <script src="/js/validation.js"></script>
 </body>
 
 </html>

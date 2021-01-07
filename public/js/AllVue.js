@@ -220,6 +220,54 @@ const vm = new Vue({
                 },
             });
         },
+        likePost(postID) {
+            user = this.currentUser;
+            $.ajax({
+                url: "/likePost/" + postID,
+                type: "POST",
+                data: user,
+                success: () =>{
+                    this.getPosts();
+                }
+            })
+        },
+        dislikePost(postID){
+            user = this.currentUser;
+
+            $.ajax({
+                url: "/dislikePost/" + postID,
+                type: "DELETE",
+                data: user,
+                success:() =>{
+                    this.getPosts();
+                }
+                
+            })
+        },
+        likeReply(replyID) {
+            const postID = $("#post-id").html();
+            user = this.currentUser;
+            $.ajax({
+                url: "/likeReply/" + replyID,
+                type: "POST",
+                data: user,
+                success: ()=>{
+                    this.getReplies(postID);
+                }
+            })
+        },
+        dislikeReply(replyID){
+            const postID = $("#post-id").html();
+            user = this.currentUser;
+            $.ajax({
+                url: "/dislikeReply/" + replyID,
+                type: "DELETE",
+                data: user,
+                success: () =>{
+                    this.getReplies(postID);
+                }
+            });
+        }
     },
     mounted() {
         var self = this;

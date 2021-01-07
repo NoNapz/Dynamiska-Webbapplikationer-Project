@@ -60,7 +60,7 @@ router.delete("/removePost/:id", async (req, res) =>{
     console.log(USER_NAME + ' - Removed Post: ' + found);
     res.send(deleted);
   }catch(err) {
-    console.log('Error from topic.js: ' + err);
+    console.log('Error from post.js: ' + err);
   }
 });
 
@@ -110,7 +110,30 @@ router.put('/isDuplicate/:id', async (req, res) => {
     console.log('Error: ' + err);
   }
 
+});
+
+router.post('/likePost/:id', async(req, res) =>{
+  try {
+    // console.log('userID in post.js' + JSON.stringify(req.body.userID));
+    const postID = req.params.id;
+    const table = 'post';
+    const column = 'postID';
+    const likePost = await dbservice.like(table, column, postID, req.body.userID);
+    res.send();
+  } catch (error) {
+    console.log('Error from post.js: ' + error);
+  }
+}),
+router.delete('/dislikePost/:id', async(req, res) =>{
+  try {
+    const postID = req.params.id;
+    const table = 'post';
+    const column = 'postID';
+    const dislike= await dbservice.dislike(table, column, postID, req.body.userID);
+    res.send();
+  } catch (error) {
+    console.log('Error from post.js: ' + error);
+  }
+
 })
-
-
 module.exports = router;

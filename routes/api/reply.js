@@ -20,12 +20,12 @@ router.post('/reply', async (req, res) => {
         res.send('Error sending commment' + err);
     }
 });
-router.get('/getReplyByID/:id', async(req, res) => {
-    try{
+router.get('/getReplyByID/:id', async (req, res) => {
+    try {
         const reply = await dbservice.getRepliesByID(req.params.id);
         res.send(reply);
         return reply;
-    } catch(err) {
+    } catch (err) {
         console.log('Error: ' + err);
     }
 
@@ -83,27 +83,52 @@ router.get("/replydislike/:id", async (req, res) => {
     }
 });
 
-router.delete("/removeReply/:id", async (req, res) =>{
+router.delete("/removeReply/:id", async (req, res) => {
     const paramID = req.params.id;
-    console.log('post ID: '+ paramID);
-    try{
+    console.log('post ID: ' + paramID);
+    try {
         await dbservice.deleteReply(paramID);
         console.log(USER_NAME + " - Removed Reply: " + paramID);
         res.send();
-    }catch (err) {
+    } catch (err) {
         console.log('Error from reply.js: ' + err);
     }
 });
 
 
-router.put("/editReply/:id", async (req, res) =>{
+router.put("/editReply/:id", async (req, res) => {
     const paramID = req.params.id;
-    try{
+    try {
         await dbservice.editReply(req.body)
         res.send();
 
-    }catch(err){
+    } catch (err) {
         console.log('Error: ' + err);
+    }
+});
+
+router.post('/likeReply/:id', async (req, res) => {
+    try {
+        const postID = req.params.id;
+        const table = 'reply';
+        const column = 'replyID';
+        const likeReply = await dbservice.like(table, column, postID, req.body.userID);
+        res.send();
+    } catch (error) {
+        console.log("Error preforming like on reply: " + error);
+    }
+});
+
+router.delete('/dislikeReply/:id', async (req, res) =>{
+    try {
+        const replyID = req.params.id;
+        const userID = req.body.userID;
+        const table = 'reply';
+        const column = 'replyID';
+        await dbservice.dislike(table, column, replyID, userID);
+        res.send()
+    } catch (error) {
+        console.log('Error preforming dislike on reply: ' + error);
     }
 });
 module.exports = router;

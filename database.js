@@ -27,7 +27,7 @@ const getUserByUsername = async (data) => {
     try {
         const dbCon = await dbPromise();
         const user = await dbCon.get(
-            "SELECT username, password, userID FROM users WHERE username = ?", [data]
+            "SELECT username, password, userID, status FROM users WHERE username = ?", [data]
         );
         return user;
     } catch (err) {
@@ -93,12 +93,19 @@ const updateUser = async(data, username) =>{
 const deletePostByID = async (data) =>{
     try {
         const dbcon = await dbPromise();
+        await dbcon.get(
+            `DELETE FROM likes WHERE replyID in (SELECT replyID FROM reply WHERE postID = ?)`, [data]
+        );
         await dbcon.all(
             `DELETE FROM reply WHERE postID = ?`, [data]
         );
         await dbcon.get(
+            `DELETE FROM likes WHERE postID = ?`, [data]
+        );
+        await dbcon.get(
             `DELETE FROM post WHERE postID = ?`, [data]
         );
+
     } catch (err) {
         throw new Error ('Error: ' + err);
     }
@@ -170,6 +177,56 @@ const duplicate = async (id)=>{
     }
 }
 
+const like = async (table, column, ID, userID) => {
+    console.log('PostID: ' + ID);
+    console.log('userID: ' + userID);
+    console.log('table: ' + table);
+    console.log('column: ' + column);
+    
+    try {
+        const dbcon = await dbPromise();
+        const makeLike = await dbcon.run(
+            `INSERT INTO likes (userID, ${column}) VALUES (?, ?)`, [userID, ID]
+        );
+        const getLikes = await dbcon.all(
+            `SELECT likeID, userID, ${column} FROM likes WHERE ${column} = ?`, [ID]
+        );
+        const likeAmount = getLikes.length;
+        console.log(likeAmount);
+        const updateLikes = await dbcon.all(
+            `UPDATE ${table} SET likes = ? WHERE ${column} = ?`, [likeAmount, ID]
+        )
+        return makeLike;
+    } catch (error) {
+        throw new Error('Error adding to database: ' + error);
+    }
+}
+
+const dislike = async (table, column, ID, userID) => {
+    console.log('PostID: ' + ID);
+    console.log('userID: ' + userID);
+    console.log('table: ' + table);
+    console.log('column: ' + column);
+
+    try {
+        const dbcon = await dbPromise();
+        const deleteLike = dbcon.run(
+            `DELETE FROM likes WHERE ${column} = ? AND userID = ?`, [ID, userID]
+        );
+        const getLikes = await dbcon.all(
+            `SELECT likeID, userID, ${column} FROM likes WHERE ${column} = ?`, [ID]
+        );
+        const likeAmount = getLikes.length;
+        console.log('Likeamount: ' +likeAmount);
+        const updateLikes = await dbcon.all(
+            `UPDATE ${table} SET likes = ? WHERE ${column} = ?`, [likeAmount, ID]
+        );
+        return deleteLike;
+    } catch (error) {
+        throw new Error('Error removing like from database: ' +error);
+    }
+}
+
 /********************* REPLY **************************/
 
 // Delete reply by postID
@@ -178,6 +235,9 @@ const deleteReply = async (data) =>{
         const dbcon = await dbPromise();
         await dbcon.get(
             `DELETE FROM reply WHERE replyID = ?`, [data]
+        );
+        await dbcon.get(
+            `DELETE FROM likes WHERE replyID = ?`, [data]
         );
     } catch (err){
         throw new Error ('Error from database.js:' + err);
@@ -282,6 +342,8 @@ module.exports = {
     getFullUser: getFullUser,
     updateUser: updateUser,
     // * All Post exports
+    like: like,
+    dislike: dislike,
     createPost: createPost,
     getPosts: getPosts,
     getPostByID: getPostByID,

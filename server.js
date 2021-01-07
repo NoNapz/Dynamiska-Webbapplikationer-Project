@@ -2,7 +2,7 @@ const { request, response, static } = require("express");
 const express = require("express");
 const session = require("express-session");
 const passport = require("passport");
-const topic = require('./routes/api/topic.js');
+const post = require('./routes/api/post.js');
 const comments = require('./routes/api/reply.js');
 const auth = require("./routes/api/auth.js");
 const server = express();
@@ -31,7 +31,7 @@ server.use(passport.initialize());
 server.use(passport.session());
 
 server.use("/", auth);
-server.use("/", topic);
+server.use("/", post);
 server.use("/", comments);
 
 server.listen(PORT, (err) => {

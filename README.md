@@ -102,15 +102,5 @@ FIXME:
 
 TODO:
 
-Dynamiska saker, lol.
-Fix, duplicate -> Contributors and Admins can see the button. And make it update Dynamically.
-Ban user, make him/her unable to login. and mark as banned in posts / replys.
-As a user I can not reply to quetions.
-
-
-Prevent undefiend user to post, like and reply.
-
-
-
-
 Likes: create, and remove likes, one like/user.
+Styling: THEN WE ARE FUCKING DONE!

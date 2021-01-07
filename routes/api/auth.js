@@ -18,12 +18,17 @@ router.post("/login", async (req, res) => {
             return res.send({ ERROR: "invalid Username" });
         } else {
             if (await bcrypt.compare(req.body.password, flag.password)) {
-                grabbedUserId = await dbservice.getUserId(flag.username);
-                req.login(grabbedUserId, (err) => {
-                    req.session.user = flag.username;
-                    console.log('LOGGED IN AS:' + flag.username + ', -- SESSION STARTED -- ');
-                    res.redirect("/home");
-                });
+                if (flag.status == 'Active'){
+                    grabbedUserId = await dbservice.getUserId(flag.username);
+                    req.login(grabbedUserId, (err) => {
+                        req.session.user = flag.username;
+                        console.log('LOGGED IN AS:' + flag.username + ', -- SESSION STARTED -- ');
+                        res.redirect("/home");
+                    });
+                }else{
+                    res.send('Error: You suck, and has been banned');
+                }
+
             } else {
                 res.send({ ERROR: "Username and password does not match" });
             }
