@@ -3,132 +3,93 @@ const express = require("express");
 const dbservice = require("../../database");
 const router = express.Router();
 
-
-router.post('/reply', async (req, res) => {
+// * GET REPLY BY ID
+router.get('/reply/:replyID', async (req, res) => {
     try {
-        console.log('postID: ' + req.body.postID);
+        const reply = await dbservice.getRepliesByID(req.params.replyID);
+        res.send(reply);
+    } catch (err) {
+        console.log('GETTING REPLY BY ID <- /reply/id/:id <- reply.js: ' + err);
+    }
+});
+
+// * GET REPLY BY POST ID
+router.get('/reply/post/:postID', async (req, res) => {
+    const paramID = req.params.postID;
+    try {
+        const replies = await dbservice.getRepliesByPostID(paramID);
+        res.send(replies);
+    } catch (err) {
+        console.log('GETTING REPLIES BY POST ID <- /reply/post/:postID <- reply.js: ' + err);
+    }
+});
+
+// * ADD REPLY
+router.post('/reply/add', async (req, res) => {
+    try {
         const reply = {
             postID: req.body.postID,
             username: USER_NAME,
             reply: req.body.reply,
         };
         await dbservice.createReply(reply);
-        res.send();
-        console.log(USER_NAME + ' Created reply:\n' + reply);
-        return reply;
-    } catch (err) {
-        res.send('Error sending commment' + err);
-    }
-});
-router.get('/getReplyByID/:id', async (req, res) => {
-    try {
-        const reply = await dbservice.getRepliesByID(req.params.id);
         res.send(reply);
-        return reply;
+        console.log(USER_NAME + ' MADE REPLY:\n' + reply.reply);
     } catch (err) {
-        console.log('Error: ' + err);
-    }
-
-})
-router.get('/reply/:postID', async (req, res) => {
-    const paramID = req.params.postID;
-    try {
-        const replies = await dbservice.getRepliesByPostID(paramID);
-        res.send(replies);
-        return replies;
-    } catch (err) {
-        console.log('Problem getting replies: ' + err);
+        console.log('POSTING COMMENT <- /reply/add <- reply.js: ' + err);
     }
 });
 
-
-router.get("/replies", async (req, res) => {
+// * REMOVE REPLY
+router.delete("/reply/remove/:replyID", async (req, res) => {
+    const replyID = req.params.replyID;
     try {
-        const replies = await dbservice.getReplies();
-        res.send(replies);
-    } catch (err) {
-        res.send(err);
-    }
-});
-
-router.post("/replylike/:id", async (req, res) => {
-    const paramID = req.params.id;
-    try {
-        const addLike = {
-            username: USER_NAME,
-            replyID: paramID,
-        };
-        await dbservice.likeReply(addLike);
-        console.log(USER_NAME + ' - added like on Reply: ' + paramID);
+        await dbservice.deleteReply(replyID);
         res.send();
-        return addLike;
+        console.log(USER_NAME + " - REMOVED REPLY: " + replyID);
     } catch (err) {
-        res.send(err);
+        console.log('REMOVING REPLY <- /reply/remove/:replyID <- reply.js: ' + err);
     }
 });
 
-router.get("/replydislike/:id", async (req, res) => {
-    const paramID = req.params.id;
+// * EDIT REPLY
+router.put("/reply/edit/:replyID", async (req, res) => {
     try {
-        const dislike = {
-            username: USER_NAME,
-            replyID: paramID,
-        };
-        await dbservice.removeReplyLike(dislike);
-        console.log(USER_NAME + " - removed like on Reply: " + paramID);
-        res.send();
-        return dislike;
-    } catch (err) {
-        console.log("Error: " + err);
-    }
-});
-
-router.delete("/removeReply/:id", async (req, res) => {
-    const paramID = req.params.id;
-    console.log('post ID: ' + paramID);
-    try {
-        await dbservice.deleteReply(paramID);
-        console.log(USER_NAME + " - Removed Reply: " + paramID);
-        res.send();
-    } catch (err) {
-        console.log('Error from reply.js: ' + err);
-    }
-});
-
-
-router.put("/editReply/:id", async (req, res) => {
-    const paramID = req.params.id;
-    try {
+        const replyID = req.params.replyID;
         await dbservice.editReply(req.body)
         res.send();
-
+        console.log(USER_NAME + " - EDITED REPLY: " + replyID);
     } catch (err) {
-        console.log('Error: ' + err);
+        console.log("EDIT REPLY <- /reply/edit/:replyID <- reply.js: " + err);
     }
 });
 
-router.post('/likeReply/:id', async (req, res) => {
+// * LIKING REPLY
+router.post("/reply/like/:replyID", async (req, res) => {
     try {
-        const postID = req.params.id;
-        const table = 'reply';
-        const column = 'replyID';
-        const likeReply = await dbservice.like(table, column, postID, req.body.userID);
+        const replyID = req.params.replyID;
+        const table = "reply";
+        const column = "replyID";
+        await dbservice.like(table, column, replyID, req.body.userID);
         res.send();
-    } catch (error) {
-        console.log("Error preforming like on reply: " + error);
+        console.log(USER_NAME + " - LIKED REPLY: " + replyID);
+    } catch (err) {
+        console.log("ADDING LIKE TO REPLY <- /reply/like/:id <- reply.js: " + err);
     }
 });
 
-router.delete('/dislikeReply/:id', async (req, res) =>{
+// * DISLIKING REPLY
+router.delete('/reply/dislike/:replyID', async (req, res) => {
     try {
-        const replyID = req.params.id;
-        const userID = req.body.userID;
+        const replyID = req.params.replyID;
         const table = 'reply';
         const column = 'replyID';
-        await dbservice.dislike(table, column, replyID, userID);
+        await dbservice.dislike(table, column, replyID, req.body.userID);
         res.send()
-    } catch (error) {
-        console.log('Error preforming dislike on reply: ' + error);
+        console.log(USER_NAME + " - DISLIKED REPLY: " + replyID);
+    } catch (err) {
+        console.log("REMOVING LIKE FROM REPLY <- /reply/dislike/:id <- reply.js: " + err);
     }
 });
+
 module.exports = router;

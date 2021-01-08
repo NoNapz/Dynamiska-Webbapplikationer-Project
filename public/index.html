@@ -50,7 +50,7 @@
                     <form id="createPost">
                         <div class="input-container">
                             <label class="label">Title</label>
-                            <input id="postTitle" class="form-control" type="text" name="title" placeholder="Topic..">
+                            <input id="postTitle" class="form-control" type="text" name="title" placeholder="Title..">
                         </div>
                         <div class="input-container form-group">
                             <label class="label " for="postCategory">Chose a category: </label>
@@ -66,7 +66,7 @@
                             <textarea name="reply" id="postBody" class="form-control" rows="3"
                                 placeholder="What do you need help with?.."></textarea>
                         </div>
-                        <button v-on:click="startTopic" type="button"  class="btn btn-white">Create post</button>
+                        <button v-on:click="createPost" type="button"  class="btn btn-white">Create post</button>
                     </form>
                     <!--  HERE -->
 
@@ -132,7 +132,7 @@
                 <!-- * CREATE POST END -->
                 <div class="col-sm-12 col-md-8 pt-4">
                     <form class="d-flex justify-content-end">
-                        <button v-if="currentUser.username" class="btn btn-white mr-1" v-on:click.prevent="sortByUser">My
+                        <button v-if="currentUser.username" class="btn btn-white mr-1" type="button" v-on:click="sortByUser(currentUser.username)">My
                             Posts</button>
                         <button class="btn btn-white mr-1" type="button"
                             v-on:click="sortByCategory('Databases')">Databases</button>
@@ -231,7 +231,7 @@
                                             <p id="post-id"></p>
                                         </div>
                                         <div class="modal-body">
-                                            <!-- Topic -->
+                                            <!-- Post -->
                                             <p id="post-body"></p>
                                             <div>
                                                 <div v-for="reply in replies">
@@ -280,7 +280,7 @@
                                                         <textarea name="reply" class="reply-body" cols="60"
                                                             rows="3"></textarea>
                                                         <button type="button" class="btn btn-white"
-                                                            v-on:click="makeReply()">Submit</button>
+                                                            v-on:click="createReply">Submit</button>
                                                     </form>
                                                     <!-- v-on:click tassarna  -->
                                                 </div>

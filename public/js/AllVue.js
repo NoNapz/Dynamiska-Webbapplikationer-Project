@@ -8,40 +8,80 @@ const vm = new Vue({
         postLikes: 0,
     },
     methods: {
-        getPosts() {
-            var self = this;
-            $.getJSON("/posts", function (jsondata) {
-                self.posts = jsondata;
-            });
-        },
-        getReplies(postID) {
-            var self = this;
-            $.getJSON("/reply/" + postID, function (jsondata) {
-                self.replies = jsondata;
-            });
-        },
+        // * START OF USER VUE
         showloginsignup() {
             $("#loginModal").modal("show");
         },
-        showReplyModal(id) {
-            $("#replyModal").modal("show");
+        showActionModal(username) {
+            $("#actionModal").modal("show");
             $.ajax({
-                url: "/post/" + id,
+                url: "/user_data/" + username,
                 type: "GET",
-                success: (post) => {
-                    $("#post-id").html(post.postID);
-                    $("#post-author").html(post.username);
-                    $("#post-title").html(post.title);
-                    $("#post-body").html(post.body);
-                    $.ajax({
-                        url: "/reply/" + id,
-                        type: "GET",
-                        success: (reply) => {
-                            this.replies = reply;
-                        },
-                    });
+                success: (user) => {
+                    $("#username").val(user.username);
+                    $("#email").val(user.email);
+                    $("#name").val(user.name);
+                    $("#status").val(user.status);
+                    $("#userType").html(user.type);
+                    $("#spanUsername").html(user.username);
                 },
             });
+        },
+        updateUser() {
+            let username = $("#spanUsername").html();
+            let user = {
+                username: $("#username").val(),
+                email: $("#email").val(),
+                name: $("#name").val(),
+                status: $("#status").val(),
+                userType: $("#userType").val(),
+            };
+            $("#actionModal").modal("hide");
+            $.ajax({
+                url: "/user_data/" + username,
+                type: "PUT",
+                data: user,
+                success: () => {
+                    this.getPosts();
+                },
+            });
+        },
+        // * END OF USER VUE
+        // * POST VUE START
+        showAll() {
+            this.getPosts();
+        },
+        getPosts() {
+            var self = this;
+            $.getJSON("/post", function (jsondata) {
+                self.posts = jsondata;
+            });
+        },
+        createPost() {
+            let post = {
+                title: $("#postTitle").val(),
+                body: $("#postBody").val(),
+                category: $("#postCategory").val(),
+            };
+            $.ajax({
+                url: "/post/add",
+                type: "POST",
+                data: post,
+                success: () => {
+                    this.getPosts();
+                },
+            });
+        },
+        removePost() {
+            const id = $("#postID").html();
+            $.ajax({
+                url: "/post/remove/" + id,
+                type: "DELETE",
+                success: () => {
+                    this.getPosts();
+                },
+            });
+            $("#editModal").modal("hide");
         },
         showEditModal(id) {
             $("#editModal").modal("show");
@@ -55,50 +95,6 @@ const vm = new Vue({
                 },
             });
         },
-        showActionModal(username) {
-            $("#actionModal").modal("show");
-            $.ajax({
-                url: "/getUser/" + username,
-                type: "GET",
-                success: (user) => {
-                    $("#username").val(user.username);
-                    $("#email").val(user.email);
-                    $("#name").val(user.name);
-                    $("#status").val(user.status);
-                    $("#userType").html(user.type);
-                    $("#spanUsername").html(user.username);
-                },
-            });
-        },
-        startTopic() {
-            let post = {
-                title: $("#postTitle").val(),
-                body: $("#postBody").val(),
-                category: $("#postCategory").val(),
-            };
-            $.ajax({
-                url: "/post",
-                type: "POST",
-                data: post,
-                success: () => {
-                    this.getPosts();
-                },
-            });
-        },
-        makeReply() {
-            let reply = {
-                postID: $("#post-id").html(),
-                reply: $(".reply-body").val(),
-            };
-            $.ajax({
-                url: "/reply",
-                type: "POST",
-                data: reply,
-                success: () => {
-                    this.getReplies(reply.postID);
-                },
-            });
-        },
         updatePost() {
             const postEdit = {
                 postID: $("#postID").html(),
@@ -108,7 +104,7 @@ const vm = new Vue({
             };
             $("#editModal").modal("hide");
             $.ajax({
-                url: "/updatePostByID/" + postEdit.postID,
+                url: "/post/update/" + postEdit.postID,
                 type: "PUT",
                 data: postEdit,
                 success: (post) => {
@@ -119,25 +115,115 @@ const vm = new Vue({
                 },
             });
         },
-        removePost() {
-            const id = $("#postID").html();
+        markAsDuplicate(postID) {
             $.ajax({
-                url: "/removePost/" + id,
-                type: "DELETE",
+                url: "/post/duplicate/" + postID,
+                type: "PUT",
                 success: () => {
                     this.getPosts();
                 },
             });
-            $("#editModal").modal("hide");
+        },
+        likePost(postID) {
+            user = this.currentUser;
+            $.ajax({
+                url: "/post/like/" + postID,
+                type: "POST",
+                data: user,
+                success: () => {
+                    this.getPosts();
+                },
+            });
+        },
+        dislikePost(postID) {
+            user = this.currentUser;
+            $.ajax({
+                url: "/post/dislike/" + postID,
+                type: "DELETE",
+                data: user,
+                success: () => {
+                    this.getPosts();
+                },
+            });
+        },
+        sortByUser(username) {
+            $.ajax({
+                url: "/sort/user/" + username,
+                type: "GET",
+                success: (jsondata) => {
+                    this.posts = jsondata;
+                },
+            });
+        },
+        sortByCategory(category) {
+            $.ajax({
+                url: "/sort/category/" + category,
+                type: "GET",
+                success: (jsondata) => {
+                    this.posts = jsondata;
+                },
+            });
+        },
+        // * END OF POST VUE
+        // * START OF REPLY VUE
+        getReplies(postID) {
+            var self = this;
+            $.getJSON("/reply/post/" + postID, function (jsondata) {
+                self.replies = jsondata;
+            });
+        },
+        showReplyModal(postID) {
+            $("#replyModal").modal("show");
+            $.ajax({
+                url: "/post/" + postID,
+                type: "GET",
+                success: (post) => {
+                    $("#post-id").html(post.postID);
+                    $("#post-author").html(post.username);
+                    $("#post-title").html(post.title);
+                    $("#post-body").html(post.body);
+                    $.ajax({
+                        url: "/reply/post/" + postID,
+                        type: "GET",
+                        success: (reply) => {
+                            this.replies = reply;
+                        },
+                    });
+                },
+            });
         },
         toggleEdit(id) {
             this.editMode = id;
             $.ajax({
-                url: "/getReplyByID/" + id,
+                url: "/reply/" + id,
                 type: "GET",
                 success: (reply) => {
                     $("#editReply").attr("Value", reply.reply);
-                    $("#editReply").html("Fuck no");
+                    $("#editReply").html();
+                },
+            });
+        },
+        createReply() {
+            let reply = {
+                postID: $("#post-id").html(),
+                reply: $(".reply-body").val(),
+            };
+            $.ajax({
+                url: "/reply/add",
+                type: "POST",
+                data: reply,
+                success: () => {
+                    this.getReplies(reply.postID);
+                },
+            });
+        },
+        removeReply(id) {
+            const postID = $("#post-id").html();
+            $.ajax({
+                url: "/reply/remove/" + id,
+                type: "DELETE",
+                success: () => {
+                    this.getReplies(postID);
                 },
             });
         },
@@ -148,7 +234,7 @@ const vm = new Vue({
                 reply: $("#editReply").val(),
             };
             $.ajax({
-                url: "/editReply/" + id,
+                url: "/reply/edit/" + id,
                 type: "PUT",
                 data: reply,
                 success: () => {
@@ -161,117 +247,35 @@ const vm = new Vue({
                 this.editMode = true;
             }
         },
-        removeReply(id) {
-            const postID = $("#post-id").html();
-            $.ajax({
-                url: "/removeReply/" + id,
-                type: "DELETE",
-                success: () => {
-                    this.getReplies(postID);
-                },
-            });
-        },
-        sortByCategory(category) {
-            $.ajax({
-                url: "/sortByCategory/" + category,
-                type: "GET",
-                success: (jsondata) => {
-                    this.posts = jsondata;
-                },
-            });
-        },
-        sortByUser() {
-            $.ajax({
-                url: "/userPost",
-                type: "GET",
-                success: (jsondata) => {
-                    this.posts = jsondata;
-                },
-            });
-        },
-        showAll() {
-            this.getPosts();
-        },
-        updateUser() {
-            let username = $("#spanUsername").html();
-            let user = {
-                username: $("#username").val(),
-                email: $("#email").val(),
-                name: $("#name").val(),
-                status: $("#status").val(),
-                userType: $("#userType").val(),
-            };
-            $("#actionModal").modal("hide");
-            $.ajax({
-                url: "/updateUser/" + username,
-                type: "PUT",
-                data: user,
-                success: () => {
-                    this.getPosts();
-                },
-            });
-        },
-        markAsDuplicate(id) {
-            $.ajax({
-                url: "/isDuplicate/" + id,
-                type: "PUT",
-                success: () => {
-                    this.getPosts();
-                },
-            });
-        },
-        likePost(postID) {
-            user = this.currentUser;
-            $.ajax({
-                url: "/likePost/" + postID,
-                type: "POST",
-                data: user,
-                success: () =>{
-                    this.getPosts();
-                }
-            })
-        },
-        dislikePost(postID){
-            user = this.currentUser;
-
-            $.ajax({
-                url: "/dislikePost/" + postID,
-                type: "DELETE",
-                data: user,
-                success:() =>{
-                    this.getPosts();
-                }
-                
-            })
-        },
         likeReply(replyID) {
             const postID = $("#post-id").html();
             user = this.currentUser;
             $.ajax({
-                url: "/likeReply/" + replyID,
+                url: "/reply/like/" + replyID,
                 type: "POST",
                 data: user,
-                success: ()=>{
+                success: () => {
                     this.getReplies(postID);
-                }
-            })
+                },
+            });
         },
-        dislikeReply(replyID){
+        dislikeReply(replyID) {
             const postID = $("#post-id").html();
             user = this.currentUser;
             $.ajax({
-                url: "/dislikeReply/" + replyID,
+                url: "/reply/dislike/" + replyID,
                 type: "DELETE",
                 data: user,
-                success: () =>{
+                success: () => {
                     this.getReplies(postID);
-                }
+                },
             });
-        }
+        },
+        // * END OF REPLIES VUE
     },
     mounted() {
         var self = this;
-        $.getJSON("/posts", function (jsondata) {
+        $.getJSON("/post", function (jsondata) {
             self.posts = jsondata;
         });
         $.getJSON("/user_data", function (userdata) {

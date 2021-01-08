@@ -5,39 +5,25 @@ const router = express.Router();
 const passport = require("passport");
 const bcrypt = require("bcrypt");
 
+// * CHECK IF AUTHENTICATED - REDIRECT
 router.get("/home", (req, res) => {
-    console.log(req.user);
     console.log(req.isAuthenticated());
     res.redirect("/index.html");
 });
 
-router.post("/login", async (req, res) => {
-    try {
-        const flag = await dbservice.getUserByUsername(req.body.username);
-        if (!flag) {
-            return res.send({ ERROR: "invalid Username" });
-        } else {
-            if (await bcrypt.compare(req.body.password, flag.password)) {
-                if (flag.status == 'Active'){
-                    grabbedUserId = await dbservice.getUserId(flag.username);
-                    req.login(grabbedUserId, (err) => {
-                        req.session.user = flag.username;
-                        console.log('LOGGED IN AS:' + flag.username + ', -- SESSION STARTED -- ');
-                        res.redirect("/home");
-                    });
-                }else{
-                    res.send('Error: You suck, and has been banned');
-                }
-
-            } else {
-                res.send({ ERROR: "Username and password does not match" });
-            }
-        }
-    } catch (err) {
-        console.log(err);
+// * GET SPECIFIC USER
+router.get("/user_data/:username", async (req, res) => {
+    try{
+        let username = req.params.username;
+        const user =  await dbservice.getUserData(username);
+        res.send(user);
+        return user;
+    }catch(err){
+        console.log('ERROR FINDING USER <- /user_data/:username <- auth.js: ' + err);
     }
 });
-// TODO: 
+
+// * SIGN UP USER - PASSWORD BCRYPT
 router.post("/signup", async (req, res) => {
     try {
         const salt = await bcrypt.genSalt(10);
@@ -49,14 +35,49 @@ router.post("/signup", async (req, res) => {
             password: hashPW,
         };
         await dbservice.addUser(user);
-        console.log('New user created:\n' + user);
+        console.log('USER CREATED:\n' + user);
         res.redirect("/home");
-        return user;
     } catch (err) {
-        res.status(500).send(err);
+        console.log('CANT SIGNUP <- /signup <- auth.js: ' + err)
     }
 });
 
+// * UPDATE USER
+router.put("/user_data/:username", async (req, res) =>{
+    try {
+        await dbservice.updateUser(req.body, req.params.username);
+        res.send();
+    } catch(err) {
+        console.log('UPDATNG USER <- /user_data/:username <- auth.js: ' + err)
+    }
+});
+
+// * LOGIN - PASSWORD BCRYPT MATCH - SESSION START
+router.post("/login", async (req, res) => {
+    try {
+        const user = await dbservice.loginByUsername(req.body.username);
+        if (!user) {
+            console.log('User does not exist.')
+        } else {
+            if (await bcrypt.compare(req.body.password, user.password)) {
+                if (user.status == 'Active'){
+                    const grabbedUserId = user.userID;
+                    req.login(grabbedUserId, (err) => {
+                        req.session.user = user.username;
+                        console.log('LOGGED IN: ' + user.username + ' -- SESSION STARTED');
+                        res.redirect("/home");
+                    });
+                }else{
+                    console.log(user.username + ' - BANNED');
+                }
+            }
+        }
+    } catch (err) {
+        console.log('CANT LOGIN <- /login <- auth.js: ' +err);
+    }
+});
+
+// * LOGGIN IN USER DATA
 router.get("/user_data", async (req, res) => {
     try {
         if (USER_NAME != null) {
@@ -64,32 +85,13 @@ router.get("/user_data", async (req, res) => {
             res.send(loggedInUser);
         }
     } catch (err) {
-        res.send(err);
+        console.log('USER DATA <- /user_data <- auth.js: ' + err)
     }
 });
-router.get("/getUser/:username", async (req, res) => {
-    try{
-        let paramUsername = req.params.username;
-        const user =  await dbservice.getFullUser(paramUsername);
-        res.send(user);
-        return user;
-    }catch(err){
-        console.log('Error: ' + err);
-    }
-});
-router.put("/updateUser/:username", async (req, res) =>{
-    try {
-        
-        console.log(JSON.stringify(req.body));
-        await dbservice.updateUser(req.body, req.params.username);
-        console.log('LOL PLS');
-        res.send();
-    } catch(err) {
-        console.log('Error: ' + err)
-    }
-})
+
+//* LOGOUT - KILL SESSION
 router.get("/logout", (req, res) => {
-    console.log("LOGGED OUT: " + USER_NAME + ", -- SESSION ENDED -- ");
+    console.log("LOGGED OUT: " + USER_NAME + " -- SESSION ENDED");
     req.logout();
     req.session.destroy();
     console.log(req.isAuthenticated());
@@ -100,7 +102,6 @@ router.get("/logout", (req, res) => {
 passport.serializeUser((grabbedUserId, done) => {
     done(null, grabbedUserId);
 });
-
 passport.deserializeUser((grabbedUserId, done) => {
     done(null, grabbedUserId);
 });

@@ -81,7 +81,7 @@ I should be able to login as super admin.
 • Under each question I should be able to see all answers related to it. For both the questions and answers I should be able to see all related information: user, 
 text and date/time. For answers, I should be able to view up-votes/down-votes (see further functionality requirements below).
 
-<!-- * COMPLETE --> TODO: Actually ban
+<!-- * COMPLETE -->
 • I should be able to block a user (i.e. consumer or contributor) for misconduct. In this scenario, when that user attempts to login they should not be able to login and should read somewhere that their account has been blocked.
 
 <!-- * COMPLETE -->
@@ -89,7 +89,7 @@ text and date/time. For answers, I should be able to view up-votes/down-votes (s
 
 Further functionality for contributor:
 
-<!-- * COMPLETE --> TODO: Dynamically
+<!-- * COMPLETE -->
 • I should be able to label a question as duplicate.
 
 <!-- * COMPLETE -->
@@ -97,10 +97,8 @@ Further functionality for contributor:
 
 Further functionality for consumer:
 
-FIXME:
+<!-- * COMPLETE -->
 • I should be able to up-vote/down-vote an answer to my question.
 
 TODO:
-
-Likes: create, and remove likes, one like/user.
 Styling: THEN WE ARE FUCKING DONE!

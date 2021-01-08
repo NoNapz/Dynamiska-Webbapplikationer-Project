@@ -1,6 +1,0 @@
-TODO: 
-FAQ
-Lable as duplicate
-
-LASTLY DO THINGS BASED ON ROLES.
-
