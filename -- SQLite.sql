@@ -16,6 +16,7 @@ CREATE TABLE if not EXISTS post(
     title varchar(256) NOT NULL,
     body varchar(256) NOT NULL,
     category varchar(32) NOT NULL,
+    likes INTEGER DEFAULT 0,
     isDuplicate INTEGER DEFAULT 0 CHECK (isDuplicate in (0, 1)),
     created DATETIME DEFAULT (datetime('now','localtime'))
 );
@@ -26,12 +27,13 @@ CREATE TABLE if not EXISTS reply(
     postID INTEGER NOT NULL,
     username varchar(64) NOT NULL,
     reply varchar(256) NOT NULL,
+    likes INTEGER DEFAULT 0,
     created DATETIME DEFAULT (datetime('now','localtime')),
     FOREIGN KEY (postID) REFERENCES post(postID)
 );
 
-DROP TABLE IF EXISTS likePost;
-CREATE TABLE if not EXISTS likePost(
+DROP TABLE IF EXISTS likes;
+CREATE TABLE if not EXISTS likes(
     likeID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     userID varchar(64) NOT NULL,
     postID varchar(256),
@@ -43,7 +45,11 @@ CREATE TABLE if not EXISTS likePost(
     UNIQUE(userID, replyID) ON CONFLICT REPLACE
 );
 
--- INSERT INTO users (username, email, name, password, userType)
--- VALUES ('Tassarna', 'h19robhe@du.se', 'Robin Hellström', 12345, 'Super Admin');
--- INSERT INTO users (username, email, name, password, userType)
--- VALUES ('Hyena', 'h19davth@du.se', 'David Thiman', '12345', 'Super Admin');
+-- * AFTER RUNNING OUR PROJECT -- CREATE A USER AND SET THEIR ROLE TO ADMIN FROM DB. (-- IF IT'S NOT TRANSFERED IN THE UPLOAD
+UPDATE users SET userType = 'Super Admin' WHERE username = 'Tass'
+UPDATE users SET userType = 'Super Admin' WHERE username = 'Hyena'
+
+UPDATE users SET userType = 'Contributor' WHERE username = 'ContributorLAD'
+UPDATE users SET userType = 'Contributor' WHERE username = 'HelpzOut'
+
+UPDATE users SET status = 'Suspended' WHERE username = 'Toxic'

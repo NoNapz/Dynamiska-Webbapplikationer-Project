@@ -15,7 +15,7 @@
     <div id="app">
         <!-- !! HEADER -->
         <header>
-            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky">
                 <div class="container">
                     <div class="brand"> Scuffed<span>&#45;</span>Flow <span>&#62; &#62;</span></div>
                     <ul class="navbar-nav ml-auto">
@@ -36,7 +36,7 @@
         <div class="container">
             <div class="row">
                 <!-- * CREATE POST START -->
-                <div class="col-sm-12 col-md-4 pt-4">
+                <div class="col-md-12 col-lg-4 pt-4">
                     <div class="createPost_container">
                         <h2 class="title_big pb-2">
                             <span v-if="currentUser.username == undefined">Guest</span>
@@ -69,11 +69,13 @@
                         <button v-on:click="createPost" type="button"  class="btn btn-white">Create post</button>
                     </form>
                     <!--  HERE -->
-
+                    <!-- FAQ for users -->
                     <div class="parent-FAQ pt-3">
+                        <div class="pt-4 pb-4">
+                            <h2 class="title_big post-title text-center">FAQ</h2>
+                        </div>
                         <i class="fas fa-angle-double-down FAQ-icon container-icon"></i>
                         <div class = "FAQ hideScroll">
-
                             <div class="post-container FAQ-post-Container">
                                 <i class="fas fa-question post-container-icon"></i>
                                 <div class="post-header d-flex justify-content-between align-items-center">
@@ -119,28 +121,29 @@
                                     </p>
                                 </div>
                             </div>
-                            
-    
-    
-    
-                            
                         </div>
                     </div>
-                    
 
                 </div>
                 <!-- * CREATE POST END -->
-                <div class="col-sm-12 col-md-8 pt-4">
-                    <form class="d-flex justify-content-end">
-                        <button v-if="currentUser.username" class="btn btn-white mr-1" type="button" v-on:click="sortByUser(currentUser.username)">My
-                            Posts</button>
-                        <button class="btn btn-white mr-1" type="button"
-                            v-on:click="sortByCategory('Databases')">Databases</button>
-                        <button class="btn btn-white mr-1" type="button"
-                            v-on:click="sortByCategory('Algorithms')">Algorithms</button>
-                        <button class="btn btn-white mr-1" type="button" v-on:click="sortByCategory('Webb')">Webb</button>
-                        <button class="btn btn-white mr-1" type="button" v-on:click="sortByCategory('Other')">Other</button>
-                        <button class="btn btn-white" type="button" v-on:click="showAll">View All</button>
+                <div class="col-md-12 col-lg-8 pt-4">
+                    <div class="pt-4 pb-4">
+                        <h2 class="title_big post-title text-center">Posts</h2>
+                    </div>
+                    <form class="d-flex sort-container justify-content-end">
+                        <!-- * Buttons for sorting navigation big and small -->
+                        <button v-if="currentUser.username" class="btn btn-white mr-1 sort-button-big" type="button" v-on:click="sortByUser(currentUser.username)">My Posts</button>
+                        <button v-if="currentUser.username" class="btn btn-white mr-1 sort-button-small" type="button" v-on:click="sortByUser(currentUser.username)"><i class="fas fa-user-tag"></i></button>
+                        <button class="btn btn-white mr-1 sort-button-big" type="button" v-on:click="sortByCategory('Databases')">Databases</button>
+                        <button class="btn btn-white mr-1 sort-button-small" type="button" v-on:click="sortByCategory('Databases')"><i class="fas fa-database"></i></button>
+                        <button class="btn btn-white mr-1 sort-button-big" type="button" v-on:click="sortByCategory('Algorithms')">Algorithms</button>
+                        <button class="btn btn-white mr-1 sort-button-small" type="button" v-on:click="sortByCategory('Algorithms')"><i class="fas fa-square-root-alt"></i></button>
+                        <button class="btn btn-white mr-1 sort-button-big" type="button" v-on:click="sortByCategory('Webb')">Webb</button>
+                        <button class="btn btn-white mr-1 sort-button-small" type="button" v-on:click="sortByCategory('Webb')"><i class="fas fa-code"></i></button>
+                        <button class="btn btn-white mr-1 sort-button-big" type="button" v-on:click="sortByCategory('Other')">Other</button>
+                        <button class="btn btn-white mr-1 sort-button-small" type="button" v-on:click="sortByCategory('Other')"><i class="fas fa-question"></i></button>
+                        <button class="btn btn-white sort-button-big" type="button" v-on:click="showAll">View All</button>
+                        <button class="btn btn-white sort-button-small" type="button" v-on:click="showAll"><i class="fas fa-eye"></i></button>
                     </form>
                     <div class="pt-3">
                         <i class="fas fa-angle-double-down POST-icon container-icon"></i>
@@ -166,7 +169,7 @@
                                     </form>
                                 </div>
                                 <div class="post-footer d-flex justify-content-between align-items-end">
-                                    <span>{{ post.category }}<br>- {{ post.created }}</span>
+                                    <span class="post-cat-date">{{ post.category }}<br>- {{ post.created }}</span>
                                     <form>
                                         <button v-if="currentUser.userType == 'Super Admin' || currentUser.userType == 'Contributor'" v-on:click="markAsDuplicate(post.postID)" class="btn btn-white" type="button" ><i class="fas fa-thumbtack"></i></button>
                                         <button v-if="currentUser.userType  == 'Super Admin'" v-on:click.prevent="showActionModal(post.username)" class="btn btn-white"><i
@@ -211,10 +214,15 @@
                                                         <textarea name="body-edit" id="bodyEdit" class="form-control"
                                                             rows="5"></textarea>
                                                     </div>
-                                                    <button type="button" class="btn btn-white updatePost"
-                                                        v-on:click="updatePost">Update</button>
-                                                    <button type="button" class="btn btn-white delete-post"
-                                                        v-on:click="removePost">Delete</button>
+                                                    <div class="d-flex justify-content-between">
+                                                        <div>
+                                                            <button type="button" class="btn btn-white updatePost"
+                                                                v-on:click="updatePost">Update</button>
+                                                            <button type="button" class="btn btn-white delete-post mr-2"
+                                                                v-on:click="removePost">Delete</button>
+                                                        </div>
+<!-- HEEEEERREEER -->                                   <button type="button" class="btn btn-white" data-dismiss="modal">Cancel</button>
+                                                    </div>
                                                 </form>
                                             </div>
                                         </div>
@@ -226,61 +234,69 @@
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="post-title"></h5>
-                                            <p id="post-author"></p>
+                                            <p><span class="post-author" id="post-author"></span> <span>&#62; &#62;</span></p>
                                             <p id="post-id"></p>
+                                        </div>
+                                        <div class="post-info-container">
+                                            <div>
+                                                <h5 class="modal-title post-info-title" id="post-title"></h5>
+                                                <p id="post-body" class="post-info-body"></p>
+                                            </div>
                                         </div>
                                         <div class="modal-body">
                                             <!-- Post -->
-                                            <p id="post-body"></p>
                                             <div>
-                                                <div v-for="reply in replies">
-                                                    <h5>{{reply.username}}</h5>
-
-                                                    <div v-if="editMode == reply.replyID" class="test">
-                                                        <textarea name="editReply" id="editReply" cols="60"
-                                                            rows="5"></textarea>
+                                                <div v-for="reply in replies" class="reply-container mt-2 mb-2">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <h5>{{reply.username}}</h5>
+                                                        <p id="replyID" class="reply-bold">ID: {{reply.replyID}}</p>
                                                     </div>
-                                                    <div v-else class="test">
-                                                        <p class="replyBody">{{reply.reply}}</p>
-                                                    </div>
-                                                    <p id="replyID">{{reply.replyID}}</p>
-                                                    <span> {{ reply.created }} </span>
-                                                    <div id="replyButtons">
-                                                        <button type="button" v-on:click="likeReply(reply.replyID)" class="btn"><i
-                                                                class="fa fa-thumbs-up fa-lg"
-                                                                aria-hidden="true"></i></button>
-                                                        <button type="button" v-on:click="dislikeReply(reply.replyID)" class="btn"><i
-                                                                class="fa fa-thumbs-down fa-lg"
-                                                                aria-hidden="true"></i></button>
-                                                        <span id="replyLikes">{{ reply.likes }}</span>
-                                                    </div>
-                                                    <div class="replyCrud">
-                                                        <!-- ? This is where the fun begins! ? -->
-                                                        <button type="button" class="removeReply btn btn-danger"
-                                                            @click="removeReply(reply.replyID)"><i
-                                                                class="fas fa-trash"></i></button>
-                                                        <div v-if="editMode == reply.replyID">
-                                                            <button type="button" class="editReply btn btn-white"
-                                                                @click="updateReply(reply.replyID)"><i
-                                                                    class="fas fa-save"></i></button>
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <div>
+                                                            <div v-if="editMode == reply.replyID" class="test">
+                                                                <textarea name="editReply" id="editReply" class="form-control" rows="4"></textarea>
+                                                            </div>
+                                                            <div v-else class="test">
+                                                                <p class="replyBody">{{reply.reply}}</p>
+                                                            </div>
                                                         </div>
-                                                        <div v-else>
-                                                            <button class="toggleReply btn btn-white"
-                                                                @click="toggleEdit(reply.replyID)"><i
-                                                                    class="fas fa-edit"></i></button>
+                                                        <div>
+                                                            <button type="button" v-on:click="likeReply(reply.replyID)" class="btn"><i class="fa fa-thumbs-up fa-lg reply-like" aria-hidden="true"></i></button>
+                                                            <span id="replyLikes">{{ reply.likes }}</span>
+                                                            <button type="button" v-on:click="dislikeReply(reply.replyID)" class="btn"><i class="fa fa-thumbs-down fa-lg reply-like" aria-hidden="true"></i></button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <span class="reply-date">{{ reply.created }}</span>
+                                                        <div class="replyCrud d-flex" v-if="currentUser.userType == 'Super Admin' || currentUser.userType == 'Contributor' && currentUser.username == reply.username">
+                                                            <button type="button" class="removeReply btn btn-danger"
+                                                                @click="removeReply(reply.replyID)"><i
+                                                                    class="fas fa-trash"></i></button>
+                                                            <div v-if="editMode == reply.replyID">
+                                                                <button type="button" class="editReply btn btn-white ml-1"
+                                                                    @click="updateReply(reply.replyID)"><i
+                                                                        class="fas fa-save"></i></button>
+                                                            </div>
+                                                            <div v-else>
+                                                                <button class="toggleReply btn btn-white ml-1"
+                                                                    @click="toggleEdit(reply.replyID)"><i
+                                                                        class="fas fa-edit"></i></button>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                             <!-- Replies -->
                                             <div class="row">
-                                                <div class="col-md-6 col-md-offset-3" v-if="currentUser.userType == 'Super Admin' || currentUser.userType == 'Contributor'">
+                                                <div class="col-md-12 col-md-offset-3" v-if="currentUser.userType == 'Super Admin' || currentUser.userType == 'Contributor'">
                                                     <form id="replyForm">
-                                                        <textarea name="reply" class="reply-body" cols="60"
-                                                            rows="3"></textarea>
-                                                        <button type="button" class="btn btn-white"
-                                                            v-on:click="createReply">Submit</button>
+                                                        <div class="input-container">
+                                                            <textarea name="reply" class="reply-body form-control" rows="3"></textarea>
+                                                        </div>
+                                                        <div class="d-flex justify-content-between">
+                                                            <button type="button" class="btn btn-white" v-on:click="createReply">Submit</button>
+                                                            <button type="button" class="btn btn-white" data-dismiss="modal">Cancel</button>
+                                                        </div>
                                                     </form>
                                                     <!-- v-on:click tassarna  -->
                                                 </div>
@@ -299,7 +315,67 @@
             </div>
         </div>
 </main>
-<footer>
+<footer class="mt-4">
+    <div class="container">
+        <div class="footer-body row">
+                <div class="col-lg-4 footer-item">
+                    <div class="footer-information text-center">
+                        <h4 class="p-2 footer-title">CONTACT</h4>
+                    </div>
+                    <div class="footer-contact-container">
+                        <div class="footer-contact w-50">
+                            <div class="contact-information text-center">
+                                <h5>Name:</h5>
+                                <p>David Thiman</p>
+                                <h5>email:</h5>
+                                <p>h19davth@du.se</p>
+                                <h5>Program:</h5>
+                                <p>System science</p>
+                            </div>
+                        </div>
+                        <div class="footer-contact w-50 ml-2">
+                            <div class="contact-information text-center">
+                                <h5>Name:</h5>
+                                <p>Robin Hellström</p>
+                                <h5>email:</h5>
+                                <p>h19robhe@du.se</p>
+                                <h5>Program:</h5>
+                                <p>System science</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 footer-item">
+                    <div class="footer-github text-center">
+                        <h4 class="p-2 footer-title">GITHUB</h4>
+                    </div>
+                    <div class="github-user text-center">
+
+                        <a href="https://github.com/NoNapz" class="footer-links">
+                            <h6>Robin Hellström</h6>
+                        </a>
+                    </div>
+                    <div class="github-user text-center">
+                        <a href="https://github.com/Lunaticc" class="footer-links">
+                            <h6>David Thiman</h6>
+                        </a>
+                    </div>
+
+                </div>
+                <div class="col-lg-4 footer-item">
+                    <div class="footer-tools text-center">
+                        <h4 class="p-2 footer-title">TOOLS</h4>
+                    </div>
+                    <div class="text-center footer-icons">
+                        <a href="#" class="m-2 footer-links"><i class="fab fa-html5"></i></a>
+                        <a href="#" class="m-2 footer-links"><i class="fab fa-css3-alt"></i></a>
+                        <a href="#" class="m-2 footer-links"><i class="fab fa-js"></i></a>
+                        <a href="https://vuejs.org/" class="m-2 footer-links"><i class="fab fa-vuejs"></i></a>
+                        <a href="https://nodejs.org/en/" class="m-2 footer-links"><i class="fab fa-node"></i></a>
+                    </div>
+                </div>
+        </div>
+    </div>
 </footer>
         <!-- * LOGIN / SIGNUP MODAL -->
         <div class="modal fade" id="loginModal">
@@ -324,7 +400,10 @@
                                         <label class="label">Password</label>
                                         <input id="logPassword" class="form-control" type="password" name="password">
                                     </div>
-                                    <button class="btn btn-white">Login</button>
+                                    <div class="d-flex justify-content-between">
+                                        <button class="btn btn-white">Login</button>
+                                        <button type="button" class="btn btn-white" data-dismiss="modal">Cancel</button>
+                                    </div>
                                 </form>
                             </div>
                             <div class="tab-pane" id="signup">
@@ -345,7 +424,10 @@
                                         <label class="label">Password</label>
                                         <input id="addPassword" class="form-control" type="password" name="password">
                                     </div>
-                                    <button class="btn btn-white">Sign Up</button>
+                                    <div class="d-flex justify-content-between">
+                                        <button class="btn btn-white">Signup</button>
+                                        <button type="button" class="btn btn-white" data-dismiss="modal">Cancel</button>
+                                    </div>
                                 </form>
                             </div>
                         </div>
@@ -366,7 +448,6 @@
                     <div class="modal-body">
                         <div>
                             <form class="form-horizontal" id="actionForm">
-
                                 <div class="input-container">
                                     <label class="label">Username</label>
                                     <input id="username" class="form-control" type="text" name="username">
@@ -394,7 +475,10 @@
                                         <option value="Super Admin">Super Admin</option>
                                     </select>
                                 </div>
-                                <button type="button" class="btn btn-white" v-on:click="updateUser()">Submit</button>
+                                <div class="d-flex justify-content-between">
+                                    <button type="sumbit" class="btn btn-white" v-on:click="updateUser()">Submit</button>
+                                    <button type="button" class="btn btn-white" data-dismiss="modal">Cancel</button>
+                                </div>
                             </form>
                         </div>
                     </div>
@@ -411,6 +495,3 @@
 </body>
 
 </html>
-<script>
-
-</script>

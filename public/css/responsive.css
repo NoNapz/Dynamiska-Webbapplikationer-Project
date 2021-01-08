@@ -1,0 +1,30 @@
+@media (max-width: 992px) {
+    .sort-button-big {
+        display: none !important;
+    }
+    .sort-container > .sort-button-small {
+        display: initial !important;
+        width: 4rem;
+    }
+    .post-title {
+        display: initial !important;
+    }
+    .FAQ-icon {
+        top: 94% !important;
+        left: 3% !important;
+    }
+    .POST-icon {
+        left: 5% !important;
+    }
+    .footer-item {
+        border-right: none !important;
+        padding-bottom: 1rem;
+    }
+    .footer-item:not(:last-child){
+        border-right: none;
+        border-bottom: 2px solid var(--main-highlight);
+      }
+      .footer-item:first-child{
+          padding-top: 1rem;
+      }
+}

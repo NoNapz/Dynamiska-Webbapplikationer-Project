@@ -1,4 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700;800;900&display=swap");
+/* * REPOSIVE CSS IMPORT * */
+@import url("/css/responsive.css");
 
 :root {
   --main-color: #343a40;
@@ -36,6 +38,12 @@ nav i {
 .input-container {
   margin: 1rem 0 1rem 0;
 }
+.post-cat-date,
+.reply-date {
+  color: #666;
+  font-style: italic;
+  font-size: .9rem;
+}
 .title_mini {
   color: rgba(0, 0, 0, 0.5);
   letter-spacing: 0.2em;
@@ -44,11 +52,39 @@ nav i {
   text-transform: uppercase;
   font-style: italic;
 }
+.post-author {
+  color: #fff !important;
+}
+.post-info-container {
+  background-color: #EEE;
+  padding: 1rem;
+}
+.reply-bold {
+  font-weight: 500;
+  font-style: italic;
+}
+.reply-like {
+  color: var(--main-highlight-2);
+}
+.post-info-title {
+  font-weight: 600;
+}
+.post-info-body {
+  font-weight:600;
+}
 .title_big {
   font-size: 2rem;
   margin: 0;
   font-style: italic;
   text-transform: uppercase;
+}
+.post-title {
+  padding: .5rem 1rem;
+  border-left: 2px solid var(--main-highlight-2);
+  display: none;
+}
+.sort-button-small {
+  display: none !important;
 }
 .createPost_container {
   border-left: 2px solid var(--main-highlight-2);
@@ -175,4 +211,61 @@ button.btn-white:hover {
 .tab-design a:hover {
   color: var(--main-color);
   text-decoration: none;
+}
+.sort-container{
+    justify-content: end;
+}
+footer{
+  background-color: var(--main-color);
+  width: 100%;
+  color: white;
+}
+.footer-body{
+  /* height: 10rem; */
+  /* width: 100%; */
+}
+.footer-title{
+  font-size: 1.2rem;
+}
+.footer-item:not(:last-child){
+  border-right: 2px solid var(--main-highlight);
+}
+.footer-contact:not(:last-child){
+  border-right: 2px solid var(--main-highlight-2);
+}
+.footer-item{
+  display: flex;
+  flex-direction: column;
+}
+.footer-contact-container{
+  display: flex;
+  flex-direction: row;
+}
+.footer-body:last-child{
+  margin-right: 0;
+  border: 0;
+}
+.contact-information>h5{
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.footer-links{
+  color: #fff;
+}
+.footer-links:hover{
+  color: var(--main-highlight);
+}
+.footer-icons{
+  font-size: 2rem;
+}
+.reply-container {
+  padding: .5rem;
+  box-shadow: 0px 2px 2px #ccc;
+}
+.reply-container:nth-child(odd) {
+  border-left: 4px solid var(--main-highlight);
+}
+.reply-container:nth-child(even) {
+  border-right: 2px solid var(--main-highlight-2);
 }

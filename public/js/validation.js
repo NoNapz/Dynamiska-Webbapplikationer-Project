@@ -8,10 +8,7 @@ $().ready(function () {
     );
     var $loginForm = $('#loginForm');
     var $signupForm = $('#signupForm');
-    var $actionForm = $('#actionForm');
-    var $replyForm = $('#replyForm');
-    var $createPostForm = $('#createPost');
-    var $editPostForm = $('#editPostForm');
+    // * checks the length of the inputs in the login form, to make sure they are not empty.
     if ($loginForm.length) {
         $loginForm.validate({
             rules: {
@@ -32,6 +29,8 @@ $().ready(function () {
             },
         });
     }
+    // * Checks the length of inputs in the sign up form,
+    // * To make sure they are not too short, or too long. and not empty.
     if ($signupForm.length) {
         $signupForm.validate({
             rules: {
@@ -62,57 +61,16 @@ $().ready(function () {
                 email: {
                     required: "Please enter an Email",
                     email: "Enter a valid Email",
-                    pattern: "REGEX HIT YOU",
                 },
                 name: {
                     required: "Please enter your name",
                     lettersonly: "Your name can only include A-Z and \'"
                 },
                 password: {
-                    require: "Please enter your password",
+                    required: "Please enter your password",
                     minlength: "Your password is too short (min 6)"
-                }
+                },
             },
         });
-    }
-    if ($actionForm.length) {
-        $actionForm.validate({
-            rules: {
-
-            },
-            messages: {
-
-            },
-        });
-    }
-    if ($replyForm.length) {
-        $replyForm.validate({
-            rules: {
-
-            },
-            messages: {
-
-            },
-        });
-    }
-    if ($createPostForm.length) {
-        $createPostForm.validate({
-            rules: {
-
-            },
-            messages: {
-
-            },
-        });
-    }
-    if ($editPostForm.length) {
-        $editPostForm.validate({
-            rules: {
-
-            },
-            messages: {
-
-            },
-        });
-    }
+    };
 });

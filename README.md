@@ -1,41 +1,67 @@
 # W-Project
-Dynamiska webb
+--------------------------Dynamiska webb ------------------------------- 
+By: Robin Hellström (h19robhe) and David Thiman (h19davth)
+------------------------------------------------------------------------
 
--- Project Desc --
+Hello, we've decided to keep our project as a "one-page" design 
+to ease up the navigation for the users.
 
-Front-end requirements:
-Make a user-friendly interface that opens immediately when the server is
-running and http://localhost:XXX is entered in the browser. We shouldn't have
-to look for the html page in your folder structure.
-Each type of user; the consumer and the contributor should be directed to the
-layout that concerns their tasks based on their permissions. The super admin
-should be able to navigate to all layouts.
-You have the freedom to choose the design you imagine for such a Q&A
-engine, but make sure it’s easy to navigate and that information/actions are
-where a user would “expect” them to be.
+The project was pretty overwhelming but we achived our goals!
+T'Was an intesting challenge to say the least, we learnt a lot in the process.
 
-Other:
-Be sure to name variables, objects, methods/functions so that they reflect this
-task of Q&A, questions, answers etc. We don't want to see anything about, for
-example, products, cars job ads or other irrelevant things.
-Remember to enter the source (links or what lectures) from which you got
-inspiration for your code.
-Try unzipping and running your zipped node.js project before submitting it.
-After the teacher unzips the submitted zipped node.js project, it must be
-possible to open and run through node server.js and/or through npm run
-server. If not, you will automatically fail.
+We tackled this problem in a good way by sketching a kanban board 
+and drawing a database diagram (UML) from it. Then we created our 
+mock-up for the actual layout of the project. We then kicked off 
+the project by implementing sessions, logging in and registration 
+functionality. And based on starting a session, we can easily save 
+the user in our VUE and back-end. And from there perform operations 
+based on the logged in user's session. Because sessions were new to 
+both of us, it was the most difficult but also most facilitating part 
+to get ready first to get the rest of the project running smoothly.
 
-G Task: (3p)
-There are a limited number of contributors pre-selected for answering
-questions, hence the number of contributors must be pre-determined. This
-provides a clear distinction between consumers and contributors.
-NOTE: The different users should login with different permissions. Follow this
-tutorial for tips on how to manage sessions with Node.js and Express:
+The most complex part besides Sessions was getting likes / dislikes 
+to work. In principle, it sounds really simple, we then realized how 
+much a functioning like / dislike system really needs. We must have 
+a user ID, post ID / response ID and save it in our database to prevent 
+users from liking / disliking multiple times. But after we found a 
+solution to the problem, the project went on quickly again.
 
-https://codeforgeek.com/manage-session-using-node-js-express-4/
+The results was better than we expected, we hope you like it as much
+as we do. 
 
+The combination of VUE, Jquery and SQLite felt pretty "scuffed",
+but as mentioned above we learnt a lot doing this!
 
-- Project flow - 
+Cheers!
+
+We decided to modify some of the points to suit our project 
+but still be within the "scope" of the goals.
+
+-------THINGS WE'VE USED TO COMPLETE THE PROJECT-----------
+
+GENERAL:
+HTML 
+CSS (responsive design)
+Bootstrap
+Node
+Vue
+Jquery
+SQLite(3)
+
+DEPENDECYS USED:
+    "bcrypt": "^5.0.0",
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.5",
+    "express": "^4.17.1",
+    "express-session": "^1.17.1",
+    "nodemon": "^2.0.6",
+    "passport": "^0.4.1",
+    "sqlite": "^4.0.18",
+    "sqlite3": "^5.0.0"
+
+------------------------------------------------------------
+
+-- Project Desc -- Project flow - 
 
 -As Consumer- (Ask questions and consume information (answers))
 
@@ -99,6 +125,3 @@ Further functionality for consumer:
 
 <!-- * COMPLETE -->
 • I should be able to up-vote/down-vote an answer to my question.
-
-TODO:
-Styling: THEN WE ARE FUCKING DONE!
