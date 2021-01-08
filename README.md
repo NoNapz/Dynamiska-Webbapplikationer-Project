@@ -1,6 +1,6 @@
 # W-Project
 --------------------------Dynamiska webb ------------------------------- 
-By: Robin Hellström (h19robhe) and David Thiman (h19davth)
+By: Robin Hellström (h19robhe@du.se) and David Thiman (h19davth@du.se)
 ------------------------------------------------------------------------
 
 Hello, we've decided to keep our project as a "one-page" design 
@@ -36,6 +36,20 @@ Cheers!
 
 We decided to modify some of the points to suit our project 
 but still be within the "scope" of the goals.
+
+SUPER ADMINS:
+Username: Tass Password: ABC123
+Username: Hyena Password ABC123
+
+CONTRIBUTROS
+Username: ContributorLAD Password: ABC123
+Username: HelpzOut Password: ABC123
+
+CONSUMERS:
+Username: FutureSucks Password: ABC123
+Username: Davbin Password: ABC123
+Username: Toxic Password: ABC123
+
 
 -------THINGS WE'VE USED TO COMPLETE THE PROJECT-----------
 
